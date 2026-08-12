@@ -43,12 +43,29 @@ The mode is chosen by whether the GitHub App credentials are present — see bel
 
 ### Turning on the deployed manager
 
-1. Create a GitHub App on your account with **Contents: Read and write** permission for the `portfolio` repo, and callback URL `https://mohammedalmsitef.me/api/keystatic/github/oauth/callback`
-2. In Vercel → Settings → Environment Variables, add:
-   - `KEYSTATIC_GITHUB_CLIENT_ID`
-   - `KEYSTATIC_GITHUB_CLIENT_SECRET`
-   - `KEYSTATIC_SECRET` (any long random string)
-3. Redeploy
+Editing on the live site needs a GitHub App, so Keystatic can commit on your behalf. This version has no in-app wizard — register it by hand at **https://github.com/settings/apps/new**:
+
+| Field                                                  | Value                                                             |
+| ------------------------------------------------------ | ----------------------------------------------------------------- |
+| GitHub App name                                        | anything, e.g. `Portfolio CMS`                                    |
+| Homepage URL                                           | `https://mohammedalmsitef.me`                                     |
+| Callback URL                                           | `https://mohammedalmsitef.me/api/keystatic/github/oauth/callback` |
+| Request user authorization (OAuth) during installation | ticked                                                            |
+| Webhook → Active                                       | **un**ticked                                                      |
+| Repository permissions → Contents                      | Read and write                                                    |
+| Where can this be installed                            | Only on this account                                              |
+
+Add a second callback URL, `http://127.0.0.1:3000/api/keystatic/github/oauth/callback`, if you want to test GitHub mode locally with `KEYSTATIC_STORAGE=github npm run dev`.
+
+Then **Install** the app on the `portfolio` repo, and copy three values into Vercel → Settings → Environment Variables:
+
+| Variable                         | Where it comes from                             |
+| -------------------------------- | ----------------------------------------------- |
+| `KEYSTATIC_GITHUB_CLIENT_ID`     | the app's page, after creating it               |
+| `KEYSTATIC_GITHUB_CLIENT_SECRET` | _Generate a new client secret_ on that page     |
+| `KEYSTATIC_SECRET`               | any long random string — `openssl rand -hex 32` |
+
+Redeploy, and `mohammedalmsitef.me/keystatic` will ask you to sign in with GitHub. Saving there commits to `main`, which triggers a rebuild — live in about a minute.
 
 `keystatic.config.ts` gates on those three variables rather than on `NODE_ENV`: Keystatic throws at config load when GitHub storage lacks credentials, which would take the whole build down instead of just shipping without the manager.
 
@@ -223,4 +240,4 @@ Other things to swap in:
 
 Push to GitHub and import the repo at [vercel.com/new](https://vercel.com/new). No configuration needed.
 
-The site URL used for metadata, Open Graph tags, and the sitemap is set in the manager under *Site & contact*.
+The site URL used for metadata, Open Graph tags, and the sitemap is set in the manager under _Site & contact_.

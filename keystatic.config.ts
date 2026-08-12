@@ -44,14 +44,30 @@ const visible = fields.checkbox({
  */
 const hasGitHubApp = Boolean(
   process.env.KEYSTATIC_GITHUB_CLIENT_ID &&
-    process.env.KEYSTATIC_GITHUB_CLIENT_SECRET &&
-    process.env.KEYSTATIC_SECRET,
+  process.env.KEYSTATIC_GITHUB_CLIENT_SECRET &&
+  process.env.KEYSTATIC_SECRET,
 )
 
+/**
+ * Try GitHub mode locally before deploying it:
+ *
+ *     KEYSTATIC_STORAGE=github npm run dev
+ *
+ * Useful for checking the app's credentials work once they are in a local
+ * .env. Restricted to development so a stray env var on the deployed site can
+ * never break the production build.
+ *
+ * Note: this version of Keystatic has no in-app "create my GitHub App" wizard
+ * — the app is registered by hand on GitHub. See the README.
+ */
+const forceGitHubForSetup =
+  process.env.NODE_ENV === 'development' && process.env.KEYSTATIC_STORAGE === 'github'
+
 export default config({
-  storage: hasGitHubApp
-    ? { kind: 'github', repo: { owner: 'Mohammed-Almsitef', name: 'portfolio' } }
-    : { kind: 'local' },
+  storage:
+    hasGitHubApp || forceGitHubForSetup
+      ? { kind: 'github', repo: { owner: 'Mohammed-Almsitef', name: 'portfolio' } }
+      : { kind: 'local' },
 
   ui: {
     brand: { name: 'Portfolio' },
