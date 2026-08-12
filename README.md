@@ -43,29 +43,12 @@ The mode is chosen by whether the GitHub App credentials are present — see bel
 
 ### Turning on the deployed manager
 
-Editing on the live site needs a GitHub App, so Keystatic can commit on your behalf. This version has no in-app wizard — register it by hand at **https://github.com/settings/apps/new**:
-
-| Field                                                  | Value                                                             |
-| ------------------------------------------------------ | ----------------------------------------------------------------- |
-| GitHub App name                                        | anything, e.g. `Portfolio CMS`                                    |
-| Homepage URL                                           | `https://mohammedalmsitef.me`                                     |
-| Callback URL                                           | `https://mohammedalmsitef.me/api/keystatic/github/oauth/callback` |
-| Request user authorization (OAuth) during installation | ticked                                                            |
-| Webhook → Active                                       | **un**ticked                                                      |
-| Repository permissions → Contents                      | Read and write                                                    |
-| Where can this be installed                            | Only on this account                                              |
-
-Add a second callback URL, `http://127.0.0.1:3000/api/keystatic/github/oauth/callback`, if you want to test GitHub mode locally with `KEYSTATIC_STORAGE=github npm run dev`.
-
-Then **Install** the app on the `portfolio` repo, and copy three values into Vercel → Settings → Environment Variables:
-
-| Variable                         | Where it comes from                             |
-| -------------------------------- | ----------------------------------------------- |
-| `KEYSTATIC_GITHUB_CLIENT_ID`     | the app's page, after creating it               |
-| `KEYSTATIC_GITHUB_CLIENT_SECRET` | _Generate a new client secret_ on that page     |
-| `KEYSTATIC_SECRET`               | any long random string — `openssl rand -hex 32` |
-
-Redeploy, and `mohammedalmsitef.me/keystatic` will ask you to sign in with GitHub. Saving there commits to `main`, which triggers a rebuild — live in about a minute.
+1. Create a GitHub App on your account with **Contents: Read and write** permission for the `portfolio` repo, and callback URL `https://mohammedalmsitef.me/api/keystatic/github/oauth/callback`
+2. In Vercel → Settings → Environment Variables, add:
+   - `KEYSTATIC_GITHUB_CLIENT_ID`
+   - `KEYSTATIC_GITHUB_CLIENT_SECRET`
+   - `KEYSTATIC_SECRET` (any long random string)
+3. Redeploy
 
 `keystatic.config.ts` gates on those three variables rather than on `NODE_ENV`: Keystatic throws at config load when GitHub storage lacks credentials, which would take the whole build down instead of just shipping without the manager.
 
@@ -125,6 +108,8 @@ Two helper classes carry the polish:
 Anything that can't inherit a CSS colour needs the theme fed to it explicitly. [`components/LidarBackdrop.tsx`](components/LidarBackdrop.tsx) reads the `--canvas-ink` triplet and re-reads it on a `data-theme` mutation and on OS-preference change; add new canvas work the same way rather than hardcoding a colour.
 
 Section numbering is derived from the order in the manager, not stored — hide a section and the rest renumber rather than leaving a gap.
+
+`next.config.mjs` must keep `outputFileTracingIncludes` for `content/**`. The reader loads those JSON files with `fs` at runtime, and Next only bundles files it can trace through imports — without it, prerendered pages keep working (they were built while the files existed) but every dynamic route, `/keystatic` included, throws `Singleton "site" not found`.
 
 All content is read through [`lib/content.ts`](lib/content.ts), which is also where hidden items are filtered out. Doing it in one place means a `visible: false` toggle can't be honoured in the grid and forgotten in the sitemap.
 
