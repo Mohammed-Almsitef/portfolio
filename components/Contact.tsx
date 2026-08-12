@@ -1,4 +1,4 @@
-import { site, socials } from '@/data/content'
+import { getSite, getSocials } from '@/lib/content'
 import CopyEmail from './CopyEmail'
 import Section from './Section'
 
@@ -7,17 +7,20 @@ import Section from './Section'
  * once in the hero and deliberately not repeated here; this section carries the
  * contact record — the links, where I am, and how fast I answer.
  */
-export default function Contact() {
+export default async function Contact({ title, index }: { title: string; index: string }) {
+  const [site, socials] = await Promise.all([getSite(), getSocials()])
+
   return (
-    <Section id="contact" title="Contact" index="06">
+    <Section id="contact" title={title} index={index}>
       <div className="grid gap-12 md:grid-cols-[1.4fr_1fr] md:gap-16">
         <div>
           <p className="text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-tight tracking-tight">
-            Let’s work together.
+            Let\u2019s work together.
           </p>
           <p className="mt-5 leading-relaxed text-body md:text-[1.0625rem]">
-            I’m open to full-time roles, contract work, and interesting collaborations — especially
-            anything involving autonomy in the real world. Email is the fastest way to reach me.
+            I\u2019m open to full-time roles, contract work, and interesting collaborations \u2014
+            especially anything involving autonomy in the real world. Email is the fastest way to
+            reach me.
           </p>
 
           <div className="mt-9">
@@ -34,7 +37,7 @@ export default function Contact() {
                   rel="noopener noreferrer"
                   className="tap font-mono text-sm text-muted underline-offset-4 transition-colors hover:text-accent hover:underline"
                 >
-                  {s.label} <span aria-hidden="true">↗</span>
+                  {s.label} <span aria-hidden="true">\u2197</span>
                 </a>
               </li>
             ))}

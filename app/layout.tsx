@@ -1,48 +1,60 @@
 import type { Metadata } from 'next'
 import { Inter, JetBrains_Mono } from 'next/font/google'
-import { site } from '@/data/content'
+import { getSite } from '@/lib/content'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
-const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-jetbrains', display: 'swap' })
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+})
+const mono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains',
+  display: 'swap',
+})
 
-export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
-  title: {
-    default: `${site.name} — ${site.role}`,
-    template: `%s — ${site.name}`,
-  },
-  description: site.tagline,
-  keywords: [
-    'robotics engineer',
-    'AI engineer',
-    'machine learning engineer',
-    'deep learning',
-    'computer vision',
-    'NLP',
-    'large language models',
-    'PyTorch',
-    'ROS 2',
-    'SLAM',
-    'reinforcement learning',
-    'autonomous systems',
-    'Python',
-    'C++',
-    site.name,
-  ],
-  openGraph: {
-    title: `${site.name} — ${site.role}`,
+export async function generateMetadata(): Promise<Metadata> {
+  const site = await getSite()
+
+  return {
+    metadataBase: new URL(site.url),
+    title: {
+      default: `${site.name} — ${site.role}`,
+      template: `%s — ${site.name}`,
+    },
     description: site.tagline,
-    url: site.url,
-    siteName: site.name,
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: `${site.name} — ${site.role}`,
-    description: site.tagline,
-  },
-  robots: { index: true, follow: true },
+    keywords: [
+      'robotics engineer',
+      'AI engineer',
+      'machine learning engineer',
+      'deep learning',
+      'computer vision',
+      'NLP',
+      'large language models',
+      'PyTorch',
+      'ROS 2',
+      'SLAM',
+      'reinforcement learning',
+      'autonomous systems',
+      'Python',
+      'C++',
+      site.name,
+    ],
+    openGraph: {
+      title: `${site.name} — ${site.role}`,
+      description: site.tagline,
+      url: site.url,
+      siteName: site.name,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${site.name} — ${site.role}`,
+      description: site.tagline,
+    },
+    robots: { index: true, follow: true },
+  }
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

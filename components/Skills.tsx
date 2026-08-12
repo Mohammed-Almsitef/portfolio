@@ -1,11 +1,13 @@
-import { skillGroups } from '@/data/content'
+import { getSkillGroups } from '@/lib/content'
 import Section from './Section'
 
-export default function Skills() {
+export default async function Skills({ title, index }: { title: string; index: string }) {
+  const groups = await getSkillGroups()
+
   return (
-    <Section id="skills" title="Skills" index="04">
+    <Section id="skills" title={title} index={index}>
       <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-        {skillGroups.map((g) => (
+        {groups.map((g) => (
           <div
             key={g.title}
             // The tone is resolved per theme by globals.css; only the variable

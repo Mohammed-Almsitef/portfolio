@@ -1,0 +1,50 @@
+{
+  "intro": "Kept separate from my own projects on purpose — contributing to someone else’s codebase demonstrates different things: reading unfamiliar code, working to a project’s standards, and getting a change through review with maintainers you’ve never met.",
+  "items": [
+    {
+      "prUrl": "https://github.com/ros-navigation/navigation2/pull/0000",
+      "project": "Nav2",
+      "projectUrl": "https://github.com/ros-navigation/navigation2",
+      "what": "Fixed a recovery-behaviour deadlock in the navigation stack",
+      "detail": "A recovery behaviour could leave the behaviour tree waiting on an action server that had already aborted, stalling navigation until a restart. Traced it to the cancellation path, added a regression test, and worked through review with the maintainers.",
+      "status": "Merged · 2025",
+      "tags": [
+        "C++",
+        "ROS 2",
+        "Behaviour trees"
+      ],
+      "tone": "emerald",
+      "visible": true
+    },
+    {
+      "prUrl": "https://github.com/moveit/moveit2/pull/0000",
+      "project": "MoveIt 2",
+      "projectUrl": "https://github.com/moveit/moveit2",
+      "what": "Added a planning-scene utility and its documentation",
+      "detail": "Contributed a helper for a collision-object workflow that previously required boilerplate at every call site, plus API documentation and examples so the addition was usable without reading the source.",
+      "status": "Merged · 2024",
+      "tags": [
+        "C++",
+        "MoveIt 2",
+        "Documentation"
+      ],
+      "tone": "blue",
+      "visible": true
+    },
+    {
+      "prUrl": "https://github.com/isl-org/Open3D/pull/0000",
+      "project": "Open3D",
+      "projectUrl": "https://github.com/isl-org/Open3D",
+      "what": "Fixed a point-cloud registration edge case",
+      "detail": "Registration silently returned an identity transform on degenerate inputs instead of reporting failure. Added the guard and a unit test covering the degenerate case.",
+      "status": "Merged · 2024",
+      "tags": [
+        "C++",
+        "Python",
+        "Point clouds"
+      ],
+      "tone": "cyan",
+      "visible": true
+    }
+  ]
+}

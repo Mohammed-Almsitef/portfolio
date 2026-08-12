@@ -1,4 +1,4 @@
-import { education, experience, publications, site } from '@/data/content'
+import { getEducation, getExperience, getPublications, getSite } from '@/lib/content'
 import Section from './Section'
 
 function SubHeading({ children }: { children: React.ReactNode }) {
@@ -7,9 +7,16 @@ function SubHeading({ children }: { children: React.ReactNode }) {
   )
 }
 
-export default function Experience() {
+export default async function Experience({ title, index }: { title: string; index: string }) {
+  const [experience, education, publications, site] = await Promise.all([
+    getExperience(),
+    getEducation(),
+    getPublications(),
+    getSite(),
+  ])
+
   return (
-    <Section id="experience" title="Experience" index="05" tone="raised">
+    <Section id="experience" title={title} index={index} tone="raised">
       <ol className="relative space-y-12 border-l border-border pl-8">
         {experience.map((job) => (
           <li key={`${job.company}-${job.period}`} className="relative">
@@ -54,20 +61,22 @@ export default function Experience() {
         ))}
       </ol>
 
-      <div className="mt-16">
-        <SubHeading>Education</SubHeading>
-        <ul className="space-y-3">
-          {education.map((e) => (
-            <li key={e.degree} className="flex flex-wrap items-baseline justify-between gap-x-4">
-              <span>
-                <span className="font-medium">{e.degree}</span>
-                <span className="text-muted"> · {e.school}</span>
-              </span>
-              <span className="font-mono text-xs text-muted">{e.period}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {education.length > 0 && (
+        <div className="mt-16">
+          <SubHeading>Education</SubHeading>
+          <ul className="space-y-3">
+            {education.map((e) => (
+              <li key={e.degree} className="flex flex-wrap items-baseline justify-between gap-x-4">
+                <span>
+                  <span className="font-medium">{e.degree}</span>
+                  <span className="text-muted"> · {e.school}</span>
+                </span>
+                <span className="font-mono text-xs text-muted">{e.period}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {publications.length > 0 && (
         <div className="mt-16">

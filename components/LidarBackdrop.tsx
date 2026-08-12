@@ -75,7 +75,10 @@ export default function LidarBackdrop() {
     read()
 
     const mo = new MutationObserver(read)
-    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+    mo.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    })
     const mq = window.matchMedia('(prefers-color-scheme: dark)')
     mq.addEventListener('change', read)
 
@@ -173,14 +176,23 @@ export default function LidarBackdrop() {
           const a = angle + i * 0.009
           const d = castRay(ox, oy, a, SCENE, 1.6)
           if (d < 1.6) {
-            points.push({ x: ox + Math.cos(a) * d, y: oy + Math.sin(a) * d, age: 0 })
+            points.push({
+              x: ox + Math.cos(a) * d,
+              y: oy + Math.sin(a) * d,
+              age: 0,
+            })
           }
         }
         while (points.length > TRAIL) points.shift()
       } else if (points.length === 0) {
         for (let a = 0; a < Math.PI * 2; a += 0.02) {
           const d = castRay(ox, oy, a, SCENE, 1.6)
-          if (d < 1.6) points.push({ x: ox + Math.cos(a) * d, y: oy + Math.sin(a) * d, age: 0 })
+          if (d < 1.6)
+            points.push({
+              x: ox + Math.cos(a) * d,
+              y: oy + Math.sin(a) * d,
+              age: 0,
+            })
         }
       }
 

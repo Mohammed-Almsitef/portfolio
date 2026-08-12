@@ -9,7 +9,9 @@ export default function Section({
   children,
 }: {
   id: string
+  /** Heading text, set per section in the manager. */
   title: string
+  /** Running number, derived from the section's position. */
   index: string
   /** Alternating grounds give the page chapters instead of one long column. */
   tone?: 'base' | 'raised'

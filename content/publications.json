@@ -1,0 +1,18 @@
+{
+  "items": [
+    {
+      "title": "Title of Your Paper on Robust Visual Perception under Distribution Shift",
+      "venue": "IEEE/CVF CVPR",
+      "year": "2024",
+      "url": "https://example.com/paper",
+      "visible": true
+    },
+    {
+      "title": "Title of Your Paper on Sim-to-Real Transfer for Learned Control",
+      "venue": "IEEE ICRA",
+      "year": "2023",
+      "url": "https://example.com/paper",
+      "visible": true
+    }
+  ]
+}

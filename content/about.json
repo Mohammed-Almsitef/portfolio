@@ -1,0 +1,22 @@
+{
+  "photo": "/profile.jpg",
+  "paragraphs": [
+    "I'm an engineer working at the intersection of robotics and applied AI. My work runs the full width of the problem — training the perception and language models, then earning the right to trust them by putting them on hardware that moves through the real world.",
+    "On the AI side that means computer vision (detection, segmentation, visual SLAM), deep learning (CNNs, transformers, reinforcement learning), and increasingly NLP and LLMs for grounding natural-language instructions into robot behaviour. On the systems side it means ROS 2, real-time control, sensor fusion, and the unglamorous work of making a model fast enough to run on an embedded GPU.",
+    "The interesting problems live where those two halves meet: distribution shift between simulation and reality, latency budgets that make a great model unusable, and calibrating how much a planner should trust a network that is confidently wrong. I care about measurable results and honest failure analysis."
+  ],
+  "stats": [
+    {
+      "value": "X+",
+      "label": "Years in robotics & AI"
+    },
+    {
+      "value": "XX",
+      "label": "Models trained & deployed"
+    },
+    {
+      "value": "XX",
+      "label": "Systems shipped to the field"
+    }
+  ]
+}

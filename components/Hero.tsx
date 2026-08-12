@@ -1,8 +1,11 @@
-import { domains, site } from '@/data/content'
+import { getSite } from '@/lib/content'
 import LidarBackdrop from './LidarBackdrop'
 import Reveal from './Reveal'
 
-export default function Hero() {
+export default async function Hero() {
+  const site = await getSite()
+  const domains = site.domains
+
   return (
     <section id="top" className="relative overflow-hidden">
       <LidarBackdrop />
@@ -72,7 +75,6 @@ export default function Hero() {
             </a>
           </div>
         </Reveal>
-
       </div>
 
       <a

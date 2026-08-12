@@ -1,13 +1,14 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { projects, site } from '@/data/content'
+import { getProjects, getSite } from '@/lib/content'
 import Footer from '@/components/Footer'
 import ProjectVisual from '@/components/ProjectVisual'
 import ScrollProgress from '@/components/ScrollProgress'
 import VideoEmbed from '@/components/VideoEmbed'
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const projects = await getProjects()
   return projects.map((p) => ({ slug: p.slug }))
 }
 
@@ -17,6 +18,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
+  const [projects, site] = await Promise.all([getProjects(), getSite()])
   const project = projects.find((p) => p.slug === slug)
   if (!project) return {}
 
@@ -60,6 +62,7 @@ function Bullets({ items }: { items: string[] }) {
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
+  const [projects, site] = await Promise.all([getProjects(), getSite()])
   const project = projects.find((p) => p.slug === slug)
   if (!project) notFound()
 
@@ -89,10 +92,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
       <main id="main" className="mx-auto max-w-3xl px-6 pb-24 pt-14 md:pt-20">
         <p className="font-mono text-xs text-muted">
-          <span className="text-[rgb(var(--tone))]">
-            {String(index + 1).padStart(2, '0')}
-          </span>{' '}
-          · {project.year}
+          <span className="text-[rgb(var(--tone))]">{String(index + 1).padStart(2, '0')}</span> ·{' '}
+          {project.year}
         </p>
 
         <h1 className="mt-4 text-[clamp(2rem,5vw,3rem)] font-semibold leading-[1.08] tracking-[-0.03em]">

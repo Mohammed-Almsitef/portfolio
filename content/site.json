@@ -1,0 +1,18 @@
+{
+  "name": "Mohammed Almsitef",
+  "role": "Robotics & AI Engineer",
+  "tagline": "I build systems that perceive, reason, and act — from deep learning models for vision and language to the real-time autonomy stacks that run them on physical robots.",
+  "location": "City, Country",
+  "email": "you@example.com",
+  "resumeUrl": "/resume.pdf",
+  "url": "https://mohammedalmsitef.me",
+  "availableForWork": true,
+  "domains": [
+    "Robotics",
+    "Artificial Intelligence",
+    "Machine Learning",
+    "Deep Learning",
+    "Computer Vision",
+    "NLP"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "degree": "M.Sc. Robotics & Artificial Intelligence",
+      "school": "University Name",
+      "period": "2018 — 2020",
+      "visible": true
+    },
+    {
+      "degree": "B.Sc. Computer / Electrical Engineering",
+      "school": "University Name",
+      "period": "2014 — 2018",
+      "visible": true
+    }
+  ]
+}

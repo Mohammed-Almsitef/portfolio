@@ -9,8 +9,25 @@ import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
 import BackToTop from '@/components/BackToTop'
 import ScrollProgress from '@/components/ScrollProgress'
+import { getSections, getSite, type SectionEntry } from '@/lib/content'
 
-export default function Home() {
+/**
+ * Section order and visibility come from content/sections.json, edited in the
+ * manager. Adding a component here is the only code change a new section
+ * needs — everything else follows from the data.
+ */
+const SECTIONS = {
+  about: About,
+  projects: Projects,
+  openSource: OpenSource,
+  skills: Skills,
+  experience: Experience,
+  contact: Contact,
+} as const
+
+export default async function Home() {
+  const [sections, site] = await Promise.all([getSections(), getSite()])
+
   return (
     <>
       {/* First tab stop: lets keyboard and screen-reader users jump the nav. */}
@@ -22,16 +39,16 @@ export default function Home() {
       </a>
 
       <ScrollProgress />
-      <Nav />
+      <Nav siteName={site.name} sections={sections} />
 
       <main id="main">
         <Hero />
-        <About />
-        <Projects />
-        <OpenSource />
-        <Skills />
-        <Experience />
-        <Contact />
+        {sections.map((section: SectionEntry) => {
+          const Section = SECTIONS[section.key]
+          return Section ? (
+            <Section key={section.key} title={section.label} index={section.index} />
+          ) : null
+        })}
       </main>
 
       <Footer />

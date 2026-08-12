@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { projects, type Project } from '@/data/content'
+import { getProjects, type Project } from '@/lib/content'
 import ProjectVisual from './ProjectVisual'
 import Reveal from './Reveal'
 import Section from './Section'
@@ -99,9 +99,11 @@ function Body({ p, index }: { p: Project; index: number }) {
   )
 }
 
-export default function Projects() {
+export default async function Projects({ title, index }: { title: string; index: string }) {
+  const projects = await getProjects()
+
   return (
-    <Section id="projects" title="Projects" index="02" tone="raised">
+    <Section id="projects" title={title} index={index} tone="raised">
       <ul className="grid gap-5 md:grid-cols-2">
         {projects.map((p, i) => (
           <li key={p.title} className={p.featured ? 'md:col-span-2' : ''}>
@@ -121,11 +123,7 @@ export default function Projects() {
               >
                 <Cover
                   p={p}
-                  className={
-                    p.featured
-                      ? 'h-44 shrink-0 md:h-auto md:w-[42%]'
-                      : 'h-40 shrink-0'
-                  }
+                  className={p.featured ? 'h-44 shrink-0 md:h-auto md:w-[42%]' : 'h-40 shrink-0'}
                 />
                 <Body p={p} index={i} />
               </Spotlight>

@@ -212,7 +212,15 @@ function Cloud() {
         ))}
       </g>
       <circle cx={ox} cy={oy} r="4.5" fill="currentColor" />
-      <circle cx={ox} cy={oy} r="11" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.4" />
+      <circle
+        cx={ox}
+        cy={oy}
+        r="11"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1"
+        opacity="0.4"
+      />
     </g>
   )
 }

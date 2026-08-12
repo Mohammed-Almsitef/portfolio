@@ -16,3 +16,8 @@ next-env.d.ts
 # past GitHub's 100 MB file limit.
 .vscode/
 *.vc.db*
+
+# Keystatic GitHub App credentials (deployed manager only).
+# Local development uses file storage and needs none of these.
+.env
+.env*.local

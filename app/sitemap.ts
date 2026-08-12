@@ -1,12 +1,13 @@
 import type { MetadataRoute } from 'next'
-import { projects, site } from '@/data/content'
+import { getProjects, getSite } from '@/lib/content'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [projects, site] = await Promise.all([getProjects(), getSite()])
   const now = new Date()
 
   return [
     { url: site.url, lastModified: now, priority: 1 },
-    // Each case study is its own indexable page, so it belongs here too.
+    // Each visible case study is its own indexable page.
     ...projects.map((p) => ({
       url: `${site.url}/projects/${p.slug}`,
       lastModified: now,

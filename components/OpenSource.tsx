@@ -1,17 +1,15 @@
-import { contributions } from '@/data/content'
+import { getOpenSource } from '@/lib/content'
 import Section from './Section'
 
-export default function OpenSource() {
+export default async function OpenSource({ title, index }: { title: string; index: string }) {
+  const { intro, items } = await getOpenSource()
+
   return (
-    <Section id="open-source" title="Open Source" index="03" tone="raised">
-      <p className="mb-10 max-w-2xl leading-relaxed text-body">
-        Kept separate from my own projects on purpose — contributing to someone else’s codebase
-        demonstrates different things: reading unfamiliar code, working to a project’s standards, and
-        getting a change through review with maintainers you’ve never met.
-      </p>
+    <Section id="open-source" title={title} index={index} tone="raised">
+      {intro && <p className="mb-10 max-w-2xl leading-relaxed text-body">{intro}</p>}
 
       <ul className="space-y-4">
-        {contributions.map((c) => (
+        {items.map((c) => (
           <li
             key={`${c.project}-${c.what}`}
             style={{ '--tone': `var(--tone-${c.tone})` } as React.CSSProperties}

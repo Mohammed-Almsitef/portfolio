@@ -1,19 +1,35 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { site } from '@/data/content'
+import { useEffect, useMemo, useState } from 'react'
 import ThemeToggle from './ThemeToggle'
 
-const links = [
-  { href: '#about', label: 'About' },
-  { href: '#projects', label: 'Projects' },
-  { href: '#open-source', label: 'Open Source' },
-  { href: '#skills', label: 'Skills' },
-  { href: '#experience', label: 'Experience' },
-  { href: '#contact', label: 'Contact' },
-]
+/** Section keys map to the DOM ids the components render. */
+const SECTION_IDS: Record<string, string> = {
+  about: 'about',
+  projects: 'projects',
+  openSource: 'open-source',
+  skills: 'skills',
+  experience: 'experience',
+  contact: 'contact',
+}
 
-export default function Nav() {
+export default function Nav({
+  siteName,
+  sections,
+}: {
+  siteName: string
+  sections: { key: string; label: string }[]
+}) {
+  // Only the sections that are actually on the page get a nav link, so hiding
+  // a section in the manager never leaves a link pointing at nothing.
+  const links = useMemo(
+    () =>
+      sections
+        .filter((s) => SECTION_IDS[s.key])
+        .map((s) => ({ href: `#${SECTION_IDS[s.key]}`, label: s.label })),
+    [sections],
+  )
+
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState('')
@@ -26,11 +42,11 @@ export default function Nav() {
   }, [])
 
   useEffect(() => {
-    const sections = links
+    const sectionEls = links
       .map((l) => document.getElementById(l.href.slice(1)))
       .filter((el): el is HTMLElement => el !== null)
 
-    if (!sections.length) return
+    if (!sectionEls.length) return
 
     // Track the live set of sections crossing the band rather than reacting to
     // each entry in isolation: otherwise scrolling back up to the hero — where
@@ -49,9 +65,9 @@ export default function Nav() {
       { rootMargin: '-30% 0px -60% 0px', threshold: 0 },
     )
 
-    sections.forEach((s) => io.observe(s))
+    sectionEls.forEach((s) => io.observe(s))
     return () => io.disconnect()
-  }, [])
+  }, [links])
 
   useEffect(() => {
     if (!open) return
@@ -81,7 +97,7 @@ export default function Nav() {
             href="#top"
             className="tap font-mono text-sm font-medium tracking-tight transition-colors hover:text-accent"
           >
-            {site.name}
+            {siteName}
           </a>
 
           <div className="flex items-center gap-5">

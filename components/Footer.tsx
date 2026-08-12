@@ -1,11 +1,13 @@
-import { site } from '@/data/content'
+import { getSite } from '@/lib/content'
 import SectionRule from './SectionRule'
 
 /**
  * Identity and copyright only. Role, location and the social links each have a
  * single home elsewhere on the page, so the footer does not restate them.
  */
-export default function Footer() {
+export default async function Footer() {
+  const site = await getSite()
+
   return (
     <footer data-print-hide>
       <SectionRule />

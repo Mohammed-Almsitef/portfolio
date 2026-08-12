@@ -1,0 +1,40 @@
+{
+  "title": "Sim-to-Real Deep Reinforcement Learning",
+  "year": "2024",
+  "tone": "purple",
+  "visual": "gait",
+  "summary": "A locomotion policy trained in simulation that survived terrain the hand-tuned baseline could not.",
+  "problem": "The hand-tuned MPC controller was reliable on flat ground and fell over on anything it had not been modelled for. Tuning it for each new surface did not scale.",
+  "solution": "A locomotion policy trained with PPO in Isaac Sim under domain randomization over mass, friction, and actuator delay, then deployed to hardware at 1 kHz alongside the existing safety layer.",
+  "how": [
+    "PPO in Isaac Sim with thousands of parallel environments; MuJoCo used for quick reward iteration.",
+    "Domain randomization over payload mass, surface friction, and actuator latency — the last of these mattered most for transfer.",
+    "Observation space restricted to what the real robot can actually measure, so nothing depends on privileged simulator state.",
+    "Policy exported and run in the real-time control loop, with the existing safety controller retained as a fallback."
+  ],
+  "testing": "Policies are gated on a fixed suite of held-out simulated terrains before any hardware run, then evaluated on hardware against the MPC baseline on the same course.",
+  "results": [
+    "Survived unmodelled terrain where the MPC baseline fell.",
+    "Ran at 1 kHz on the target hardware.",
+    "Recovered from pushes up to X N without falling."
+  ],
+  "lessons": [
+    "Actuator-delay randomization was the single change that made transfer work. Mass and friction randomization alone produced a policy that looked great in sim and stumbled immediately on hardware.",
+    "My first observation space accidentally included a simulator-only quantity. It trained beautifully and transferred not at all — a good lesson in auditing observations before rewards."
+  ],
+  "tags": [
+    "PPO",
+    "Isaac Sim",
+    "PyTorch",
+    "MuJoCo",
+    "Domain randomization"
+  ],
+  "repoUrl": "https://github.com/yourusername/sim2real-rl",
+  "videoUrl": "https://youtube.com/watch?v=yourdemo",
+  "visible": true,
+  "order": 40,
+  "image": null,
+  "role": "",
+  "liveUrl": "",
+  "featured": false
+}
