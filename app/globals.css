@@ -1,0 +1,481 @@
+@import 'tailwindcss';
+
+/*
+ * Light is the default palette so that a document with no `data-theme`
+ * attribute — no JS, a crawler, a printer — still renders legibly.
+ * The inline script in app/layout.tsx resolves the real theme before first
+ * paint and stamps `data-theme` on <html>, so there is no flash.
+ */
+@theme {
+  --color-bg: #eef1f6;
+  --color-surface: #ffffff;
+  --color-elevated: #ffffff;
+  --color-border: #d9dfe9;
+  --color-border-strong: #b6bfcd;
+
+  /* Three text tones, not two: headings read strong, long-form body copy sits
+     comfortably below them, and metadata/labels recede furthest. Running body
+     text at the muted tone is what makes a page feel washed out. */
+  --color-text: #0b1220;
+  --color-body: #36404f;
+  --color-muted: #5d6675;
+
+  /* Engineering blue rather than a consumer teal — the register robotics and
+     AI research read as credible. The hue differs per theme by necessity: a
+     blue light enough for a dark ground is unreadable on white. */
+  --color-accent: #1d4ed8;
+  --color-accent-dim: #3b62c4;
+  --color-accent-alt: #4f46e5;
+
+  --font-sans:
+    var(--font-inter), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+:root {
+  /*
+   * Supporting palette.
+   *
+   * Blue above is the one main colour — brand, links, actions. These tones are
+   * only for content that benefits from being told apart at a glance: each
+   * skill group and each project carries one. Stored as space-separated RGB so
+   * they can be used at any alpha via `rgb(var(--tone) / 0.15)`.
+   *
+   * Every value is picked to clear 4.5:1 on its own theme's ground — the light
+   * set is 700-weight, the dark set 400-weight. They are not interchangeable.
+   */
+  --tone-blue: 29 78 216;
+  --tone-violet: 109 40 217;
+  --tone-purple: 126 34 206;
+  --tone-cyan: 21 94 117;
+  --tone-rose: 190 18 60;
+  --tone-emerald: 6 95 70;
+  --tone-amber: 146 64 14;
+  --tone-teal: 17 94 89;
+  --tone-lime: 63 98 18;
+
+  /* Availability / positive status, kept separate from the content tones so
+     changing a project's colour can never change what "available" looks like. */
+  --tone-status: var(--tone-emerald);
+
+  /* Light-theme values for the properties Tailwind doesn't generate. */
+  --canvas-ink: 29 78 216;
+  --glow: rgb(29 78 216 / 0.06);
+  --card-glow: rgb(29 78 216 / 0.09);
+  --btn-glow: rgb(29 78 216 / 0.3);
+  --card-shadow:
+    0 1px 2px rgb(11 18 32 / 0.04), 0 10px 26px -14px rgb(11 18 32 / 0.14);
+  --grain: 0.02;
+  --headline-gradient: linear-gradient(115deg, #0b1220 12%, #22314a 50%, var(--color-accent) 98%);
+
+  /*
+   * Dark-theme literals, declared once here and only *aliased* by the two
+   * selectors below (explicit choice, plus the no-JS system fallback). Keeping
+   * the literals in one place means the two dark selectors cannot drift apart.
+   */
+  /* Dark counterparts of the supporting palette (400-weight). */
+  --d-tone-blue: 96 165 250;
+  --d-tone-violet: 167 139 250;
+  --d-tone-purple: 192 132 252;
+  --d-tone-cyan: 34 211 238;
+  --d-tone-rose: 251 113 133;
+  --d-tone-emerald: 52 211 153;
+  --d-tone-amber: 251 191 36;
+  --d-tone-teal: 45 212 191;
+  --d-tone-lime: 163 230 53;
+
+  --d-bg: #131720;
+  --d-surface: #1a1f2b;
+  --d-elevated: #212836;
+  --d-border: #2a3140;
+  --d-border-strong: #3a4355;
+  --d-text: #eaeef6;
+  --d-body: #b6bdcd;
+  --d-muted: #868fa0;
+  --d-accent: #60a5fa;
+  --d-accent-dim: #6b98d6;
+  --d-accent-alt: #818cf8;
+  --d-canvas-ink: 96 165 250;
+  --d-glow: rgb(96 165 250 / 0.08);
+  --d-card-glow: rgb(96 165 250 / 0.12);
+  --d-btn-glow: rgb(96 165 250 / 0.5);
+  --d-card-shadow: none;
+  --d-grain: 0.022;
+  --d-headline-gradient: linear-gradient(
+    115deg,
+    #ffffff 14%,
+    #dce6f5 50%,
+    var(--color-accent) 98%
+  );
+}
+
+/* Explicit dark choice, and the resolved value the inline script writes. */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-bg: var(--d-bg);
+  --color-surface: var(--d-surface);
+  --color-elevated: var(--d-elevated);
+  --color-border: var(--d-border);
+  --color-border-strong: var(--d-border-strong);
+  --color-text: var(--d-text);
+  --color-body: var(--d-body);
+  --color-muted: var(--d-muted);
+  --color-accent: var(--d-accent);
+  --color-accent-dim: var(--d-accent-dim);
+  --color-accent-alt: var(--d-accent-alt);
+  --tone-blue: var(--d-tone-blue);
+  --tone-violet: var(--d-tone-violet);
+  --tone-purple: var(--d-tone-purple);
+  --tone-cyan: var(--d-tone-cyan);
+  --tone-rose: var(--d-tone-rose);
+  --tone-emerald: var(--d-tone-emerald);
+  --tone-amber: var(--d-tone-amber);
+  --tone-teal: var(--d-tone-teal);
+  --tone-lime: var(--d-tone-lime);
+  --canvas-ink: var(--d-canvas-ink);
+  --glow: var(--d-glow);
+  --card-glow: var(--d-card-glow);
+  --btn-glow: var(--d-btn-glow);
+  --card-shadow: var(--d-card-shadow);
+  --grain: var(--d-grain);
+  --headline-gradient: var(--d-headline-gradient);
+}
+
+/* Fallback for when the script never ran: honour the OS preference. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --color-bg: var(--d-bg);
+    --color-surface: var(--d-surface);
+    --color-elevated: var(--d-elevated);
+    --color-border: var(--d-border);
+    --color-border-strong: var(--d-border-strong);
+    --color-text: var(--d-text);
+    --color-body: var(--d-body);
+    --color-muted: var(--d-muted);
+    --color-accent: var(--d-accent);
+    --color-accent-dim: var(--d-accent-dim);
+    --color-accent-alt: var(--d-accent-alt);
+    --tone-blue: var(--d-tone-blue);
+    --tone-violet: var(--d-tone-violet);
+    --tone-purple: var(--d-tone-purple);
+    --tone-cyan: var(--d-tone-cyan);
+    --tone-rose: var(--d-tone-rose);
+    --tone-emerald: var(--d-tone-emerald);
+    --tone-amber: var(--d-tone-amber);
+    --tone-teal: var(--d-tone-teal);
+    --tone-lime: var(--d-tone-lime);
+    --canvas-ink: var(--d-canvas-ink);
+    --glow: var(--d-glow);
+    --card-glow: var(--d-card-glow);
+    --btn-glow: var(--d-btn-glow);
+    --card-shadow: var(--d-card-shadow);
+    --grain: var(--d-grain);
+    --headline-gradient: var(--d-headline-gradient);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Keeps anchored section headings clear of the fixed header. */
+  scroll-padding-top: 6rem;
+  color-scheme: light;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  /* Theme switches should feel like a dip, not a hard cut. */
+  transition:
+    background-color 220ms ease,
+    color 220ms ease;
+}
+
+/* A barely-there film grain stops large flat areas from banding and gives the
+   page a printed rather than plastic feel. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: var(--grain);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-bg);
+}
+
+/* Keyboard focus must be visible everywhere. Applied globally rather than
+   per-component so no interactive element can be added later without it. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* Pointer users don't get the ring; keyboard users always do. */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Headline treatment: starts at full-strength ink and cools into the accent.
+   Deliberately weighted toward the ink end so contrast stays high — a
+   gradient running accent-to-accent looks striking and reads poorly. */
+.text-gradient {
+  background-image: var(--headline-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Hairline that fades out, instead of stopping abruptly. */
+.rule-fade {
+  background-image: linear-gradient(to right, var(--color-border-strong), transparent);
+}
+
+/*
+ * Hero backdrop mask.
+ *
+ * Two masks intersected: the radial one keeps the scan a soft blob, and the
+ * linear one clears its left edge so the headline and tagline sit on empty
+ * ground. Without the linear pass the decoration ran straight through the copy
+ * at every viewport width.
+ */
+.lidar-mask {
+  -webkit-mask-image:
+    radial-gradient(ellipse 62% 62% at 60% 50%, #000 30%, transparent 78%),
+    linear-gradient(to right, transparent 16%, #000 56%);
+  mask-image:
+    radial-gradient(ellipse 62% 62% at 60% 50%, #000 30%, transparent 78%),
+    linear-gradient(to right, transparent 16%, #000 56%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+/*
+ * Minimum hit area for a standalone link.
+ *
+ * Small mono links measured 14px tall, well under the 24px WCAG 2.5.8 floor.
+ * Applied to links that stand alone in a list or row; links inline inside a
+ * sentence are exempt and are left as they are.
+ */
+.tap {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
+
+/*
+ * A link sitting inline inside a heading or sentence.
+ *
+ * WCAG 2.5.8 exempts inline links, but these measured 21px and the fix is
+ * free: vertical padding on an inline element grows its hit box without
+ * changing the line box, so nothing shifts.
+ */
+.tap-inline {
+  padding-block: 3px;
+}
+
+/*
+ * Divider between sections.
+ *
+ * A flat full-width `border-border` hairline was the faintest token in the
+ * palette and barely registered. This is the stronger border tone, fading at
+ * both ends so it reads as a deliberate rule rather than an edge cut across
+ * the viewport, with an accent segment and node at the content gutter.
+ *
+ * The draw-in is gated on `.js` so that without JavaScript the rule renders
+ * fully drawn rather than collapsed to nothing.
+ */
+.section-rule {
+  position: relative;
+  height: 1px;
+}
+
+.section-rule__line {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+    to right,
+    transparent,
+    var(--color-border-strong) 7%,
+    var(--color-border-strong) 93%,
+    transparent
+  );
+}
+
+/* Short accent segment sitting on the rule at the content's left edge. */
+.section-rule__mark {
+  position: relative;
+  display: block;
+  width: 2.75rem;
+  height: 2px;
+  margin-top: -0.5px;
+  border-radius: 999px;
+  background-image: linear-gradient(to right, transparent, rgb(var(--tone-blue)));
+  box-shadow: 0 0 12px -2px rgb(var(--tone-blue) / 0.55);
+}
+
+/* The node terminating the segment — the schematic detail that makes the rule
+   look measured rather than drawn. */
+.section-rule__node {
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  margin-top: -2.5px;
+  border-radius: 999px;
+  background-color: rgb(var(--tone-blue));
+  box-shadow: 0 0 0 3px rgb(var(--tone-blue) / 0.16);
+}
+
+.js .section-rule__line {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1100ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.js .section-rule__mark {
+  opacity: 0;
+  transform: translateX(-8px);
+  transition:
+    opacity 500ms ease-out 320ms,
+    transform 600ms cubic-bezier(0.22, 1, 0.36, 1) 320ms;
+}
+
+.js [data-rule='drawn'] .section-rule__line {
+  transform: scaleX(1);
+}
+
+.js [data-rule='drawn'] .section-rule__mark {
+  opacity: 1;
+  transform: none;
+}
+
+/*
+ * Scroll reveal.
+ *
+ * The hidden starting state is gated on the `.js` class, which the inline
+ * script in app/layout.tsx adds before first paint. Gating on actual script
+ * *execution* — rather than on `@media (scripting: enabled)`, which only
+ * reports browser capability — means content is never stranded at opacity 0
+ * when JS is disabled OR when the bundle fails to load. A blank page is the
+ * one failure mode a portfolio cannot afford.
+ */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 600ms ease-out,
+    transform 600ms ease-out;
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.js [data-reveal='shown'] {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .js .section-rule__line,
+  .js .section-rule__mark {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Sending the page to a printer should produce a readable résumé, not a
+   dark rectangle with hidden navigation. */
+@media print {
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  body::before {
+    display: none;
+  }
+
+  /* Every theme tone has to become ink. Without this the dark theme's body
+     tone prints as near-invisible grey, and filled buttons print as solid
+     blocks of toner. */
+  *,
+  *::before,
+  *::after {
+    color: #000 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  /* Must follow the universal reset above, which would otherwise strip the
+     page's own white ground. */
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  /* The gradient headline is painted through the text; on paper it would
+     clip to transparent and vanish. */
+  .text-gradient {
+    background-image: none !important;
+    -webkit-text-fill-color: #000 !important;
+    color: #000 !important;
+  }
+
+  header,
+  footer,
+  canvas,
+  [data-print-hide] {
+    display: none !important;
+  }
+
+  section {
+    border: 0 !important;
+    padding: 0.75rem 0 !important;
+    break-inside: avoid;
+  }
+
+  #top > div {
+    min-height: 0 !important;
+    /* Vertical only — zeroing the shorthand would also strip the horizontal
+       gutter and run the headline off the edge of the paper. */
+    padding-top: 0 !important;
+    padding-bottom: 1rem !important;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  .js [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

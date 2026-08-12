@@ -1,0 +1,35 @@
+import { skillGroups } from '@/data/content'
+import Section from './Section'
+
+export default function Skills() {
+  return (
+    <Section id="skills" title="Skills" index="04">
+      <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+        {skillGroups.map((g) => (
+          <div
+            key={g.title}
+            // The tone is resolved per theme by globals.css; only the variable
+            // reference is dynamic, so no Tailwind class is built at runtime.
+            style={{ '--tone': `var(--tone-${g.tone})` } as React.CSSProperties}
+            className="group border-l-2 border-[rgb(var(--tone)/0.45)] pl-5 transition-colors duration-300 hover:border-[rgb(var(--tone))]"
+          >
+            <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold tracking-tight">
+              <span
+                aria-hidden="true"
+                className="size-1.5 shrink-0 rounded-full bg-[rgb(var(--tone))]"
+              />
+              {g.title}
+            </h3>
+            <ul className="space-y-2">
+              {g.items.map((item) => (
+                <li key={item} className="font-mono text-[0.8125rem] leading-relaxed text-muted">
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </Section>
+  )
+}
