@@ -2,40 +2,64 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { t, type Locale } from '@/lib/locale'
+import { LOCALES, type Locale } from '@/lib/locale'
 
 /**
- * Switches between the English and Arabic pages.
+ * Switches between the English and Arabic versions of the current page.
  *
- * It keeps you on the same page rather than dumping you at the home page —
- * reading a case study and being thrown back to the top is the fastest way to
- * make someone stop using a language switch.
+ * Built as a segmented control rather than a single link so both languages are
+ * visible at once: a reader who cannot read the current page can still see
+ * that the other one exists, and which of the two they are on.
  *
- * The label is written in the language it takes you *to*, which is the one
- * convention every bilingual site agrees on: a reader who cannot read the
- * current page can still read the way out.
+ * Each label is written in its own language, and carries its own `lang` and
+ * `dir` — otherwise "عربي" inherits the surrounding page's direction and
+ * renders the wrong way round on the English side.
+ *
+ * These are navigations, so they are links. It is styled like a button group,
+ * but making them <button>s would break opening a language in a new tab.
  */
+const LABEL: Record<Locale, { text: string; name: string; dir: 'ltr' | 'rtl' }> = {
+  en: { text: 'EN', name: 'English', dir: 'ltr' },
+  ar: { text: 'عربي', name: 'العربية', dir: 'rtl' },
+}
+
 export default function LanguageSwitch({ locale }: { locale: Locale }) {
   const pathname = usePathname() || '/'
-  const other: Locale = locale === 'ar' ? 'en' : 'ar'
 
-  const href =
-    locale === 'ar'
-      ? pathname.replace(/^\/ar(?=\/|$)/, '') || '/'
-      : `/ar${pathname === '/' ? '' : pathname}`
+  // Strip any locale prefix to get the shared part of the path, so switching
+  // language keeps you on the same page instead of returning you to the top.
+  const bare = pathname.replace(/^\/ar(?=\/|$)/, '') || '/'
+
+  const hrefFor = (target: Locale) => (target === 'ar' ? `/ar${bare === '/' ? '' : bare}` : bare)
 
   return (
-    <Link
-      href={href}
-      hrefLang={other}
-      // The label is in the target language, so it must be read in that
-      // language's direction — not the one the surrounding page uses.
-      lang={other}
-      dir={other === 'ar' ? 'rtl' : 'ltr'}
-      title={t(locale, 'switchLanguage')}
-      className="tap rounded-md px-2 py-1 font-mono text-xs text-muted transition-colors hover:bg-elevated hover:text-text"
+    <div
+      role="group"
+      aria-label="Language"
+      data-print-hide
+      className="flex items-center gap-0.5 rounded-lg border border-border bg-surface/70 p-0.5 backdrop-blur-sm"
     >
-      {t(locale, 'languageName')}
-    </Link>
+      {LOCALES.map((l) => {
+        const current = l === locale
+        return (
+          <Link
+            key={l}
+            href={hrefFor(l)}
+            hrefLang={l}
+            lang={l}
+            dir={LABEL[l].dir}
+            // Marks the active language for assistive tech, the same way the
+            // theme toggle reports its selected mode.
+            aria-current={current ? 'true' : undefined}
+            title={LABEL[l].name}
+            className={`flex h-7 items-center justify-center rounded-md px-2 font-mono text-xs transition-colors ${
+              current ? 'bg-accent/15 text-accent' : 'text-muted hover:bg-border/60 hover:text-text'
+            }`}
+          >
+            {LABEL[l].text}
+          </Link>
+        )
+      })}
+    </div>
   )
 }

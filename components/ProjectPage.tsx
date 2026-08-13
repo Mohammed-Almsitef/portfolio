@@ -1,8 +1,9 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getProjects, getSite } from '@/lib/content'
+import { arabicEnabled, getProjects, getSite } from '@/lib/content'
 import { dir, localePath, t, type Locale } from '@/lib/locale'
 import Footer from '@/components/Footer'
+import LanguageSwitch from '@/components/LanguageSwitch'
 import ProjectClip from '@/components/ProjectClip'
 import ProjectVisual from '@/components/ProjectVisual'
 import ScrollProgress from '@/components/ScrollProgress'
@@ -44,7 +45,11 @@ function Bullets({ items }: { items: string[] }) {
  * paragraph reads worse than the original.
  */
 export default async function ProjectPage({ slug, locale }: { slug: string; locale: Locale }) {
-  const [projects, site] = await Promise.all([getProjects(locale), getSite(locale)])
+  const [projects, site, hasArabic] = await Promise.all([
+    getProjects(locale),
+    getSite(locale),
+    arabicEnabled(),
+  ])
   const project = projects.find((p) => p.slug === slug)
   if (!project) notFound()
 
@@ -67,15 +72,21 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
           >
             {site.name}
           </Link>
-          <Link
-            href={localePath(locale, '/#projects')}
-            className="tap font-mono text-xs text-muted transition-colors hover:text-accent"
-          >
-            <span aria-hidden="true" className="rtl:-scale-x-100 inline-block">
-              ←
-            </span>{' '}
-            {t(locale, 'allProjects')}
-          </Link>
+          {/* The case study has its own header rather than the site nav, so the
+              switch has to be repeated here — otherwise a reader who lands on a
+              project from search has no way to change language. */}
+          <div className="flex items-center gap-4">
+            <Link
+              href={localePath(locale, '/#projects')}
+              className="tap font-mono text-xs text-muted transition-colors hover:text-accent"
+            >
+              <span aria-hidden="true" className="rtl:-scale-x-100 inline-block">
+                ←
+              </span>{' '}
+              {t(locale, 'allProjects')}
+            </Link>
+            {hasArabic && <LanguageSwitch locale={locale} />}
+          </div>
         </div>
       </header>
 
