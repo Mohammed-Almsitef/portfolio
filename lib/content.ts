@@ -114,6 +114,8 @@ export type Project = {
   featured: boolean
   tone: Tone
   visual: VisualKind
+  /** Self-hosted silent loop. Outranks the image and the generated art. */
+  clip?: string
   image?: string
   summary: string
   problem: string
@@ -146,6 +148,7 @@ export async function getProjects(): Promise<Project[]> {
       featured: entry.featured,
       tone: entry.tone as Tone,
       visual: entry.visual as VisualKind,
+      clip: entry.clip ?? undefined,
       image: entry.image ?? undefined,
       summary: entry.summary,
       problem: entry.problem,

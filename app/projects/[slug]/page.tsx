@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getProjects, getSite } from '@/lib/content'
 import Footer from '@/components/Footer'
+import ProjectClip from '@/components/ProjectClip'
 import ProjectVisual from '@/components/ProjectVisual'
 import ScrollProgress from '@/components/ScrollProgress'
 import VideoEmbed from '@/components/VideoEmbed'
@@ -136,9 +137,17 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           )}
         </div>
 
-        {/* Proof it runs, before any of the prose. */}
+        {/* Proof it runs, before any of the prose. A self-hosted clip is the
+            strongest form of that, so it wins over an embed or the art. */}
         <div className="mt-10">
-          {project.videoUrl ? (
+          {project.clip ? (
+            <ProjectClip
+              src={project.clip}
+              poster={project.image}
+              title={project.title}
+              className="aspect-video w-full rounded-xl border border-border"
+            />
+          ) : project.videoUrl ? (
             <VideoEmbed url={project.videoUrl} title={project.title} />
           ) : (
             <ProjectVisual

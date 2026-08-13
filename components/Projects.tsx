@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { getProjects, type Project } from '@/lib/content'
+import ProjectClip from './ProjectClip'
 import ProjectVisual from './ProjectVisual'
 import Reveal from './Reveal'
 import Section from './Section'
@@ -35,8 +36,19 @@ function ProjectLink({
   )
 }
 
+/**
+ * Cover art, in descending order of how much it proves.
+ *
+ * A clip of the thing running outranks a screenshot, which outranks the
+ * generated art — so a project earns a better cover by having better evidence,
+ * without anyone editing this file.
+ */
 function Cover({ p, className }: { p: Project; className: string }) {
   const sideFade = Boolean(p.featured)
+
+  if (p.clip) {
+    return <ProjectClip src={p.clip} poster={p.image} title={p.title} className={className} />
+  }
   if (p.image) {
     return (
       <div className={`relative overflow-hidden ${className}`}>

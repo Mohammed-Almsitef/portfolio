@@ -30,7 +30,7 @@
     "Domain randomization"
   ],
   "repoUrl": "https://github.com/yourusername/sim2real-rl",
-  "videoUrl": "https://youtube.com/watch?v=yourdemo",
+  "videoUrl": null,
   "visible": true,
   "order": 40,
   "image": null,

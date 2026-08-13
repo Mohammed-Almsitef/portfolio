@@ -106,13 +106,24 @@ export default config({
         }),
         visual: fields.select({
           label: 'Cover art',
-          description: 'Used when no image is uploaded.',
+          description: 'Used when no clip or image is uploaded.',
           options: [...VISUALS],
           defaultValue: 'graph',
         }),
+        clip: fields.file({
+          label: 'Demo clip',
+          description:
+            'A short silent screen capture of this running — 20–40s, MP4 (H.264), under 8 MB. ' +
+            'It plays muted on a loop and beats every screenshot. Compress with: ' +
+            'ffmpeg -i in.mp4 -vf scale=960:-2 -crf 30 -an -movflags +faststart out.mp4',
+          directory: 'public/projects/clips',
+          publicPath: '/projects/clips/',
+        }),
         image: fields.image({
           label: 'Cover image',
-          description: 'Replaces the generated art. A real screenshot beats any placeholder.',
+          description:
+            'Used as the clip’s poster frame, or on its own if there is no clip. ' +
+            'A real screenshot beats any placeholder.',
           directory: 'public/projects',
           publicPath: '/projects/',
         }),

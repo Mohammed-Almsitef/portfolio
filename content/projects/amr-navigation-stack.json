@@ -37,9 +37,10 @@
     "Docker"
   ],
   "repoUrl": "https://github.com/yourusername/nav-stack",
-  "videoUrl": "https://youtube.com/watch?v=yourdemo",
+  "videoUrl": null,
   "visible": true,
   "order": 20,
   "image": null,
-  "liveUrl": ""
+  "liveUrl": "",
+  "clip": null
 }
