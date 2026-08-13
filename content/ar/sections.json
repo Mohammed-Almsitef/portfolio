@@ -1,0 +1,29 @@
+{
+  "order": [
+    {
+      "key": "about",
+      "label": "About",
+      "visible": true
+    },
+    {
+      "key": "projects",
+      "label": "Projects",
+      "visible": true
+    },
+    {
+      "key": "skills",
+      "label": "Skills",
+      "visible": true
+    },
+    {
+      "key": "experience",
+      "label": "Experience",
+      "visible": true
+    },
+    {
+      "key": "contact",
+      "label": "Contact",
+      "visible": true
+    }
+  ]
+}

@@ -19,13 +19,13 @@ export default function Nav({
   siteName,
   sections,
   locale = 'en',
-  showLanguage = false,
+  languageHrefs,
 }: {
   siteName: string
   sections: { key: string; label: string }[]
   locale?: Locale
-  /** Hidden until an Arabic translation is actually published. */
-  showLanguage?: boolean
+  /** Omitted until the Arabic site is published, which hides the switch. */
+  languageHrefs?: Record<Locale, string>
 }) {
   // Only the sections that are actually on the page get a nav link, so hiding
   // a section in the manager never leaves a link pointing at nothing.
@@ -126,7 +126,7 @@ export default function Nav({
               ))}
             </ul>
 
-            {showLanguage && <LanguageSwitch locale={locale} />}
+            {languageHrefs && <LanguageSwitch locale={locale} hrefs={languageHrefs} />}
             <ThemeToggle />
 
             <button

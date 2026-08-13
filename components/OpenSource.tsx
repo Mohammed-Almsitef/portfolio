@@ -2,8 +2,16 @@ import { getOpenSource } from '@/lib/content'
 import Section from './Section'
 import type { Locale } from '@/lib/locale'
 
-export default async function OpenSource({ title, index, locale = 'en' }: { title: string; index: string; locale?: Locale }) {
-  const { intro, items } = await getOpenSource()
+export default async function OpenSource({
+  title,
+  index,
+  locale = 'en',
+}: {
+  title: string
+  index: string
+  locale?: Locale
+}) {
+  const { intro, items } = await getOpenSource(locale)
 
   return (
     <Section id="open-source" title={title} index={index} tone="raised">

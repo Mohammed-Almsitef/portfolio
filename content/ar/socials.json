@@ -1,0 +1,14 @@
+{
+  "items": [
+    {
+      "label": "GitHub",
+      "href": "https://github.com/yourusername",
+      "visible": true
+    },
+    {
+      "label": "LinkedIn",
+      "href": "https://linkedin.com/in/yourusername",
+      "visible": true
+    }
+  ]
+}

@@ -1,37 +1,34 @@
-'use client'
-
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import { LOCALES, type Locale } from '@/lib/locale'
 
 /**
- * Switches between the English and Arabic versions of the current page.
+ * Switches between the English and Arabic sites.
  *
- * Built as a segmented control rather than a single link so both languages are
- * visible at once: a reader who cannot read the current page can still see
- * that the other one exists, and which of the two they are on.
+ * Both destinations are passed in rather than derived from the current path.
+ * The two sites are independent, so a case study can exist in one language and
+ * not the other — rewriting `/projects/x` to `/ar/projects/x` would send half
+ * the readers who use this to a 404. The caller knows what exists; this does
+ * not guess.
  *
- * Each label is written in its own language, and carries its own `lang` and
- * `dir` — otherwise "عربي" inherits the surrounding page's direction and
- * renders the wrong way round on the English side.
+ * Shown as a pair rather than a single link so a reader who cannot read the
+ * current page can still see the other exists and which one they are on. Each
+ * label carries its own `lang` and `dir`, or "عربي" inherits the English
+ * page's direction and renders backwards.
  *
- * These are navigations, so they are links. It is styled like a button group,
- * but making them <button>s would break opening a language in a new tab.
+ * These stay links, not buttons, so opening a language in a new tab works.
  */
 const LABEL: Record<Locale, { text: string; name: string; dir: 'ltr' | 'rtl' }> = {
   en: { text: 'EN', name: 'English', dir: 'ltr' },
   ar: { text: 'عربي', name: 'العربية', dir: 'rtl' },
 }
 
-export default function LanguageSwitch({ locale }: { locale: Locale }) {
-  const pathname = usePathname() || '/'
-
-  // Strip any locale prefix to get the shared part of the path, so switching
-  // language keeps you on the same page instead of returning you to the top.
-  const bare = pathname.replace(/^\/ar(?=\/|$)/, '') || '/'
-
-  const hrefFor = (target: Locale) => (target === 'ar' ? `/ar${bare === '/' ? '' : bare}` : bare)
-
+export default function LanguageSwitch({
+  locale,
+  hrefs,
+}: {
+  locale: Locale
+  hrefs: Record<Locale, string>
+}) {
   return (
     <div
       role="group"
@@ -44,7 +41,7 @@ export default function LanguageSwitch({ locale }: { locale: Locale }) {
         return (
           <Link
             key={l}
-            href={hrefFor(l)}
+            href={hrefs[l]}
             hrefLang={l}
             lang={l}
             dir={LABEL[l].dir}

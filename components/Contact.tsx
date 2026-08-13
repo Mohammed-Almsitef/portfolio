@@ -8,8 +8,16 @@ import type { Locale } from '@/lib/locale'
  * once in the hero and deliberately not repeated here; this section carries the
  * contact record — the links, where I am, and how fast I answer.
  */
-export default async function Contact({ title, index, locale = 'en' }: { title: string; index: string; locale?: Locale }) {
-  const [site, socials] = await Promise.all([getSite(locale), getSocials()])
+export default async function Contact({
+  title,
+  index,
+  locale = 'en',
+}: {
+  title: string
+  index: string
+  locale?: Locale
+}) {
+  const [site, socials] = await Promise.all([getSite(locale), getSocials(locale)])
 
   return (
     <Section id="contact" title={title} index={index}>

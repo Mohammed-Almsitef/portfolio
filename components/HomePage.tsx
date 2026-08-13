@@ -52,7 +52,12 @@ export default async function HomePage({ locale }: { locale: Locale }) {
       </a>
 
       <ScrollProgress />
-      <Nav siteName={site.name} sections={sections} locale={locale} showLanguage={hasArabic} />
+      <Nav
+        siteName={site.name}
+        sections={sections}
+        locale={locale}
+        languageHrefs={hasArabic ? { en: '/', ar: '/ar' } : undefined}
+      />
 
       <main id="main">
         <Hero locale={locale} />

@@ -27,85 +27,75 @@ const shown = <T extends { visible?: boolean }>(items: readonly T[]) =>
   items.filter((i) => i.visible !== false)
 
 /**
- * Arabic is stored as overrides, not a second site.
+ * Which tree a language reads from.
  *
- * Every getter below merges field by field, so anything left untranslated
- * shows its English text rather than a gap. That makes the Arabic page safe to
- * publish while it is still half written, and lets technical prose stay in
- * English — which is how it is written in robotics anyway.
+ * Arabic is a separate site rather than a translation layer: both trees are
+ * built from the same schema, so they cannot drift apart structurally, but
+ * their contents are wholly independent. The Arabic side can carry different
+ * projects, a different section order and a different bio, and nothing written
+ * on one side leaks into the other.
  */
-async function overrides() {
-  return reader.singletons.arabic.readOrThrow()
-}
+const TREE = {
+  en: {
+    sections: reader.singletons.sections,
+    site: reader.singletons.site,
+    socials: reader.singletons.socials,
+    about: reader.singletons.about,
+    skills: reader.singletons.skills,
+    experience: reader.singletons.experience,
+    education: reader.singletons.education,
+    publications: reader.singletons.publications,
+    openSource: reader.singletons.openSource,
+    projects: reader.collections.projects,
+  },
+  ar: {
+    sections: reader.singletons.sectionsAr,
+    site: reader.singletons.siteAr,
+    socials: reader.singletons.socialsAr,
+    about: reader.singletons.aboutAr,
+    skills: reader.singletons.skillsAr,
+    experience: reader.singletons.experienceAr,
+    education: reader.singletons.educationAr,
+    publications: reader.singletons.publicationsAr,
+    openSource: reader.singletons.openSourceAr,
+    projects: reader.collections.projectsAr,
+  },
+} as const
 
-/** The override if it has actual text in it, otherwise the English. */
-function pick(override: string | null | undefined, fallback: string): string {
-  const value = override?.trim()
-  return value ? value : fallback
-}
-
-/** Same, for lists: a translated list replaces the English one only if filled. */
-function pickList(override: readonly string[] | undefined, fallback: readonly string[]): string[] {
-  const value = override?.filter((v) => v.trim())
-  return value && value.length ? [...value] : [...fallback]
-}
-
-/** Whether /ar should be reachable at all. */
+/** Whether the Arabic site is published. Missing settings file means no. */
 export async function arabicEnabled(): Promise<boolean> {
-  return (await overrides()).enabled === true
+  const settings = await reader.singletons.arabicSettings.read()
+  return settings?.enabled === true
 }
 
 export async function getSite(locale: Locale = 'en') {
-  const site = await reader.singletons.site.readOrThrow()
-  const base = {
+  const site = await TREE[locale].site.readOrThrow()
+  return {
     ...site,
     // URL fields are nullable in the schema, but metadata and the sitemap need
     // a definite origin — fall back rather than emitting "null" into tags.
     url: site.url || 'https://mohammedalmsitef.me',
     domains: [...site.domains],
   }
-  if (locale === 'en') return base
-
-  const ar = await overrides()
-  return {
-    ...base,
-    name: pick(ar.name, base.name),
-    role: pick(ar.role, base.role),
-    tagline: pick(ar.tagline, base.tagline),
-    location: pick(ar.location, base.location),
-    domains: pickList(ar.domains, base.domains),
-  }
 }
 
-export async function getSocials() {
-  const { items } = await reader.singletons.socials.readOrThrow()
+export async function getSocials(locale: Locale = 'en') {
+  const { items } = await TREE[locale].socials.readOrThrow()
   return shown(items).map((s) => ({ label: s.label, href: s.href ?? '#' }))
 }
 
 export async function getAbout(locale: Locale = 'en') {
-  const about = await reader.singletons.about.readOrThrow()
+  const about = await TREE[locale].about.readOrThrow()
   const base = {
     photo: about.photo ?? '/profile.jpg',
     paragraphs: [...about.paragraphs],
     stats: about.stats.map((s) => ({ value: s.value, label: s.label })),
   }
-  if (locale === 'en') return base
-
-  const ar = await overrides()
-  return {
-    ...base,
-    paragraphs: pickList(ar.aboutParagraphs, base.paragraphs),
-    // Figures are numerals and stay put; only their captions translate, matched
-    // by position so the two lists cannot drift apart.
-    stats: base.stats.map((stat, i) => ({
-      ...stat,
-      label: pick(ar.statLabels[i], stat.label),
-    })),
-  }
+  return base
 }
 
-export async function getSkillGroups() {
-  const { groups } = await reader.singletons.skills.readOrThrow()
+export async function getSkillGroups(locale: Locale = 'en') {
+  const { groups } = await TREE[locale].skills.readOrThrow()
   return shown(groups).map((g) => ({
     title: g.title,
     tone: g.tone as Tone,
@@ -114,7 +104,7 @@ export async function getSkillGroups() {
 }
 
 export async function getExperience(locale: Locale = 'en') {
-  const { jobs } = await reader.singletons.experience.readOrThrow()
+  const { jobs } = await TREE[locale].experience.readOrThrow()
   const base = shown(jobs).map((j) => ({
     role: j.role,
     company: j.company,
@@ -123,25 +113,11 @@ export async function getExperience(locale: Locale = 'en') {
     description: j.description,
     highlights: [...j.highlights],
   }))
-  if (locale === 'en') return base
-
-  // Matched on company name rather than position, so reordering jobs in the
-  // manager cannot silently attach a translation to the wrong role.
-  const ar = await overrides()
-  return base.map((job) => {
-    const tr = ar.experience.find((e) => e.company.trim() === job.company.trim())
-    return tr
-      ? {
-          ...job,
-          role: pick(tr.role, job.role),
-          description: pick(tr.description, job.description),
-        }
-      : job
-  })
+  return base
 }
 
-export async function getEducation() {
-  const { items } = await reader.singletons.education.readOrThrow()
+export async function getEducation(locale: Locale = 'en') {
+  const { items } = await TREE[locale].education.readOrThrow()
   return shown(items).map((e) => ({
     degree: e.degree,
     school: e.school,
@@ -149,8 +125,8 @@ export async function getEducation() {
   }))
 }
 
-export async function getPublications() {
-  const { items } = await reader.singletons.publications.readOrThrow()
+export async function getPublications(locale: Locale = 'en') {
+  const { items } = await TREE[locale].publications.readOrThrow()
   return shown(items).map((p) => ({
     title: p.title,
     venue: p.venue,
@@ -159,8 +135,8 @@ export async function getPublications() {
   }))
 }
 
-export async function getOpenSource() {
-  const os = await reader.singletons.openSource.readOrThrow()
+export async function getOpenSource(locale: Locale = 'en') {
+  const os = await TREE[locale].openSource.readOrThrow()
   return {
     intro: os.intro,
     items: shown(os.items).map((c) => ({
@@ -201,7 +177,7 @@ export type Project = {
 }
 
 export async function getProjects(locale: Locale = 'en'): Promise<Project[]> {
-  const entries = await reader.collections.projects.all()
+  const entries = await TREE[locale].projects.all()
 
   // `order` is nullable in the schema — an entry saved without one sorts last
   // rather than throwing or jumping to the front.
@@ -232,13 +208,7 @@ export async function getProjects(locale: Locale = 'en'): Promise<Project[]> {
       videoUrl: entry.videoUrl || undefined,
       liveUrl: entry.liveUrl || undefined,
     }))
-  if (locale === 'en') return base
-
-  const ar = await overrides()
-  return base.map((p) => {
-    const tr = ar.projects.find((x) => x.slug.trim() === p.slug)
-    return tr ? { ...p, title: pick(tr.title, p.title), summary: pick(tr.summary, p.summary) } : p
-  })
+  return base
 }
 
 export type SectionEntry = { key: SectionKey; label: string; index: string }
@@ -249,7 +219,7 @@ export type SectionEntry = { key: SectionKey; label: string; index: string }
  * instead of leaving a gap.
  */
 export async function getSections(locale: Locale = 'en'): Promise<SectionEntry[]> {
-  const { order } = await reader.singletons.sections.readOrThrow()
+  const { order } = await TREE[locale].sections.readOrThrow()
 
   const base = order
     .filter((s) => s.visible)
@@ -258,11 +228,5 @@ export async function getSections(locale: Locale = 'en'): Promise<SectionEntry[]
       label: s.label || s.key,
       index: String(i + 1).padStart(2, '0'),
     }))
-  if (locale === 'en') return base
-
-  const ar = await overrides()
-  return base.map((section) => {
-    const tr = ar.sectionLabels.find((x) => x.key.trim() === section.key)
-    return tr ? { ...section, label: pick(tr.label, section.label) } : section
-  })
+  return base
 }

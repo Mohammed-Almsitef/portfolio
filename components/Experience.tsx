@@ -8,11 +8,19 @@ function SubHeading({ children }: { children: React.ReactNode }) {
   )
 }
 
-export default async function Experience({ title, index, locale = 'en' }: { title: string; index: string; locale?: Locale }) {
+export default async function Experience({
+  title,
+  index,
+  locale = 'en',
+}: {
+  title: string
+  index: string
+  locale?: Locale
+}) {
   const [experience, education, publications, site] = await Promise.all([
     getExperience(locale),
-    getEducation(),
-    getPublications(),
+    getEducation(locale),
+    getPublications(locale),
     getSite(locale),
   ])
 

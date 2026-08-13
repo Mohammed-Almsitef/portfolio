@@ -53,6 +53,19 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
   const project = projects.find((p) => p.slug === slug)
   if (!project) notFound()
 
+  /**
+   * The two sites hold different projects, so this case study may have no
+   * counterpart. When it does not, the switch points at that language's home
+   * rather than a page that does not exist.
+   */
+  const other: Locale = locale === 'ar' ? 'en' : 'ar'
+  const otherProjects = hasArabic ? await getProjects(other) : []
+  const otherHasIt = otherProjects.some((p) => p.slug === slug)
+  const languageHrefs = {
+    [locale]: localePath(locale, `/projects/${slug}`),
+    [other]: otherHasIt ? localePath(other, `/projects/${slug}`) : localePath(other),
+  } as Record<Locale, string>
+
   const index = projects.findIndex((p) => p.slug === slug)
   const next = projects[(index + 1) % projects.length]
 
@@ -85,7 +98,7 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
               </span>{' '}
               {t(locale, 'allProjects')}
             </Link>
-            {hasArabic && <LanguageSwitch locale={locale} />}
+            {hasArabic && <LanguageSwitch locale={locale} hrefs={languageHrefs} />}
           </div>
         </div>
       </header>

@@ -1,0 +1,46 @@
+{
+  "title": "Autonomous Mobile Robot Navigation Stack",
+  "year": "2025",
+  "featured": true,
+  "tone": "emerald",
+  "visual": "occupancy",
+  "summary": "A full ROS 2 autonomy stack for a warehouse AMR, with a learned traversability costmap replacing hand-tuned heuristics.",
+  "problem": "The fleet needed an operator intervention roughly once every X hours. Most were the same failure: the planner treated a hand-tuned inflation radius as ground truth, so pallet wrap, floor drains, and low-hanging shrink film were either invisible or treated as walls.",
+  "solution": "An end-to-end autonomy stack: 2D LiDAR SLAM for localisation, Nav2 for global and local planning, and a learned traversability costmap trained on field data that replaced the inflation heuristic. A behaviour tree handles recovery so the robot degrades gracefully instead of stopping dead.",
+  "how": [
+    "C++17 ROS 2 nodes; the control path runs on a PREEMPT_RT kernel with the executor and node composition tuned to hold the latency budget.",
+    "SLAM Toolbox for mapping and localisation, with a re-localisation routine for the docking approach.",
+    "Traversability model in PyTorch, trained on labelled LiDAR + camera field recordings, exported to ONNX and served on the robot.",
+    "Nav2 with a custom controller plugin and a BehaviorTree.CPP recovery tree.",
+    "Sensor fusion (EKF) over wheel odometry, IMU, and LiDAR scan matching."
+  ],
+  "testing": "A hardware-in-the-loop rig replays recorded field rosbags on every merge and fails the build on a regression in intervention-triggering events. Controller changes are checked against a fixed set of simulated scenarios before they reach a robot.",
+  "results": [
+    "Operator interventions cut from 1 per X hours to 1 per Y, across N customer sites.",
+    "Docking accuracy held under Z cm.",
+    "Perception-to-planning latency reduced from X ms to Y ms after restructuring the executor.",
+    "Migrated ROS 1 → ROS 2 with zero fleet downtime."
+  ],
+  "lessons": [
+    "The learned costmap was only trustworthy once I added a floor on it. A model that is confidently wrong about a drain is worse than a crude inflation radius, so the planner now clamps how much it will trust the network.",
+    "Most of the real work was data, not modelling — the active-learning loop over field failures moved the metric far more than any architecture change.",
+    "I underestimated how much the HIL rig would pay for itself. It should have been the first thing built, not the third."
+  ],
+  "role": "I owned the perception-to-planning interface and the costmap model, and led the ROS 2 migration. Two other engineers worked on the docking and fleet-management sides.",
+  "tags": [
+    "ROS 2",
+    "C++",
+    "Nav2",
+    "SLAM Toolbox",
+    "PyTorch",
+    "PREEMPT_RT",
+    "Docker"
+  ],
+  "repoUrl": "https://github.com/yourusername/nav-stack",
+  "videoUrl": null,
+  "visible": true,
+  "order": 20,
+  "image": null,
+  "liveUrl": "",
+  "clip": null
+}

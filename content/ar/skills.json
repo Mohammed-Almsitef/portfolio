@@ -1,0 +1,121 @@
+{
+  "groups": [
+    {
+      "title": "Languages",
+      "tone": "blue",
+      "items": [
+        "Python",
+        "C++17 / 20",
+        "CUDA",
+        "SQL",
+        "Bash",
+        "CMake"
+      ],
+      "visible": true
+    },
+    {
+      "title": "Machine Learning",
+      "tone": "violet",
+      "items": [
+        "scikit-learn",
+        "XGBoost / LightGBM",
+        "Feature engineering",
+        "Hyperparameter search (Optuna)",
+        "Model evaluation & calibration",
+        "Time-series forecasting"
+      ],
+      "visible": true
+    },
+    {
+      "title": "Deep Learning",
+      "tone": "purple",
+      "items": [
+        "PyTorch",
+        "TensorFlow / Keras",
+        "CNNs & Vision Transformers",
+        "Reinforcement learning (PPO / SAC)",
+        "Distributed & mixed-precision training",
+        "Model compression"
+      ],
+      "visible": true
+    },
+    {
+      "title": "Computer Vision",
+      "tone": "cyan",
+      "items": [
+        "OpenCV",
+        "Detection (YOLO / DETR)",
+        "Semantic & instance segmentation",
+        "Stereo & depth estimation",
+        "Visual SLAM / VIO",
+        "Camera calibration"
+      ],
+      "visible": true
+    },
+    {
+      "title": "NLP & LLMs",
+      "tone": "rose",
+      "items": [
+        "Hugging Face Transformers",
+        "Fine-tuning (LoRA / QLoRA)",
+        "RAG & vector search",
+        "Embeddings & semantic search",
+        "Tokenization, spaCy / NLTK",
+        "Evaluation & guardrails"
+      ],
+      "visible": true
+    },
+    {
+      "title": "Robotics",
+      "tone": "emerald",
+      "items": [
+        "ROS 2 (Humble / Jazzy)",
+        "Nav2 & MoveIt 2",
+        "Sensor fusion (EKF / UKF)",
+        "Motion planning",
+        "Real-time control (MPC / PID)",
+        "Behavior trees"
+      ],
+      "visible": true
+    },
+    {
+      "title": "Simulation",
+      "tone": "amber",
+      "items": [
+        "NVIDIA Isaac Sim",
+        "Gazebo / Ignition",
+        "MuJoCo",
+        "Domain randomization",
+        "Sim-to-real transfer",
+        "Foxglove / rviz2"
+      ],
+      "visible": true
+    },
+    {
+      "title": "MLOps & Deployment",
+      "tone": "teal",
+      "items": [
+        "Docker & CI/CD",
+        "Weights & Biases, MLflow",
+        "ONNX / TensorRT",
+        "Jetson & edge inference",
+        "Data & experiment versioning",
+        "Monitoring & drift detection"
+      ],
+      "visible": true
+    },
+    {
+      "title": "Embedded & Hardware",
+      "tone": "lime",
+      "items": [
+        "Linux PREEMPT_RT",
+        "STM32 / FreeRTOS",
+        "CAN / CANopen",
+        "LiDAR, IMU, depth cameras",
+        "Time synchronization",
+        "Hardware-in-the-loop"
+      ],
+      "visible": true
+    }
+  ]
+}
