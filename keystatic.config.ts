@@ -37,37 +37,31 @@ const visible = fields.checkbox({
 })
 
 /**
- * GitHub storage needs a GitHub App's credentials. Gate on their presence
- * rather than on NODE_ENV: without them Keystatic throws at config load and
- * takes the whole build down, so an un-configured deploy would fail rather
- * than simply shipping without the manager.
+ * Storage mode.
+ *
+ * This file is imported by BOTH the server route handler and the browser app,
+ * so the two must resolve the same `kind`. That rules out gating on a
+ * server-only secret: the browser cannot read those, would fall back to
+ * `local`, and would call `/api/keystatic/tree` — an endpoint that only exists
+ * in local mode, so a GitHub-mode server answers 404 and every collection
+ * fails with `"Not Found" is not valid JSON`.
+ *
+ * Hence a NEXT_PUBLIC_ flag, which Next inlines into both bundles:
+ *
+ *   unset            → local mode; writes files directly, no login (dev)
+ *   'github'         → GitHub mode; the browser reads and writes via the
+ *                      GitHub API, so the three secrets below must also be set
+ *                      or Keystatic throws at config load and fails the build
+ *
+ * In GitHub mode the server still needs KEYSTATIC_GITHUB_CLIENT_ID,
+ * KEYSTATIC_GITHUB_CLIENT_SECRET and KEYSTATIC_SECRET for the OAuth exchange.
  */
-const hasGitHubApp = Boolean(
-  process.env.KEYSTATIC_GITHUB_CLIENT_ID &&
-  process.env.KEYSTATIC_GITHUB_CLIENT_SECRET &&
-  process.env.KEYSTATIC_SECRET,
-)
-
-/**
- * Try GitHub mode locally before deploying it:
- *
- *     KEYSTATIC_STORAGE=github npm run dev
- *
- * Useful for checking the app's credentials work once they are in a local
- * .env. Restricted to development so a stray env var on the deployed site can
- * never break the production build.
- *
- * Note: this version of Keystatic has no in-app "create my GitHub App" wizard
- * — the app is registered by hand on GitHub. See the README.
- */
-const forceGitHubForSetup =
-  process.env.NODE_ENV === 'development' && process.env.KEYSTATIC_STORAGE === 'github'
+const useGitHubStorage = process.env.NEXT_PUBLIC_KEYSTATIC_STORAGE === 'github'
 
 export default config({
-  storage:
-    hasGitHubApp || forceGitHubForSetup
-      ? { kind: 'github', repo: { owner: 'Mohammed-Almsitef', name: 'portfolio' } }
-      : { kind: 'local' },
+  storage: useGitHubStorage
+    ? { kind: 'github', repo: { owner: 'Mohammed-Almsitef', name: 'portfolio' } }
+    : { kind: 'local' },
 
   ui: {
     brand: { name: 'Portfolio' },
