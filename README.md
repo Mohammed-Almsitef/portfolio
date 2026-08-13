@@ -76,6 +76,43 @@ Gating on a server-only secret looks reasonable and fails silently: the browser 
 
 `NEXT_PUBLIC_` is inlined into both bundles, so they agree. The three secrets remain server-side for the OAuth exchange — set the public flag only once they're in place, or Keystatic throws at config load and fails the build.
 
+## Locking the manager with a password
+
+GitHub sign-in already decides who can **save** — only accounts with write access to the repo. The password decides who can **open** the manager at all, so `/keystatic` isn't a door strangers can rattle.
+
+`proxy.ts` guards `/keystatic` and `/api/keystatic`. Signed out, pages redirect to `/manager/login` and API calls get a 401. Sign in once and a signed, `HttpOnly` cookie carries you for seven days.
+
+### Setting it up
+
+The password is stored as an scrypt hash in a Redis store. It **cannot** live in this repo — the repo is public, and a published hash is one an attacker can crack offline at their leisure.
+
+1. Vercel → **Storage** → create an **Upstash for Redis** database (free tier) and connect it to this project. It injects `KV_REST_API_URL` and `KV_REST_API_TOKEN` automatically.
+2. Add `MANAGER_PASSWORD` with a starting password, so you can get in the first time.
+3. Redeploy, sign in, then open **Account** (bottom-right of the manager) and save a real password. That writes the hash to Redis and supersedes the variable — delete `MANAGER_PASSWORD` afterwards.
+
+`KEYSTATIC_SECRET` doubles as the session signing key, so there's no extra secret to manage. Set `MANAGER_SESSION_SECRET` if you'd rather keep them separate; changing either signs everyone out.
+
+### What each state does
+
+| Situation                                           | Manager        |
+| --------------------------------------------------- | -------------- |
+| No Redis variables set                              | Open, unlocked |
+| Redis set, no password saved, no `MANAGER_PASSWORD` | Open, unlocked |
+| Password saved, or `MANAGER_PASSWORD` set           | Password asked |
+| Removed from **Account → Danger zone**              | Open, unlocked |
+| Redis configured but **not answering**              | **Closed**     |
+
+That last row is deliberate. If the store can't be reached, the gate stays shut rather than defaulting open — an outage shouldn't quietly publish the manager. It also means an unreachable store locks _you_ out until it recovers.
+
+Missing variables, by contrast, leave the manager open: that's the state before setup, and failing closed there would lock you out of a manager you hadn't secured yet. The manager shows a **No password** badge whenever it's unprotected.
+
+Eight wrong passwords from one IP lock sign-in for 15 minutes.
+
+### Known limits
+
+- Changing the password does **not** end sessions already open elsewhere; they run their seven days out. Use **Sign out** on any device you want cut off.
+- Rate limiting is per IP, so it slows a single attacker rather than a distributed one. The scrypt cost is what makes guessing expensive.
+
 ## Design system
 
 Type is Inter (sans) and JetBrains Mono (mono), self-hosted at build time via `next/font/google` — no runtime request to Google.
