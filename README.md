@@ -39,18 +39,42 @@ Empty a list and its block disappears: no publications means no Publications hea
 | `npm run dev` on your machine   | Writes `content/*.json` directly   | None   |
 | `mohammedalmsitef.me/keystatic` | Commits to GitHub, which redeploys | GitHub |
 
-The mode is chosen by whether the GitHub App credentials are present — see below. Without them everything still builds and runs; only the deployed manager is inactive.
+The mode is set by `NEXT_PUBLIC_KEYSTATIC_STORAGE`. Unset, everything still builds and runs locally; only the deployed manager is inactive.
 
 ### Turning on the deployed manager
 
-1. Create a GitHub App on your account with **Contents: Read and write** permission for the `portfolio` repo, and callback URL `https://mohammedalmsitef.me/api/keystatic/github/oauth/callback`
-2. In Vercel → Settings → Environment Variables, add:
-   - `KEYSTATIC_GITHUB_CLIENT_ID`
-   - `KEYSTATIC_GITHUB_CLIENT_SECRET`
-   - `KEYSTATIC_SECRET` (any long random string)
-3. Redeploy
+Register a GitHub App by hand at **https://github.com/settings/apps/new** — this version of Keystatic has no in-app wizard:
 
-`keystatic.config.ts` gates on those three variables rather than on `NODE_ENV`: Keystatic throws at config load when GitHub storage lacks credentials, which would take the whole build down instead of just shipping without the manager.
+| Field                                                  | Value                                                             |
+| ------------------------------------------------------ | ----------------------------------------------------------------- |
+| Homepage URL                                           | `https://mohammedalmsitef.me`                                     |
+| Callback URL                                           | `https://mohammedalmsitef.me/api/keystatic/github/oauth/callback` |
+| Request user authorization (OAuth) during installation | ticked                                                            |
+| Webhook → Active                                       | **un**ticked                                                      |
+| Repository permissions → Contents                      | Read and write                                                    |
+
+Generate a client secret, generate a private key (GitHub requires one before the app can be installed, though Keystatic never uses it), then **Install** the app on the `portfolio` repo.
+
+Add four variables in Vercel → Settings → Environment Variables, on **Production** and Preview:
+
+| Variable                         | Value                                           | Sensitive |
+| -------------------------------- | ----------------------------------------------- | --------- |
+| `NEXT_PUBLIC_KEYSTATIC_STORAGE`  | `github`                                        | **no**    |
+| `KEYSTATIC_GITHUB_CLIENT_ID`     | the app's Client ID                             | optional  |
+| `KEYSTATIC_GITHUB_CLIENT_SECRET` | _Generate a new client secret_                  | yes       |
+| `KEYSTATIC_SECRET`               | any long random string — `openssl rand -hex 32` | yes       |
+
+Redeploy. `mohammedalmsitef.me/keystatic` then asks you to sign in with GitHub, and saving commits to `main`, which rebuilds — live in about a minute.
+
+_(Vercel locks sensitive variables out of the Development environment. That's fine: local dev uses file storage and needs none of them.)_
+
+### Why the storage flag must be NEXT_PUBLIC_
+
+`keystatic.config.ts` is imported by **both** the server route handler and the browser app, so both must resolve the same storage `kind`.
+
+Gating on a server-only secret looks reasonable and fails silently: the browser can't read those variables, falls back to `local`, and calls `/api/keystatic/tree` — an endpoint that exists **only** in local mode. A GitHub-mode server answers 404, and every collection dies with `Unexpected token 'N', "Not Found" is not valid JSON`. The dashboard still renders, so it reads like an auth problem rather than a config mismatch.
+
+`NEXT_PUBLIC_` is inlined into both bundles, so they agree. The three secrets remain server-side for the OAuth exchange — set the public flag only once they're in place, or Keystatic throws at config load and fails the build.
 
 ## Design system
 
