@@ -1,9 +1,10 @@
 import { getSite } from '@/lib/content'
 import LidarBackdrop from './LidarBackdrop'
 import Reveal from './Reveal'
+import type { Locale } from '@/lib/locale'
 
-export default async function Hero() {
-  const site = await getSite()
+export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
+  const site = await getSite(locale)
   const domains = site.domains
 
   return (
@@ -15,7 +16,7 @@ export default async function Hero() {
       <div
         aria-hidden="true"
         data-print-hide
-        className="pointer-events-none absolute -left-40 -top-40 size-[38rem] rounded-full bg-[radial-gradient(circle,var(--glow),transparent_68%)] blur-2xl"
+        className="pointer-events-none absolute -start-40 -top-40 size-[38rem] rounded-full bg-[radial-gradient(circle,var(--glow),transparent_68%)] blur-2xl"
       />
 
       <div className="relative z-2 mx-auto flex min-h-[90svh] max-w-5xl flex-col justify-center px-6 pb-24 pt-32 md:pb-32 md:pt-40">

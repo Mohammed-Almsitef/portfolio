@@ -69,6 +69,7 @@ export default config({
       'Page setup': ['sections', 'site'],
       Content: ['about', 'projects', 'openSource', 'skills', 'experience'],
       'Credentials & links': ['education', 'publications', 'socials'],
+      Translation: ['arabic'],
     },
   },
 
@@ -452,6 +453,90 @@ export default config({
               'Only list real, merged work — a broken PR link costs more than an empty section.',
             itemLabel: (props) =>
               `${props.fields.project.value || 'Project'} · ${props.fields.what.value || ''}`,
+          },
+        ),
+      },
+    }),
+
+    /**
+     * Arabic copy for /ar.
+     *
+     * Overrides rather than a second full site: anything left blank falls back
+     * to the English text, so a half-finished translation still renders a
+     * complete page instead of gaps. That also means technical writing —
+     * ROS, Nav2, SLAM — can stay in English, which is how it is written in
+     * the field anyway, while the parts a reader actually needs in Arabic
+     * get translated first.
+     */
+    arabic: singleton({
+      label: 'العربية — Arabic',
+      path: 'content/arabic',
+      format: { data: 'json' },
+      schema: {
+        enabled: fields.checkbox({
+          label: 'Publish the Arabic page',
+          description: 'Untick to hide /ar and the language switch entirely.',
+          defaultValue: false,
+        }),
+        name: fields.text({ label: 'Name in Arabic' }),
+        role: fields.text({ label: 'Role' }),
+        tagline: fields.text({ label: 'Tagline', multiline: true }),
+        location: fields.text({ label: 'Location' }),
+        domains: fields.array(fields.text({ label: 'Area' }), {
+          label: 'Expertise chips',
+          description: 'In the same order as the English ones.',
+          itemLabel: (props) => props.value || 'Area',
+        }),
+        aboutParagraphs: fields.array(fields.text({ label: 'Paragraph', multiline: true }), {
+          label: 'About paragraphs',
+          itemLabel: (props) => (props.value || 'Paragraph').slice(0, 40),
+        }),
+        statLabels: fields.array(fields.text({ label: 'Label' }), {
+          label: 'Headline figure labels',
+          description: 'In the same order as the English ones. Figures stay as they are.',
+          itemLabel: (props) => props.value || 'Label',
+        }),
+        sectionLabels: fields.array(
+          fields.object({
+            key: fields.text({
+              label: 'Section key',
+              description: 'about, projects, openSource, skills, experience, or contact',
+            }),
+            label: fields.text({ label: 'Arabic heading' }),
+          }),
+          {
+            label: 'Section headings',
+            itemLabel: (props) =>
+              `${props.fields.key.value || 'key'} → ${props.fields.label.value || ''}`,
+          },
+        ),
+        projects: fields.array(
+          fields.object({
+            slug: fields.text({
+              label: 'Project slug',
+              description: 'The URL slug of the English project this translates.',
+            }),
+            title: fields.text({ label: 'Title' }),
+            summary: fields.text({ label: 'Summary', multiline: true }),
+          }),
+          {
+            label: 'Project titles and summaries',
+            description: 'Case-study detail stays in English unless you translate it separately.',
+            itemLabel: (props) => props.fields.title.value || props.fields.slug.value || 'Project',
+          },
+        ),
+        experience: fields.array(
+          fields.object({
+            company: fields.text({
+              label: 'Company',
+              description: 'Must match the English entry exactly, so the two line up.',
+            }),
+            role: fields.text({ label: 'Role' }),
+            description: fields.text({ label: 'Description', multiline: true }),
+          }),
+          {
+            label: 'Experience',
+            itemLabel: (props) => props.fields.company.value || 'Company',
           },
         ),
       },

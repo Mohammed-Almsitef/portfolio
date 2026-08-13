@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import ThemeToggle from './ThemeToggle'
+import type { Locale } from '@/lib/locale'
+import LanguageSwitch from './LanguageSwitch'
 
 /** Section keys map to the DOM ids the components render. */
 const SECTION_IDS: Record<string, string> = {
@@ -16,9 +18,14 @@ const SECTION_IDS: Record<string, string> = {
 export default function Nav({
   siteName,
   sections,
+  locale = 'en',
+  showLanguage = false,
 }: {
   siteName: string
   sections: { key: string; label: string }[]
+  locale?: Locale
+  /** Hidden until an Arabic translation is actually published. */
+  showLanguage?: boolean
 }) {
   // Only the sections that are actually on the page get a nav link, so hiding
   // a section in the manager never leaves a link pointing at nothing.
@@ -107,7 +114,7 @@ export default function Nav({
                   <a
                     href={l.href}
                     aria-current={active === l.href ? 'true' : undefined}
-                    className={`tap relative py-1 text-sm transition-colors after:absolute after:-bottom-0.5 after:left-0 after:h-px after:bg-accent after:transition-all after:duration-300 ${
+                    className={`tap relative py-1 text-sm transition-colors after:absolute after:-bottom-0.5 after:start-0 after:h-px after:bg-accent after:transition-all after:duration-300 ${
                       active === l.href
                         ? 'text-text after:w-full'
                         : 'text-muted after:w-0 hover:text-text hover:after:w-full'
@@ -119,6 +126,7 @@ export default function Nav({
               ))}
             </ul>
 
+            {showLanguage && <LanguageSwitch locale={locale} />}
             <ThemeToggle />
 
             <button

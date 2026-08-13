@@ -256,7 +256,7 @@ export default function LidarBackdrop() {
       // Opacity climbs with available width. On a phone the scan has nowhere to
       // go but behind the copy, so it stays faint; only past `xl` is there
       // genuinely empty ground to the right of the text for it to own.
-      className="lidar-mask pointer-events-none absolute inset-y-0 right-0 w-full overflow-hidden opacity-20 md:w-[56%] md:opacity-45 lg:opacity-70 xl:opacity-100"
+      className="lidar-mask pointer-events-none absolute inset-y-0 end-0 w-full overflow-hidden opacity-20 md:w-[56%] md:opacity-45 lg:opacity-70 xl:opacity-100"
       aria-hidden="true"
     >
       <div ref={parallaxRef} className="size-full">

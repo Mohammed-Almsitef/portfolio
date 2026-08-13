@@ -1,5 +1,6 @@
 import { getEducation, getExperience, getPublications, getSite } from '@/lib/content'
 import Section from './Section'
+import type { Locale } from '@/lib/locale'
 
 function SubHeading({ children }: { children: React.ReactNode }) {
   return (
@@ -7,22 +8,22 @@ function SubHeading({ children }: { children: React.ReactNode }) {
   )
 }
 
-export default async function Experience({ title, index }: { title: string; index: string }) {
+export default async function Experience({ title, index, locale = 'en' }: { title: string; index: string; locale?: Locale }) {
   const [experience, education, publications, site] = await Promise.all([
-    getExperience(),
+    getExperience(locale),
     getEducation(),
     getPublications(),
-    getSite(),
+    getSite(locale),
   ])
 
   return (
     <Section id="experience" title={title} index={index} tone="raised">
-      <ol className="relative space-y-12 border-l border-border pl-8">
+      <ol className="relative space-y-12 border-s border-border ps-8">
         {experience.map((job) => (
           <li key={`${job.company}-${job.period}`} className="relative">
             <span
               aria-hidden="true"
-              className="absolute -left-[2.19rem] top-2 size-2.5 rounded-full border border-border-strong bg-bg"
+              className="absolute -start-[2.19rem] top-2 size-2.5 rounded-full border border-border-strong bg-bg"
             />
 
             <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">

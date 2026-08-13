@@ -2,9 +2,10 @@ import Image from 'next/image'
 import { getAbout, getSite } from '@/lib/content'
 import CountUp from './CountUp'
 import Section from './Section'
+import type { Locale } from '@/lib/locale'
 
-export default async function About({ title, index }: { title: string; index: string }) {
-  const [about, site] = await Promise.all([getAbout(), getSite()])
+export default async function About({ title, index, locale = 'en' }: { title: string; index: string; locale?: Locale }) {
+  const [about, site] = await Promise.all([getAbout(locale), getSite(locale)])
 
   return (
     <Section id="about" title={title} index={index}>

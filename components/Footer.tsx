@@ -1,12 +1,13 @@
 import { getSite } from '@/lib/content'
 import SectionRule from './SectionRule'
+import type { Locale } from '@/lib/locale'
 
 /**
  * Identity and copyright only. Role, location and the social links each have a
  * single home elsewhere on the page, so the footer does not restate them.
  */
-export default async function Footer() {
-  const site = await getSite()
+export default async function Footer({ locale = 'en' }: { locale?: Locale }) {
+  const site = await getSite(locale)
 
   return (
     <footer data-print-hide>

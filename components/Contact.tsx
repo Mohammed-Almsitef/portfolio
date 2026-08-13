@@ -1,14 +1,15 @@
 import { getSite, getSocials } from '@/lib/content'
 import CopyEmail from './CopyEmail'
 import Section from './Section'
+import type { Locale } from '@/lib/locale'
 
 /**
  * The single home for how to reach me. Availability and focus areas are stated
  * once in the hero and deliberately not repeated here; this section carries the
  * contact record — the links, where I am, and how fast I answer.
  */
-export default async function Contact({ title, index }: { title: string; index: string }) {
-  const [site, socials] = await Promise.all([getSite(), getSocials()])
+export default async function Contact({ title, index, locale = 'en' }: { title: string; index: string; locale?: Locale }) {
+  const [site, socials] = await Promise.all([getSite(locale), getSocials()])
 
   return (
     <Section id="contact" title={title} index={index}>
