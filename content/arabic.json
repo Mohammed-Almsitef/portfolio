@@ -1,9 +1,8 @@
 {
   "enabled": true,
-  "name": "محمد المسيطف",
+  "name": "محمد المصيطف",
   "role": "مهندس روبوتات وذكاء اصطناعي",
   "tagline": "أبني أنظمة روبوتية ترى وتخطط وتتحرك.",
-  "location": "",
   "domains": [],
   "aboutParagraphs": [],
   "statLabels": [],
@@ -16,8 +15,7 @@
   "projects": [
     {
       "slug": "amr-navigation-stack",
-      "title": "حزمة ملاحة الروبوت المتنقل",
-      "summary": ""
+      "title": "حزمة ملاحة الروبوت المتنقل"
     }
   ],
   "experience": []
