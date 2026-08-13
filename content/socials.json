@@ -9,11 +9,6 @@
       "label": "LinkedIn",
       "href": "https://linkedin.com/in/yourusername",
       "visible": true
-    },
-    {
-      "label": "Google Scholar",
-      "href": "https://scholar.google.com/citations?user=yourid",
-      "visible": true
     }
   ]
 }
