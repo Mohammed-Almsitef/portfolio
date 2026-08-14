@@ -57,6 +57,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
         sections={sections}
         locale={locale}
         languageHrefs={hasArabic ? { en: '/', ar: '/ar' } : undefined}
+        availableForWork={site.availableForWork}
       />
 
       <main id="main">

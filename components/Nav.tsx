@@ -20,12 +20,14 @@ export default function Nav({
   sections,
   locale = 'en',
   languageHrefs,
+  availableForWork,
 }: {
   siteName: string
   sections: { key: string; label: string }[]
   locale?: Locale
   /** Omitted until the Arabic site is published, which hides the switch. */
   languageHrefs?: Record<Locale, string>
+  availableForWork: boolean
 }) {
   // Only the sections that are actually on the page get a nav link, so hiding
   // a section in the manager never leaves a link pointing at nothing.
@@ -98,14 +100,29 @@ export default function Nav({
             : 'border-b border-transparent'
       }`}
     >
-      <nav aria-label="Main" className="mx-auto max-w-5xl px-6">
+
+      <nav aria-label="Main" className="mx-auto max-w-page px-6">
         <div className="flex items-center justify-between gap-4 py-4">
-          <a
-            href="#top"
-            className="tap font-mono text-sm font-medium tracking-tight transition-colors hover:text-accent"
-          >
-            {siteName}
-          </a>
+          <div className="flex min-w-0 items-center gap-3">
+            <a
+              href="#top"
+              className="tap shrink-0 font-mono text-sm font-medium tracking-tight transition-colors hover:text-accent"
+            >
+              {siteName}
+            </a>
+
+            {availableForWork && (
+              <p title="Available for work" className="inline-flex w-fit items-center gap-1.5 rounded-full border border-[rgb(var(--tone-status)/0.35)] bg-[rgb(var(--tone-status)/0.12)] sm:px-2 px-1 py-1 font-mono text-[0.6875rem] font-medium text-[rgb(var(--tone-status))] shadow-[0_0_12px_rgb(var(--tone-status)/0.25)] cursor-help">
+                <span className="relative flex size-1.5 shrink-0">
+                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-[rgb(var(--tone-status))] opacity-75" />
+                  <span className="relative inline-flex size-1.5 rounded-full bg-[rgb(var(--tone-status))]" />
+                </span>
+                {/* The dot alone reads fine on a phone-width bar; the label only
+                    earns its space once there's room next to the name and links. */}
+                <span className="hidden sm:inline">Available for work</span>
+              </p>
+            )}
+          </div>
 
           <div className="flex items-center gap-5">
             <ul className="hidden items-center gap-7 lg:flex">

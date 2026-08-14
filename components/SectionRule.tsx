@@ -43,7 +43,7 @@ export default function SectionRule() {
   return (
     <div ref={ref} aria-hidden="true" data-rule={drawn ? 'drawn' : 'idle'} className="section-rule">
       <span className="section-rule__line" />
-      <div className="mx-auto max-w-5xl px-6">
+      <div className="mx-auto max-w-page px-6">
         <span className="section-rule__mark">
           <span className="section-rule__node" />
         </span>

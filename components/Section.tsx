@@ -21,23 +21,20 @@ export default function Section({
     <section
       id={id}
       aria-labelledby={`${id}-heading`}
-      className={tone === 'raised' ? 'bg-surface/45' : ''}
+      className={tone === 'raised' ? 'bg-surface' : ''}
     >
-      <SectionRule />
+      {/* <SectionRule /> */}
 
-      <div className="mx-auto max-w-5xl px-6 py-20 md:py-28">
+      <div className="mx-auto max-w-page px-6 py-10 md:py-15">
         <Reveal>
-          <div className="mb-12 flex items-center gap-4">
-            <span aria-hidden="true" className="font-mono text-xs text-accent-dim">
-              {index}
-            </span>
+          <div className="relative mb-12 flex items-center gap-4">
             <h2
               id={`${id}-heading`}
-              className="font-mono text-xs uppercase tracking-[0.2em] text-accent"
+              className={`relative mx-auto border-x-2 border-border-strong px-5 font-mono text-3xl font-bold uppercase tracking-[0.2em] text-accent shadow-[0_0_20px_-6px_rgb(var(--tone-blue)/0.4)] ${tone === 'raised' ? 'bg-surface' : 'bg-bg'}`}
             >
               {title}
             </h2>
-            <span aria-hidden="true" className="rule-fade h-px flex-1" />
+            <span aria-hidden="true" className="section-title-rule absolute -z-1 h-px w-full" />
           </div>
         </Reveal>
 
