@@ -411,7 +411,7 @@ export default function RobotField({
       // the field waits until there is genuinely room beside the content: the
       // 44px margin plus the largest machine needs 136px of gutter, which a
       // 90rem container reaches at about 1712px.
-      className="pointer-events-none absolute inset-0 hidden overflow-hidden [@media(min-width:1720px)]:block"
+      className="robot-field pointer-events-none absolute inset-0 hidden overflow-hidden [@media(min-width:1720px)]:block"
     >
       {layout.slice(0, count).map(({ side, top, size, tilt }, i) => {
         const machine = RENDERED[(i + shapeStart) % RENDERED.length]
@@ -434,7 +434,10 @@ export default function RobotField({
               top: `${top}%`,
               width: size,
               height: size,
-              opacity: 0.3,
+              // Weight and halo come from `.robot-field`, which the stylesheet
+              // redefines under dark — the neon switch lives entirely in CSS.
+              opacity: 'var(--robot-alpha)',
+              filter: 'var(--robot-glow)',
               color: `rgb(var(${tone}))`,
               // Right-hand machines face back toward the content.
               transform: `rotate(${tilt}deg) scaleX(${side === 'right' ? -1 : 1})`,
@@ -456,9 +459,11 @@ export default function RobotField({
                   {!isShadow && <path d={d} fill={ground} stroke={ground} />}
                   <path
                     d={d}
-                    fillOpacity={fill}
-                    // The contact patch is a soft blot, not an outlined disc.
-                    strokeOpacity={isShadow ? 0 : 0.85}
+                    style={{
+                      fillOpacity: `calc(${fill.toFixed(3)} * var(--robot-fill))`,
+                      // The contact patch is a soft blot, not an outlined disc.
+                      strokeOpacity: isShadow ? 0 : 'var(--robot-stroke)',
+                    }}
                   />
                 </g>
               ))}
