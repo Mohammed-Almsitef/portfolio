@@ -198,19 +198,53 @@ const ROVER = [
 
 const SHAPES: string[][] = [DRONE, ARM, QUADRUPED, HUMANOID, ROVER]
 
+/** The full palette, so the field is as varied in hue as the skills grid. */
+const TONES = [
+  '--tone-blue',
+  '--tone-rose',
+  '--tone-teal',
+  '--tone-purple',
+  '--tone-amber',
+  '--tone-cyan',
+  '--tone-violet',
+  '--tone-lime',
+  '--tone-emerald',
+]
+
 /**
- * A composed arrangement rather than a random scatter: the two gutters are
+ * Composed arrangements rather than random scatter: the two gutters are
  * staggered against each other so no two machines sit at the same height, and
- * sizes alternate heavy/light down the column so the eye travels rather than
- * reading a row of equal marks. Tilts lean away from the content.
+ * sizes alternate heavy and light down the column so the eye travels rather
+ * than reading a row of equal marks. Tilts lean away from the content.
+ *
+ * Three of them, picked per section, so consecutive sections do not repeat the
+ * same silhouette down the page.
  */
-const LAYOUT = [
-  { side: 'left', top: 5, size: 104, tilt: -7, tone: '--tone-blue' },
-  { side: 'right', top: 18, size: 74, tilt: 8, tone: '--tone-teal' },
-  { side: 'left', top: 36, size: 78, tilt: 6, tone: '--tone-violet' },
-  { side: 'right', top: 49, size: 110, tilt: -6, tone: '--tone-amber' },
-  { side: 'left', top: 68, size: 72, tilt: 9, tone: '--tone-cyan' },
-  { side: 'right', top: 81, size: 90, tilt: -8, tone: '--tone-emerald' },
+const LAYOUTS = [
+  [
+    { side: 'left', top: 4, size: 104, tilt: -7 },
+    { side: 'right', top: 18, size: 74, tilt: 8 },
+    { side: 'left', top: 36, size: 78, tilt: 6 },
+    { side: 'right', top: 50, size: 110, tilt: -6 },
+    { side: 'left', top: 68, size: 72, tilt: 9 },
+    { side: 'right', top: 82, size: 90, tilt: -8 },
+  ],
+  [
+    { side: 'right', top: 7, size: 84, tilt: 6 },
+    { side: 'left', top: 21, size: 100, tilt: -9 },
+    { side: 'right', top: 39, size: 70, tilt: 7 },
+    { side: 'left', top: 54, size: 88, tilt: -5 },
+    { side: 'right', top: 70, size: 104, tilt: 9 },
+    { side: 'left', top: 85, size: 76, tilt: -7 },
+  ],
+  [
+    { side: 'left', top: 9, size: 88, tilt: 8 },
+    { side: 'right', top: 25, size: 78, tilt: -6 },
+    { side: 'right', top: 44, size: 106, tilt: 7 },
+    { side: 'left', top: 57, size: 72, tilt: -8 },
+    { side: 'left', top: 73, size: 96, tilt: 5 },
+    { side: 'right', top: 87, size: 82, tilt: -9 },
+  ],
 ] as const
 
 function hash(text: string) {
@@ -224,26 +258,35 @@ function hash(text: string) {
 
 export default function RobotField({
   seed,
-  count = LAYOUT.length,
+  count = 6,
 }: {
   /** Anything stable and distinct per section — the section id works. */
   seed: string
   count?: number
 }) {
-  // The only thing the seed decides is which machine the cycle starts on, so
-  // each section leads with a different one while the composition stays fixed.
-  const offset = hash(seed) % SHAPES.length
+  // The seed picks the arrangement, the machine the cycle starts on, and where
+  // the palette starts — three independent rotations, so no two sections read
+  // as the same composition in the same colours.
+  const h = hash(seed)
+  const layout = LAYOUTS[h % LAYOUTS.length]
+  // Unsigned shifts: `>>` would coerce a hash above 2^31 to a negative int and
+  // index off the front of the array.
+  const shapeStart = (h >>> 4) % SHAPES.length
+  const toneStart = (h >>> 9) % TONES.length
 
   return (
     <div
       aria-hidden="true"
       data-print-hide
-      // Only from `lg` up: below that the content fills the full width and
-      // there is no gutter to sit in without landing on the text.
-      className="pointer-events-none absolute inset-0 hidden overflow-hidden lg:block"
+      // Gutters only exist once the window is wider than the page container, so
+      // the field waits until there is genuinely room beside the content.
+      className="pointer-events-none absolute inset-0 hidden overflow-hidden [@media(min-width:1700px)]:block"
     >
-      {LAYOUT.slice(0, count).map(({ side, top, size, tilt, tone }, i) => {
-        const paths = SHAPES[(i + offset) % SHAPES.length]
+      {layout.slice(0, count).map(({ side, top, size, tilt }, i) => {
+        const paths = SHAPES[(i + shapeStart) % SHAPES.length]
+        // Stride of two through nine tones: six distinct hues per section, and
+        // adjacent machines never land on neighbouring shades.
+        const tone = TONES[(i * 2 + toneStart) % TONES.length]
         // A left-gutter machine is pinned by its right edge and vice versa, so
         // both anchor off the same distance from the middle.
         const anchor = side === 'left' ? 'right' : 'left'
@@ -254,10 +297,9 @@ export default function RobotField({
             style={{
               // Anchored to the content edge, not to a percentage of the
               // viewport: this keeps every machine outside the text column at
-              // any width, and simply pushes them off-screen when there is no
-              // gutter left to occupy. The 12px reclaims part of the
-              // container's own padding, which holds no text.
-              [anchor]: `calc(50% + var(--container-page) / 2 - 12px)`,
+              // any width. The 20px is clear air past the container, so nothing
+              // crowds the copy.
+              [anchor]: `calc(50% + var(--container-page) / 2 + 20px)`,
               top: `${top}%`,
               width: size,
               height: size,
