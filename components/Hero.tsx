@@ -1,9 +1,7 @@
-import Image from 'next/image'
 import { getSite } from '@/lib/content'
 import LidarBackdrop from './LidarBackdrop'
 import Reveal from './Reveal'
 import type { Locale } from '@/lib/locale'
-import imgProfile from '@/public/profile.png'
 
 export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
   const site = await getSite(locale)
@@ -69,14 +67,6 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
               </a>
             </div>
           </Reveal>
-        </div>
-
-        <div className='hidden lg:inline p-6'>
-          <Image
-            src={imgProfile}
-            alt={site.name}
-            className="w-120"
-          />
         </div>
       </div>
 
