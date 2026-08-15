@@ -49,6 +49,10 @@ export default function ThemeToggle() {
     setMode(mode === 'light' ? 'dark' : 'light')
   }
 
+  // Shows the icon of the theme a click switches TO, not the one currently
+  // active — a sun on a dark page promises light, not "you are in the dark".
+  const next: Mode = mode === 'light' ? 'dark' : 'light'
+
   return (
     <button
       type="button"
@@ -68,7 +72,7 @@ export default function ThemeToggle() {
         className="h-5 w-5"
         aria-hidden="true"
       >
-        {ICONS[mode]}
+        {ICONS[next]}
       </svg>
     </button>
   )
