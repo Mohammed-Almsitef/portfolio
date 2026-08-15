@@ -434,8 +434,8 @@ export default function RobotField({
               top: `${top}%`,
               width: size,
               height: size,
-              // Weight and halo come from `.robot-field`, which the stylesheet
-              // redefines under dark — the neon switch lives entirely in CSS.
+              // Weight comes from `.robot-field` in the stylesheet, so the
+              // whole field can be tuned without touching the geometry.
               opacity: 'var(--robot-alpha)',
               filter: 'var(--robot-glow)',
               color: `rgb(var(${tone}))`,

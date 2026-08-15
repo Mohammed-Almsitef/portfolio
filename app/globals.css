@@ -271,34 +271,15 @@ body::before {
 /*
  * Gutter machines.
  *
- * Light keeps them as quiet shaded solids. Dark turns them neon: the faces
- * drop most of their fill so the body reads as glass, the edges go to full
- * strength, and a two-stop halo in the machine's own colour bleeds off the
- * silhouette. The component multiplies its per-face shading by `--robot-fill`
- * rather than picking values itself, so the whole switch lives here.
+ * Quiet shaded solids in both themes — no glow. Kept as custom properties
+ * rather than inlined in the component so the weight of the whole field is
+ * tunable from one place.
  */
 .robot-field {
   --robot-fill: 1;
   --robot-stroke: 0.85;
   --robot-alpha: 0.3;
   --robot-glow: none;
-}
-
-:root[data-theme='dark'] .robot-field {
-  --robot-fill: 0.3;
-  --robot-stroke: 1;
-  --robot-alpha: 0.55;
-  --robot-glow: drop-shadow(0 0 2px currentColor) drop-shadow(0 0 7px currentColor);
-}
-
-/* Same treatment when the script never ran and the OS asks for dark. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) .robot-field {
-    --robot-fill: 0.3;
-    --robot-stroke: 1;
-    --robot-alpha: 0.55;
-    --robot-glow: drop-shadow(0 0 2px currentColor) drop-shadow(0 0 7px currentColor);
-  }
 }
 
 /*
