@@ -1,6 +1,7 @@
 import { getSite } from '@/lib/content'
 import LidarBackdrop from './LidarBackdrop'
 import Reveal from './Reveal'
+import RobotField from './RobotField'
 import type { Locale } from '@/lib/locale'
 
 export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
@@ -10,6 +11,9 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
   return (
     <section id="top" className="relative overflow-hidden">
       <LidarBackdrop />
+
+      {/* Fewer here — the hero already has the scan carrying it. */}
+      <RobotField seed="hero" count={4} />
 
       {/* Soft glow anchoring the headline, so the hero has depth rather than
           being flat black behind text. */}

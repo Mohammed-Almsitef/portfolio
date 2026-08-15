@@ -1,4 +1,5 @@
 import Reveal from './Reveal'
+import RobotField from './RobotField'
 import SectionRule from './SectionRule'
 
 export default function Section({
@@ -21,11 +22,15 @@ export default function Section({
     <section
       id={id}
       aria-labelledby={`${id}-heading`}
-      className={tone === 'raised' ? 'bg-surface' : ''}
+      className={`relative overflow-hidden ${tone === 'raised' ? 'bg-surface' : ''}`}
     >
       {/* <SectionRule /> */}
 
-      <div className="mx-auto max-w-page px-6 py-10 md:py-15">
+      {/* Seeded by id, so each section scatters differently but stably. */}
+      <RobotField seed={id} />
+
+      {/* Positioned, so the content paints above the absolute field. */}
+      <div className="relative mx-auto max-w-page px-6 py-10 md:py-15">
         <Reveal>
           <div className="relative mb-12 flex items-center gap-4">
             <h2
