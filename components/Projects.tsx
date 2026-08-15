@@ -125,9 +125,11 @@ export default async function Projects({
 
   return (
     <Section id="projects" title={title} index={index} tone="raised">
+      {/* Every card takes one column, featured or not, so each row always holds
+          two. Featured still decides ordering, just not footprint. */}
       <ul className="grid gap-5 md:grid-cols-2">
         {projects.map((p, i) => (
-          <li key={p.title} className={p.featured ? 'md:col-span-2' : ''}>
+          <li key={p.title}>
             {/* Staggered so the grid assembles rather than appearing at once. */}
             <Reveal delay={Math.min(i, 3) * 70} className="h-full">
               <Spotlight
@@ -140,12 +142,11 @@ export default async function Projects({
                   } as React.CSSProperties
                 }
                 className="group h-full overflow-hidden rounded-2xl border border-border bg-surface shadow-[var(--card-shadow)] transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[rgb(var(--tone)/0.45)]"
-                innerClassName={`flex h-full flex-col ${p.featured ? 'md:flex-row' : ''}`}
+                innerClassName="flex h-full flex-col"
               >
-                <Cover
-                  p={p}
-                  className={p.featured ? 'h-44 shrink-0 md:h-auto md:w-[42%]' : 'h-40 shrink-0'}
-                />
+                {/* The side-by-side cover was sized for a full-width card; in
+                    a half-width column it left no room for the copy. */}
+                <Cover p={p} className="h-40 shrink-0" />
                 <Body p={p} index={i} locale={locale} />
               </Spotlight>
             </Reveal>
