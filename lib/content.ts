@@ -62,6 +62,28 @@ const TREE = {
   },
 } as const
 
+export type Appearance = {
+  defaultTheme: 'light' | 'dark'
+  decorShow: boolean
+  decorArrangement: 'auto' | 'a' | 'b' | 'c'
+  decorWeight: 'vivid' | 'soft'
+}
+
+/**
+ * Site chrome: the colour mode a first-time visitor gets, and how the margin
+ * decorations behave. Shared by both languages, and every field falls back so
+ * a missing or partial file still renders the site.
+ */
+export async function getAppearance(): Promise<Appearance> {
+  const a = await reader.singletons.appearance.read()
+  return {
+    defaultTheme: a?.defaultTheme === 'dark' ? 'dark' : 'light',
+    decorShow: a?.decorShow !== false,
+    decorArrangement: a?.decorArrangement ?? 'auto',
+    decorWeight: a?.decorWeight === 'soft' ? 'soft' : 'vivid',
+  }
+}
+
 /** Whether the Arabic site is published. Missing settings file means no. */
 export async function arabicEnabled(): Promise<boolean> {
   const settings = await reader.singletons.arabicSettings.read()
@@ -87,7 +109,9 @@ export async function getSocials(locale: Locale = 'en') {
 export async function getAbout(locale: Locale = 'en') {
   const about = await TREE[locale].about.readOrThrow()
   const base = {
-    photo: about.photo ?? '/profile.jpg',
+    // Null rather than a guessed path: an unset photo should mean "no photo",
+    // not a broken image pointing at a file that may never have existed.
+    photo: about.photo || null,
     paragraphs: [...about.paragraphs],
     stats: about.stats.map((s) => ({ value: s.value, label: s.label })),
   }

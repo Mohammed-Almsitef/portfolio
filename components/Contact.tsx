@@ -24,10 +24,10 @@ export default async function Contact({
       <div className="grid gap-12 md:grid-cols-[1.4fr_1fr] md:gap-16">
         <div>
           <p className="text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-tight tracking-tight">
-            Let\u2019s work together.
+            Let's work together.
           </p>
           <p className="mt-5 leading-relaxed text-body md:text-[1.0625rem]">
-            I\u2019m open to full-time roles, contract work, and interesting collaborations \u2014
+            I'm open to full-time roles, contract work, and interesting collaborations \u2014
             especially anything involving autonomy in the real world. Email is the fastest way to
             reach me.
           </p>
@@ -46,7 +46,7 @@ export default async function Contact({
                   rel="noopener noreferrer"
                   className="tap font-mono text-sm text-muted underline-offset-4 transition-colors hover:text-accent hover:underline"
                 >
-                  {s.label} <span aria-hidden="true">\u2197</span>
+                  {s.label} <span aria-hidden="true"></span>
                 </a>
               </li>
             ))}

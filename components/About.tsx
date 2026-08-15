@@ -3,7 +3,6 @@ import { getAbout, getSite } from '@/lib/content'
 import CountUp from './CountUp'
 import Section from './Section'
 import type { Locale } from '@/lib/locale'
-import imgProfile from '@/public/profile.png'
 
 export default async function About({
   title,
@@ -19,13 +18,19 @@ export default async function About({
   return (
     <Section id="about" title={title} index={index}>
       <div className='flex gap-20 w-full items-center'>
-        <div className='hidden lg:inline p-6'>
-          <Image
-            src={imgProfile}
-            alt={site.name}
-            className="w-100"
-          />
-        </div>
+        {/* Set in the manager under About. Hidden entirely if none is set,
+            rather than leaving a broken image or a reserved gap. */}
+        {about.photo && (
+          <div className="hidden shrink-0 p-6 lg:block">
+            <Image
+              src={about.photo}
+              alt={site.name}
+              width={400}
+              height={400}
+              className="h-auto w-100 rounded-2xl object-cover"
+            />
+          </div>
+        )}
         <div className="md:max-w-2xl flex flex-col w-full items center gap-12 md:grid-cols-[1.55fr_1fr] md:gap-16">
           {about.paragraphs.map((p, i) => (
             <p key={i} className="leading-relaxed text-body md:text-[1.0625rem] text-justify">

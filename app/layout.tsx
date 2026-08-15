@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter, JetBrains_Mono, Noto_Sans_Arabic } from 'next/font/google'
-import { arabicEnabled, getSite } from '@/lib/content'
+import { arabicEnabled, getAppearance, getSite } from '@/lib/content'
 import './globals.css'
 
 const inter = Inter({
@@ -72,7 +72,9 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const { defaultTheme } = await getAppearance()
+
   return (
     // suppressHydrationWarning: the inline script below adds a class to <html>
     // before React hydrates, which is an intentional server/client difference.
@@ -86,14 +88,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/*
           Runs synchronously before first paint, so the resolved theme is on
           <html> before anything is drawn — no flash of the wrong palette.
-          Light is the default: only a stored preference switches to dark, so
-          the system setting no longer decides for a first-time visitor.
-          Wrapped in try/catch because localStorage throws in some privacy
-          modes, and a theme preference must never break the page.
+          The default comes from the manager; a visitor's own stored choice
+          always beats it. Wrapped in try/catch because localStorage throws in
+          some privacy modes, and a theme preference must never break the page.
         */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){var r=document.documentElement;r.classList.add('js');try{var s=localStorage.getItem('theme');r.dataset.theme=s==='dark'?'dark':'light'}catch(e){}})()`,
+            __html: `(function(){var r=document.documentElement;var d=${JSON.stringify(defaultTheme)};r.classList.add('js');r.dataset.theme=d;try{var s=localStorage.getItem('theme');if(s==='dark'||s==='light')r.dataset.theme=s}catch(e){}})()`,
           }}
         />
       </head>

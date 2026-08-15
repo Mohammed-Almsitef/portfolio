@@ -283,6 +283,13 @@ body::before {
   --robot-glow: none;
 }
 
+/* Faded back, for when the machines should sit further behind the page. */
+.robot-field.is-soft {
+  --robot-fill: 1;
+  --robot-stroke: 0.85;
+  --robot-alpha: 0.3;
+}
+
 /*
  * Hero backdrop mask.
  *

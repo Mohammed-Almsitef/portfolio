@@ -20,35 +20,30 @@ const LABELS: Record<Mode, string> = {
 }
 
 export default function ThemeToggle() {
-  // Light is the default, matching the pre-paint script in the layout. The two
-  // have to agree, or the first click on the toggle goes the wrong way.
   const [mode, setMode] = useState<Mode>('light')
 
+  // Adopt whatever the pre-paint script already resolved onto <html>, rather
+  // than assuming a default here. That script knows the site-wide default from
+  // the manager and the visitor's stored choice; duplicating either would mean
+  // two sources of truth that drift, and a first click that goes the wrong way.
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem('theme')
-      if (stored === 'light' || stored === 'dark') {
-        setMode(stored)
-        document.documentElement.dataset.theme = stored
-      } else {
-        document.documentElement.dataset.theme = 'light'
-      }
-    } catch {
-      document.documentElement.dataset.theme = 'light'
-    }
+    const current = document.documentElement.dataset.theme
+    if (current === 'light' || current === 'dark') setMode(current)
   }, [])
 
-  useEffect(() => {
+  // Written on click only, never on mount. Persisting the resolved mode as a
+  // side effect of rendering would stamp the site-wide default into a
+  // first-time visitor's storage, and a later change to that default would
+  // then never reach them.
+  const toggleTheme = () => {
+    const picked: Mode = mode === 'light' ? 'dark' : 'light'
+    setMode(picked)
+    document.documentElement.dataset.theme = picked
     try {
-      localStorage.setItem('theme', mode)
-      document.documentElement.dataset.theme = mode
+      localStorage.setItem('theme', picked)
     } catch {
       // preference just won't persist
     }
-  }, [mode])
-
-  const toggleTheme = () => {
-    setMode(mode === 'light' ? 'dark' : 'light')
   }
 
   // Shows the icon of the theme a click switches TO, not the one currently

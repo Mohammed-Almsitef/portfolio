@@ -467,7 +467,7 @@ export default config({
   ui: {
     brand: { name: 'Portfolio' },
     navigation: {
-      'Page setup': ['sections', 'site'],
+      'Page setup': ['sections', 'site', 'appearance'],
       Content: ['about', 'projects', 'openSource', 'skills', 'experience'],
       'Credentials & links': ['education', 'publications', 'socials'],
       'العربية · إعداد الصفحة': ['sectionsAr', 'siteAr'],
@@ -501,6 +501,55 @@ export default config({
     educationAr: educationDef('content/ar', ' · عربي'),
     publicationsAr: publicationsDef('content/ar', ' · عربي'),
     openSourceAr: openSourceDef('content/ar', ' · عربي'),
+
+    /**
+     * Chrome rather than content, so it is deliberately NOT duplicated per
+     * language: one theme and one set of margin decorations for both sites.
+     */
+    appearance: singleton({
+      label: 'Appearance',
+      path: 'content/appearance',
+      format: { data: 'json' },
+      schema: {
+        defaultTheme: fields.select({
+          label: 'Default colour mode',
+          description:
+            'What a first-time visitor sees. Once someone picks a mode themselves, their choice always wins.',
+          options: [
+            { label: 'Light', value: 'light' },
+            { label: 'Dark', value: 'dark' },
+          ],
+          defaultValue: 'light',
+        }),
+        decorShow: fields.checkbox({
+          label: 'Show the robot shapes beside the content',
+          description:
+            'The isometric machines in the left and right margins. They only appear on windows wider than about 1720px, where there is a margin to sit in.',
+          defaultValue: true,
+        }),
+        decorArrangement: fields.select({
+          label: 'How the shapes are arranged',
+          description:
+            'Vary means each section gets a different one of the three layouts, so no two sections look alike.',
+          options: [
+            { label: 'Vary per section', value: 'auto' },
+            { label: 'Always arrangement A', value: 'a' },
+            { label: 'Always arrangement B', value: 'b' },
+            { label: 'Always arrangement C', value: 'c' },
+          ],
+          defaultValue: 'auto',
+        }),
+        decorWeight: fields.select({
+          label: 'Shape intensity',
+          description: 'Full colour, or faded back so they sit further behind the page.',
+          options: [
+            { label: 'Full colour', value: 'vivid' },
+            { label: 'Light / faded', value: 'soft' },
+          ],
+          defaultValue: 'vivid',
+        }),
+      },
+    }),
 
     /** The single switch that publishes or hides the whole Arabic site. */
     arabicSettings: singleton({

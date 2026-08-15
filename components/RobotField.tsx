@@ -1,5 +1,7 @@
+import { getAppearance } from '@/lib/content'
+
 /**
- * A scattered field of robot line-art, sitting behind a section's content.
+ * A field of isometric robots, sitting in the margins beside a section.
  *
  * Placement is pseudo-random but derived from a seed, so the server and the
  * client render the same arrangement — a real `Math.random()` here would
@@ -381,7 +383,7 @@ function hash(text: string) {
   return h >>> 0
 }
 
-export default function RobotField({
+export default async function RobotField({
   seed,
   count = 6,
   tone = 'base',
@@ -392,12 +394,18 @@ export default function RobotField({
   /** The ground the field sits on, so backing faces match it exactly. */
   tone?: 'base' | 'raised'
 }) {
+  // Read here rather than threading props down through every section: this is
+  // a Server Component, and the reader is cached per request.
+  const { decorShow, decorArrangement, decorWeight } = await getAppearance()
+  if (!decorShow) return null
+
   const ground = tone === 'raised' ? 'var(--color-surface)' : 'var(--color-bg)'
   // The seed picks the arrangement, the machine the cycle starts on, and where
   // the palette starts — three independent rotations, so no two sections read
   // as the same composition in the same colours.
   const h = hash(seed)
-  const layout = LAYOUTS[h % LAYOUTS.length]
+  const pinned = { a: 0, b: 1, c: 2 }[decorArrangement as 'a' | 'b' | 'c']
+  const layout = LAYOUTS[pinned ?? h % LAYOUTS.length]
   // Unsigned shifts: `>>` would coerce a hash above 2^31 to a negative int and
   // index off the front of the array.
   const shapeStart = (h >>> 4) % SHAPES.length
@@ -411,7 +419,9 @@ export default function RobotField({
       // the field waits until there is genuinely room beside the content: the
       // 44px margin plus the largest machine needs 136px of gutter, which a
       // 90rem container reaches at about 1712px.
-      className="robot-field pointer-events-none absolute inset-0 hidden overflow-hidden [@media(min-width:1720px)]:block"
+      className={`robot-field pointer-events-none absolute inset-0 hidden overflow-hidden [@media(min-width:1720px)]:block ${
+        decorWeight === 'soft' ? 'is-soft' : ''
+      }`}
     >
       {layout.slice(0, count).map(({ side, top, size, tilt }, i) => {
         const machine = RENDERED[(i + shapeStart) % RENDERED.length]
