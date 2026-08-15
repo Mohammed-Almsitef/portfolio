@@ -7,62 +7,196 @@
  * so every section gets a different but stable scatter.
  */
 
-type Shape = (props: { className?: string }) => React.ReactElement
+type V3 = [number, number, number]
 
-/** Quadrotor, front view: body, arms, rotor discs, landing skids. */
-const Drone: Shape = (p) => (
-  <svg viewBox="0 0 48 48" {...p}>
-    <rect x="18" y="19" width="12" height="8" rx="2" />
-    <path d="M18 22 6 17M30 22l12-5" />
-    <ellipse cx="6" cy="16" rx="6" ry="1.8" />
-    <ellipse cx="42" cy="16" rx="6" ry="1.8" />
-    <path d="M20 27v6M28 27v6M14 33h20" />
-  </svg>
-)
+/**
+ * Isometric projection. X runs right-and-down, Z left-and-down, Y is up, so a
+ * box drawn through it shows its top and two sides — the shapes are built from
+ * real 3D geometry rather than drawn as flat icons.
+ */
+const ISO_X = Math.cos(Math.PI / 6)
+function iso([x, y, z]: V3): [number, number] {
+  return [(x - z) * ISO_X, (x + z) * 0.5 - y]
+}
 
-/** Manipulator, side view: turret base, two links, joints, gripper. */
-const Arm: Shape = (p) => (
-  <svg viewBox="0 0 48 48" {...p}>
-    <path d="M13 42h22M16 42v-5h16v5" />
-    <path d="M24 37V27M24 27l11 -12M35 15 24 8" />
-    <circle cx="24" cy="27" r="2.4" />
-    <circle cx="35" cy="15" r="2.2" />
-    <path d="m24 8-5-2M24 8l-3 4" />
-  </svg>
-)
+function toPath(points: V3[], close = true) {
+  const d = points
+    .map((p, i) => {
+      const [x, y] = iso(p)
+      return `${i === 0 ? 'M' : 'L'}${x.toFixed(2)} ${y.toFixed(2)}`
+    })
+    .join('')
+  return close ? `${d}Z` : d
+}
 
-/** Quadruped, side view: body, head, four two-segment legs. */
-const Quadruped: Shape = (p) => (
-  <svg viewBox="0 0 48 48" {...p}>
-    <rect x="11" y="17" width="25" height="9" rx="2.5" />
-    <path d="M36 19h6v6h-6" />
-    <path d="M15 26l-3 7 3 6M21 26l3 7-3 6M28 26l-3 7 3 6M34 26l3 7-3 6" />
-  </svg>
-)
+/** The three faces of an axis-aligned box that face the camera. */
+function box(c: V3, size: V3): string[] {
+  const [cx, cy, cz] = c
+  const [w, h, d] = size.map((n) => n / 2) as V3
+  const x0 = cx - w
+  const x1 = cx + w
+  const y0 = cy - h
+  const y1 = cy + h
+  const z0 = cz - d
+  const z1 = cz + d
+  return [
+    // top
+    toPath([
+      [x0, y1, z0],
+      [x1, y1, z0],
+      [x1, y1, z1],
+      [x0, y1, z1],
+    ]),
+    // the +x side
+    toPath([
+      [x1, y0, z0],
+      [x1, y1, z0],
+      [x1, y1, z1],
+      [x1, y0, z1],
+    ]),
+    // the +z side
+    toPath([
+      [x0, y0, z1],
+      [x0, y1, z1],
+      [x1, y1, z1],
+      [x1, y0, z1],
+    ]),
+  ]
+}
 
-/** Humanoid: head, torso, swung arms, stance legs. */
-const Humanoid: Shape = (p) => (
-  <svg viewBox="0 0 48 48" {...p}>
-    <circle cx="24" cy="9" r="4.2" />
-    <path d="M24 13.5v3" />
-    <rect x="18.5" y="16.5" width="11" height="13" rx="2.5" />
-    <path d="M18.5 19 13 29M29.5 19 35 29" />
-    <path d="M21 29.5 20 42M27 29.5 28 42" />
-  </svg>
-)
+/** A circle in the plane spanned by `u` and `v` — wheels, rotors, turrets. */
+function ring(c: V3, r: number, u: V3, v: V3, segs = 16): string {
+  const pts: V3[] = Array.from({ length: segs }, (_, i) => {
+    const t = (i / segs) * Math.PI * 2
+    const co = Math.cos(t) * r
+    const si = Math.sin(t) * r
+    return [c[0] + u[0] * co + v[0] * si, c[1] + u[1] * co + v[1] * si, c[2] + u[2] * co + v[2] * si]
+  })
+  return toPath(pts)
+}
 
-/** Wheeled rover: deck, sensor mast, wheels. */
-const Rover: Shape = (p) => (
-  <svg viewBox="0 0 48 48" {...p}>
-    <rect x="9" y="20" width="30" height="10" rx="2.5" />
-    <path d="M31 20v-7" />
-    <rect x="27" y="7" width="8" height="6" rx="1.5" />
-    <circle cx="17" cy="33" r="4" />
-    <circle cx="31" cy="33" r="4" />
-  </svg>
-)
+const sub = (a: V3, b: V3): V3 => [a[0] - b[0], a[1] - b[1], a[2] - b[2]]
+const cross = (a: V3, b: V3): V3 => [
+  a[1] * b[2] - a[2] * b[1],
+  a[2] * b[0] - a[0] * b[2],
+  a[0] * b[1] - a[1] * b[0],
+]
+const norm = (a: V3): V3 => {
+  const l = Math.hypot(a[0], a[1], a[2]) || 1
+  return [a[0] / l, a[1] / l, a[2] / l]
+}
 
-const SHAPES: Shape[] = [Drone, Arm, Quadruped, Humanoid, Rover]
+/**
+ * A square-section beam between two points — limbs, legs, masts and arms.
+ * Built with a frame perpendicular to the beam, so it stays solid-looking at
+ * any angle instead of collapsing to a line.
+ */
+function beam(a: V3, b: V3, w: number): string[] {
+  const dir = norm(sub(b, a))
+  const ref: V3 = Math.abs(dir[1]) > 0.95 ? [1, 0, 0] : [0, 1, 0]
+  const r = norm(cross(dir, ref))
+  const u = norm(cross(r, dir))
+  const corner = (p: V3, sr: number, su: number): V3 => [
+    p[0] + r[0] * w * sr + u[0] * w * su,
+    p[1] + r[1] * w * sr + u[1] * w * su,
+    p[2] + r[2] * w * sr + u[2] * w * su,
+  ]
+  const signs: [number, number][] = [
+    [1, 1],
+    [1, -1],
+    [-1, -1],
+    [-1, 1],
+  ]
+  const capA = signs.map(([s1, s2]) => corner(a, s1, s2))
+  const capB = signs.map(([s1, s2]) => corner(b, s1, s2))
+  return [
+    toPath(capA),
+    toPath(capB),
+    ...capA.map((p, i) => toPath([p, capB[i]], false)),
+  ]
+}
+
+const HORIZONTAL: [V3, V3] = [
+  [1, 0, 0],
+  [0, 0, 1],
+]
+const AXLE_Z: [V3, V3] = [
+  [1, 0, 0],
+  [0, 1, 0],
+]
+
+/** Quadrotor: body, four booms, rotor discs, landing legs. */
+const DRONE = [
+  ...box([0, 7, 0], [8, 4, 8]),
+  ...[
+    [1, 1],
+    [1, -1],
+    [-1, -1],
+    [-1, 1],
+  ].flatMap(([sx, sz]) => [
+    ...beam([sx * 3, 7, sz * 3], [sx * 7.5, 8, sz * 7.5], 0.5),
+    ring([sx * 7.5, 8.8, sz * 7.5], 3.4, ...HORIZONTAL, 14),
+    ...beam([sx * 3, 5, sz * 3], [sx * 4.5, 0, sz * 4.5], 0.5),
+  ]),
+]
+
+/** Manipulator: turret base, two links, gripper. */
+const ARM = [
+  ring([0, 0, 0], 6, ...HORIZONTAL),
+  ring([0, 2.5, 0], 6, ...HORIZONTAL),
+  ...[0, 1, 2, 3].map((i) => {
+    const t = (i / 4) * Math.PI * 2
+    const x = Math.cos(t) * 6
+    const z = Math.sin(t) * 6
+    return toPath([[x, 0, z] as V3, [x, 2.5, z] as V3], false)
+  }),
+  ...box([0, 5, 0], [5, 5, 5]),
+  ...beam([0, 7.5, 0], [7, 15, 0], 1.2),
+  ...beam([7, 15, 0], [2, 21, 0], 1),
+  ...beam([2, 21, 0], [-1, 23, 1.6], 0.5),
+  ...beam([2, 21, 0], [-1, 23, -1.6], 0.5),
+]
+
+/** Quadruped: body, head, four two-segment legs. */
+const QUADRUPED = [
+  ...box([0, 9, 0], [16, 6, 8]),
+  ...box([10.5, 10, 0], [5, 4, 5]),
+  ...[
+    [1, 1],
+    [1, -1],
+    [-1, -1],
+    [-1, 1],
+  ].flatMap(([sx, sz]) => [
+    ...beam([sx * 5, 6, sz * 3.5], [sx * 6.5, 3, sz * 3.5], 0.6),
+    ...beam([sx * 6.5, 3, sz * 3.5], [sx * 5, 0, sz * 3.5], 0.5),
+  ]),
+]
+
+/** Humanoid: torso, head, arms, legs. */
+const HUMANOID = [
+  ...beam([2.5, 9, 0], [2.5, 0, 0], 1),
+  ...beam([-2.5, 9, 0], [-2.5, 0, 0], 1),
+  ...box([0, 14, 0], [7, 10, 5]),
+  ...beam([0, 19, 0], [0, 20, 0], 1.2),
+  ...box([0, 22.5, 0], [4.5, 4.5, 4.5]),
+  ...beam([4.5, 18, 0], [6, 10, 0], 0.8),
+  ...beam([-4.5, 18, 0], [-6, 10, 0], 0.8),
+]
+
+/** Wheeled rover: deck, sensor mast, four wheels. */
+const ROVER = [
+  ...box([0, 5.5, 0], [16, 4, 9]),
+  ...beam([4, 7.5, 0], [4, 13, 0], 0.7),
+  ...box([4, 14.5, 0], [4.5, 3, 4.5]),
+  ...[
+    [1, 1],
+    [1, -1],
+    [-1, -1],
+    [-1, 1],
+  ].map(([sx, sz]) => ring([sx * 5, 3, sz * 5.5], 3, ...AXLE_Z, 12)),
+]
+
+const SHAPES: string[][] = [DRONE, ARM, QUADRUPED, HUMANOID, ROVER]
 
 /**
  * A composed arrangement rather than a random scatter: the two gutters are
@@ -71,12 +205,12 @@ const SHAPES: Shape[] = [Drone, Arm, Quadruped, Humanoid, Rover]
  * reading a row of equal marks. Tilts lean away from the content.
  */
 const LAYOUT = [
-  { side: 'left', top: 5, size: 80, tilt: -7, tone: '--tone-blue' },
-  { side: 'right', top: 18, size: 56, tilt: 8, tone: '--tone-teal' },
-  { side: 'left', top: 36, size: 58, tilt: 6, tone: '--tone-violet' },
-  { side: 'right', top: 49, size: 84, tilt: -6, tone: '--tone-amber' },
-  { side: 'left', top: 68, size: 54, tilt: 9, tone: '--tone-cyan' },
-  { side: 'right', top: 81, size: 68, tilt: -8, tone: '--tone-emerald' },
+  { side: 'left', top: 5, size: 104, tilt: -7, tone: '--tone-blue' },
+  { side: 'right', top: 18, size: 74, tilt: 8, tone: '--tone-teal' },
+  { side: 'left', top: 36, size: 78, tilt: 6, tone: '--tone-violet' },
+  { side: 'right', top: 49, size: 110, tilt: -6, tone: '--tone-amber' },
+  { side: 'left', top: 68, size: 72, tilt: 9, tone: '--tone-cyan' },
+  { side: 'right', top: 81, size: 90, tilt: -8, tone: '--tone-emerald' },
 ] as const
 
 function hash(text: string) {
@@ -109,7 +243,7 @@ export default function RobotField({
       className="pointer-events-none absolute inset-0 hidden overflow-hidden lg:block"
     >
       {LAYOUT.slice(0, count).map(({ side, top, size, tilt, tone }, i) => {
-        const Shape = SHAPES[(i + offset) % SHAPES.length]
+        const paths = SHAPES[(i + offset) % SHAPES.length]
         // A left-gutter machine is pinned by its right edge and vice versa, so
         // both anchor off the same distance from the middle.
         const anchor = side === 'left' ? 'right' : 'left'
@@ -133,7 +267,21 @@ export default function RobotField({
               transform: `rotate(${tilt}deg) scaleX(${side === 'right' ? -1 : 1})`,
             }}
           >
-            <Shape className="size-full [&_*]:fill-none [&_*]:stroke-current [&_*]:[stroke-linecap:round] [&_*]:[stroke-linejoin:round] [&_*]:[stroke-width:1.6]" />
+            {/* One viewBox for every machine, sized to the tallest — so they
+                keep their relative scale instead of each filling the frame. */}
+            <svg
+              viewBox="-22 -32 44 44"
+              className="size-full"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.1"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              {paths.map((d, j) => (
+                <path key={j} d={d} />
+              ))}
+            </svg>
           </div>
         )
       })}
