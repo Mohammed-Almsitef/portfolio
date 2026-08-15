@@ -30,11 +30,11 @@ export default function Section({
           <div className="relative mb-12 flex items-center gap-4">
             <h2
               id={`${id}-heading`}
-              className={`relative mx-auto border-x-2 border-border-strong px-5 font-mono text-3xl font-bold uppercase tracking-[0.2em] text-accent shadow-[0_0_20px_-6px_rgb(var(--tone-blue)/0.4)] ${tone === 'raised' ? 'bg-surface' : 'bg-bg'}`}
+              className={`relative z-10 mx-auto border-x-2 border-border-strong px-5 font-mono text-3xl font-bold uppercase tracking-[0.2em] text-accent shadow-[0_0_20px_-6px_rgb(var(--tone-blue)/0.4)] ${tone === 'raised' ? 'bg-surface' : 'bg-bg'}`}
             >
               {title}
             </h2>
-            <span aria-hidden="true" className="section-title-rule absolute -z-1 h-px w-full" />
+            <span aria-hidden="true" className="section-title-rule absolute h-px w-full" />
           </div>
         </Reveal>
 
