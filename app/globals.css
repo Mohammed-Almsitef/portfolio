@@ -271,14 +271,15 @@ body::before {
 /*
  * Gutter machines.
  *
- * Quiet shaded solids in both themes — no glow. Kept as custom properties
- * rather than inlined in the component so the weight of the whole field is
- * tunable from one place.
+ * Shaded solids in full-strength colour: the fill multiplier pushes the lit
+ * faces close to the raw tone, and the field sits at high opacity so the hues
+ * actually read rather than washing into the ground. Kept as custom properties
+ * rather than inlined in the component so the whole field is tunable here.
  */
 .robot-field {
-  --robot-fill: 1;
-  --robot-stroke: 0.85;
-  --robot-alpha: 0.3;
+  --robot-fill: 1.4;
+  --robot-stroke: 1;
+  --robot-alpha: 0.8;
   --robot-glow: none;
 }
 
