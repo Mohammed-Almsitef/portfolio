@@ -20,7 +20,9 @@ const LABELS: Record<Mode, string> = {
 }
 
 export default function ThemeToggle() {
-  const [mode, setMode] = useState<Mode>('dark')
+  // Light is the default, matching the pre-paint script in the layout. The two
+  // have to agree, or the first click on the toggle goes the wrong way.
+  const [mode, setMode] = useState<Mode>('light')
 
   useEffect(() => {
     try {
@@ -29,10 +31,10 @@ export default function ThemeToggle() {
         setMode(stored)
         document.documentElement.dataset.theme = stored
       } else {
-        document.documentElement.dataset.theme = 'dark'
+        document.documentElement.dataset.theme = 'light'
       }
     } catch {
-      document.documentElement.dataset.theme = 'dark'
+      document.documentElement.dataset.theme = 'light'
     }
   }, [])
 

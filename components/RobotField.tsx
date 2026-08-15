@@ -188,6 +188,9 @@ const CORNERS: [number, number][] = [
   [-1, 1],
 ]
 
+/** Left and right, for the things that come in pairs rather than fours. */
+const SIDES = [1, -1]
+
 /** Quadrotor: body, canopy, four booms with rotor hubs, landing skids. */
 const DRONE: Face[] = [
   shadow(0, 0, 9),
@@ -198,7 +201,9 @@ const DRONE: Face[] = [
     ...beam([sx * 4.4, 6.5, sz * 4.4], [sx * 8, 7.6, sz * 8], 0.6),
     ...cylinder([sx * 8, 8.4, sz * 8], 1.1, [0, 1, 0], 1.4, 10),
     disc([sx * 8, 9.2, sz * 8], 3.6, [1, 0, 0], [0, 0, 1], 16),
-    ...beam([sx * 3, 4.6, sz * 3], [sx * 5, 0.4, sz * 5], 0.55),
+    // Legs land on pads rather than stopping in mid-air.
+    ...beam([sx * 3, 4.6, sz * 3], [sx * 5, 0.7, sz * 5], 0.55),
+    ...box([sx * 5, 0.4, sz * 5], [2.6, 0.8, 2.6]),
   ]),
 ]
 
@@ -237,19 +242,23 @@ const QUADRUPED: Face[] = [
 /** Humanoid: torso, visored head, shouldered arms, jointed legs. */
 const HUMANOID: Face[] = [
   shadow(0, 0, 6),
-  ...CORNERS.slice(0, 2).flatMap(([s]) => [
-    ...beam([s * 2.6, 9, 0], [s * 2.6, 4.5, 0], 1.1),
-    ...cylinder([s * 2.6, 4.5, 0], 1.1, [0, 0, 1], 1.6, 10),
-    ...beam([s * 2.6, 4.5, 0], [s * 2.6, 0.6, 0], 0.95),
-    ...box([s * 2.6, 0.4, 0.8], [2.6, 0.9, 4.4]),
+  // Legs and arms are paired across Z, the axis the torso is thin on, so both
+  // of each are visible from this camera rather than hiding behind each other.
+  ...SIDES.flatMap((s) => [
+    ...beam([0, 9, s * 2.6], [0, 4.6, s * 2.8], 1.1),
+    ...cylinder([0, 4.6, s * 2.8], 1.2, [1, 0, 0], 1.8, 10),
+    ...beam([0, 4.6, s * 2.8], [0, 1, s * 2.8], 0.95),
+    ...box([0.8, 0.5, s * 2.8], [4.4, 1, 2.6]),
   ]),
-  ...box([0, 14, 0], [7.5, 10, 5]),
-  ...cylinder([0, 19.4, 0], 1.2, [0, 1, 0], 1.6, 10),
-  ...box([0, 22.4, 0], [4.6, 4.4, 4.8]),
-  ...box([1.6, 22.6, 0], [1.6, 2, 3.6]),
-  ...CORNERS.slice(0, 2).flatMap(([s]) => [
-    ...cylinder([s * 4.6, 18.2, 0], 1.3, [0, 0, 1], 1.6, 10),
-    ...beam([s * 4.6, 18.2, 0], [s * 6, 10, 0], 0.85),
+  ...box([0, 14, 0], [6, 10, 8]),
+  ...cylinder([0, 19.4, 0], 1.3, [0, 1, 0], 1.8, 10),
+  ...box([0, 22.6, 0], [5, 4.6, 5.4]),
+  // Visor: a shallow lip on the face, not a block bolted to the side of it.
+  ...box([2.2, 22.8, 0], [1.4, 2.2, 4]),
+  ...SIDES.flatMap((s) => [
+    ...cylinder([0, 18.4, s * 5], 1.4, [0, 0, 1], 1.8, 10),
+    ...beam([0, 18.4, s * 5], [0.6, 10, s * 5.6], 0.85),
+    ...cylinder([0.6, 10, s * 5.6], 1.1, [0, 0, 1], 1.6, 10),
   ]),
 ]
 

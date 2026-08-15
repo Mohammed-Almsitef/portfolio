@@ -86,12 +86,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/*
           Runs synchronously before first paint, so the resolved theme is on
           <html> before anything is drawn — no flash of the wrong palette.
+          Light is the default: only a stored preference switches to dark, so
+          the system setting no longer decides for a first-time visitor.
           Wrapped in try/catch because localStorage throws in some privacy
           modes, and a theme preference must never break the page.
         */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){var r=document.documentElement;r.classList.add('js');try{var s=localStorage.getItem('theme');r.dataset.theme=(s==='dark'||(s!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches))?'dark':'light'}catch(e){}})()`,
+            __html: `(function(){var r=document.documentElement;r.classList.add('js');try{var s=localStorage.getItem('theme');r.dataset.theme=s==='dark'?'dark':'light'}catch(e){}})()`,
           }}
         />
       </head>
