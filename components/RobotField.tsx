@@ -64,16 +64,20 @@ const Rover: Shape = (p) => (
 
 const SHAPES: Shape[] = [Drone, Arm, Quadruped, Humanoid, Rover]
 
-/** Small deterministic PRNG — enough spread for scatter, stable across renders. */
-function mulberry32(seed: number) {
-  let a = seed
-  return () => {
-    a = (a + 0x6d2b79f5) | 0
-    let t = Math.imul(a ^ (a >>> 15), 1 | a)
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
-  }
-}
+/**
+ * A composed arrangement rather than a random scatter: the two gutters are
+ * staggered against each other so no two machines sit at the same height, and
+ * sizes alternate heavy/light down the column so the eye travels rather than
+ * reading a row of equal marks. Tilts lean away from the content.
+ */
+const LAYOUT = [
+  { side: 'left', top: 5, size: 80, tilt: -7, tone: '--tone-blue' },
+  { side: 'right', top: 18, size: 56, tilt: 8, tone: '--tone-teal' },
+  { side: 'left', top: 36, size: 58, tilt: 6, tone: '--tone-violet' },
+  { side: 'right', top: 49, size: 84, tilt: -6, tone: '--tone-amber' },
+  { side: 'left', top: 68, size: 54, tilt: 9, tone: '--tone-cyan' },
+  { side: 'right', top: 81, size: 68, tilt: -8, tone: '--tone-emerald' },
+] as const
 
 function hash(text: string) {
   let h = 2166136261
@@ -86,55 +90,53 @@ function hash(text: string) {
 
 export default function RobotField({
   seed,
-  count = 9,
+  count = LAYOUT.length,
 }: {
-  /** Anything stable and distinct per placement — a section id works. */
+  /** Anything stable and distinct per section — the section id works. */
   seed: string
   count?: number
 }) {
-  const rand = mulberry32(hash(seed))
-
-  const items = Array.from({ length: count }, (_, i) => {
-    const Shape = SHAPES[Math.floor(rand() * SHAPES.length)]
-    return {
-      key: i,
-      Shape,
-      // Kept off the vertical centre band, where headings and body copy sit.
-      left: rand() * 92,
-      top: rand() * 84,
-      size: 46 + rand() * 66,
-      tilt: (rand() - 0.5) * 22,
-      // Varied weight, so the field reads as depth rather than a stamped grid.
-      opacity: 0.1 + rand() * 0.1,
-      flip: rand() > 0.5,
-    }
-  })
+  // The only thing the seed decides is which machine the cycle starts on, so
+  // each section leads with a different one while the composition stays fixed.
+  const offset = hash(seed) % SHAPES.length
 
   return (
     <div
       aria-hidden="true"
       data-print-hide
-      className="pointer-events-none absolute inset-0 overflow-hidden"
-      // `muted` rather than a border token: it is the one neutral that stays
-      // legible against both the light and the dark ground.
-      style={{ color: 'var(--color-muted)' }}
+      // Only from `lg` up: below that the content fills the full width and
+      // there is no gutter to sit in without landing on the text.
+      className="pointer-events-none absolute inset-0 hidden overflow-hidden lg:block"
     >
-      {items.map(({ key, Shape, left, top, size, tilt, opacity, flip }) => (
-        <div
-          key={key}
-          className="absolute"
-          style={{
-            left: `${left}%`,
-            top: `${top}%`,
-            width: size,
-            height: size,
-            opacity,
-            transform: `rotate(${tilt}deg) scaleX(${flip ? -1 : 1})`,
-          }}
-        >
-          <Shape className="size-full [&_*]:fill-none [&_*]:stroke-current [&_*]:[stroke-linecap:round] [&_*]:[stroke-linejoin:round] [&_*]:[stroke-width:1.6]" />
-        </div>
-      ))}
+      {LAYOUT.slice(0, count).map(({ side, top, size, tilt, tone }, i) => {
+        const Shape = SHAPES[(i + offset) % SHAPES.length]
+        // A left-gutter machine is pinned by its right edge and vice versa, so
+        // both anchor off the same distance from the middle.
+        const anchor = side === 'left' ? 'right' : 'left'
+        return (
+          <div
+            key={i}
+            className="absolute"
+            style={{
+              // Anchored to the content edge, not to a percentage of the
+              // viewport: this keeps every machine outside the text column at
+              // any width, and simply pushes them off-screen when there is no
+              // gutter left to occupy. The 12px reclaims part of the
+              // container's own padding, which holds no text.
+              [anchor]: `calc(50% + var(--container-page) / 2 - 12px)`,
+              top: `${top}%`,
+              width: size,
+              height: size,
+              opacity: 0.3,
+              color: `rgb(var(${tone}))`,
+              // Right-hand machines face back toward the content.
+              transform: `rotate(${tilt}deg) scaleX(${side === 'right' ? -1 : 1})`,
+            }}
+          >
+            <Shape className="size-full [&_*]:fill-none [&_*]:stroke-current [&_*]:[stroke-linecap:round] [&_*]:[stroke-linejoin:round] [&_*]:[stroke-width:1.6]" />
+          </div>
+        )
+      })}
     </div>
   )
 }
