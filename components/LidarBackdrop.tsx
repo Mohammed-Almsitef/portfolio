@@ -2,11 +2,29 @@
 
 import { useEffect, useRef } from 'react'
 
-/** A wall footprint on the ground plane, extruded to `h`. */
-type Seg = { x1: number; z1: number; x2: number; z2: number; h: number }
+/**
+ * A wall footprint on the ground plane, occupying the height band y0..h.
+ * A non-zero `y0` lets beams pass underneath, which is how a hovering drone
+ * casts a shadow on the wall behind it but not on the floor below it.
+ */
+type Seg = { x1: number; z1: number; x2: number; z2: number; h: number; y0: number }
 
 /** An axis-aligned obstacle the perception stack reports as a detection. */
-type Box = { minX: number; maxX: number; minZ: number; maxZ: number; h: number; label: string }
+type Box = { minX: number; maxX: number; minZ: number; maxZ: number; h: number; y0?: number }
+
+/** The machines populating the room. Each is scanned, tracked, and drawn. */
+type PropKind = 'drone' | 'arm' | 'quadruped' | 'humanoid' | 'agv'
+type Prop = {
+  kind: PropKind
+  x: number
+  z: number
+  yaw: number
+  label: string
+  /** Phase offset so identical machines do not animate in lockstep. */
+  phase: number
+  /** What the sensor can actually hit. */
+  hull: Box
+}
 
 /** Fallbacks until the themed values are read from CSS. */
 const INK_FALLBACK: RGB = [96, 165, 250]
@@ -38,27 +56,81 @@ const CHANNELS = Array.from({ length: 16 }, (_, i) => -0.5 + (i / 15) * 0.66)
  * a surface, so the map reads as a scanned volume rather than a scattering of
  * disconnected fragments.
  */
-function wall(x1: number, z1: number, x2: number, z2: number, h = WALL_H): Seg {
-  return { x1, z1, x2, z2, h }
+function wall(x1: number, z1: number, x2: number, z2: number, h = WALL_H, y0 = 0): Seg {
+  return { x1, z1, x2, z2, h, y0 }
 }
 
-/** Four walls closing a footprint, so boxes can be both geometry and detection. */
+/** Four walls closing a footprint, so a box is both geometry and scan target. */
 function boxWalls(b: Box): Seg[] {
+  const y0 = b.y0 ?? 0
   return [
-    wall(b.minX, b.minZ, b.maxX, b.minZ, b.h),
-    wall(b.maxX, b.minZ, b.maxX, b.maxZ, b.h),
-    wall(b.maxX, b.maxZ, b.minX, b.maxZ, b.h),
-    wall(b.minX, b.maxZ, b.minX, b.minZ, b.h),
+    wall(b.minX, b.minZ, b.maxX, b.minZ, b.h, y0),
+    wall(b.maxX, b.minZ, b.maxX, b.maxZ, b.h, y0),
+    wall(b.maxX, b.maxZ, b.minX, b.maxZ, b.h, y0),
+    wall(b.minX, b.maxZ, b.minX, b.minZ, b.h, y0),
   ]
 }
 
-const BOXES: Box[] = [
-  { minX: 0.22, maxX: 0.4, minZ: 0.5, maxZ: 0.62, h: 0.22, label: 'OBJ 01' },
-  { minX: 0.5, maxX: 0.58, minZ: 0.2, maxZ: 0.28, h: 0.17, label: 'OBJ 02' },
-  { minX: 0.78, maxX: 0.86, minZ: 0.66, maxZ: 0.74, h: 0.2, label: 'OBJ 03' },
+/** Crates and pillars — scenery, not tracked. */
+const FURNITURE: Box[] = [
+  { minX: 0.22, maxX: 0.4, minZ: 0.5, maxZ: 0.62, h: 0.22 },
+  { minX: 0.78, maxX: 0.86, minZ: 0.66, maxZ: 0.74, h: 0.2 },
 ]
 
-const SCENE: Seg[] = [
+/**
+ * A mixed fleet, placed in open floor clear of the walls and the patrol loop.
+ * Each hull is the volume the sensor sees; the drone's floats above the floor.
+ */
+const PROPS: Prop[] = [
+  {
+    kind: 'arm',
+    x: 0.19,
+    z: 0.22,
+    yaw: 0.6,
+    label: 'ARM',
+    phase: 0,
+    hull: { minX: 0.15, maxX: 0.23, minZ: 0.18, maxZ: 0.26, h: 0.2 },
+  },
+  {
+    kind: 'humanoid',
+    x: 0.44,
+    z: 0.16,
+    yaw: 2.3,
+    label: 'HUMANOID',
+    phase: 1.1,
+    hull: { minX: 0.41, maxX: 0.47, minZ: 0.13, maxZ: 0.19, h: 0.26 },
+  },
+  {
+    kind: 'drone',
+    x: 0.82,
+    z: 0.22,
+    yaw: -0.5,
+    label: 'UAV',
+    phase: 2.2,
+    hull: { minX: 0.77, maxX: 0.87, minZ: 0.17, maxZ: 0.27, h: 0.245, y0: 0.195 },
+  },
+  {
+    kind: 'quadruped',
+    x: 0.165,
+    z: 0.55,
+    yaw: -0.9,
+    label: 'QUADRUPED',
+    phase: 3.3,
+    hull: { minX: 0.12, maxX: 0.21, minZ: 0.51, maxZ: 0.59, h: 0.12 },
+  },
+  {
+    kind: 'agv',
+    x: 0.56,
+    z: 0.85,
+    yaw: 0.25,
+    label: 'AGV',
+    phase: 4.4,
+    hull: { minX: 0.52, maxX: 0.6, minZ: 0.82, maxZ: 0.88, h: 0.07 },
+  },
+]
+
+/** The room itself — the only geometry drawn as a wireframe. */
+const WALLS: Seg[] = [
   // outer boundary
   wall(0.08, 0.08, 0.92, 0.08),
   wall(0.92, 0.08, 0.92, 0.92),
@@ -71,9 +143,15 @@ const SCENE: Seg[] = [
   wall(0.6, 0.45, 0.92, 0.45, 0.24),
   wall(0.72, 0.62, 0.72, 0.92, 0.28),
   wall(0.2, 0.74, 0.46, 0.74, 0.22),
-  // the tracked obstacles
-  ...BOXES.flatMap(boxWalls),
+  ...FURNITURE.flatMap(boxWalls),
 ]
+
+/**
+ * What the sensor can hit. The machines contribute simple hulls rather than
+ * their drawn wireframes: the point cloud should outline them without a
+ * bounding box being drawn around each one.
+ */
+const SCENE: Seg[] = [...WALLS, ...PROPS.flatMap((p) => boxWalls(p.hull))]
 
 /** The robot's closed patrol loop, threaded through open floor. */
 const PATH = { cx: 0.53, cz: 0.6, rx: 0.11, rz: 0.085 }
@@ -83,6 +161,13 @@ const TARGET = { x: 0.5, y: 0.1, z: 0.5 }
 const XZ_A = [1, 0, 0] as const
 const XZ_B = [0, 0, 1] as const
 const UP = [0, 1, 0] as const
+/** Fore/aft × left/right sign pairs, for legs, wheels and rotors. */
+const CORNERS: readonly (readonly [number, number])[] = [
+  [1, 1],
+  [1, -1],
+  [-1, -1],
+  [-1, 1],
+]
 
 const CAM_DIST = 1.9
 const CAM_ELEV = 0.72 // radians above the horizon — high enough to read the plan
@@ -349,7 +434,7 @@ export default function LidarBackdrop() {
         if (t <= 0 || t >= best || u < 0 || u > 1) continue
 
         const y = SENSOR_H + t * slope
-        if (y < 0 || y > s.h) continue // over the top, or below the floor
+        if (y < s.y0 || y > s.h) continue // over the top, or under the body
         best = t
         ground = false
       }
@@ -375,6 +460,172 @@ export default function LidarBackdrop() {
           z: pose.z + Math.sin(azi) * hit.dist,
           g: hit.ground,
         })
+      }
+    }
+
+    /**
+     * One machine, as a wireframe added to the current path. Each type moves a
+     * little — a still room reads as a diagram, a moving one as a workspace.
+     */
+    const drawProp = (p: Prop, t: number) => {
+      const fwd = [Math.cos(p.yaw), Math.sin(p.yaw)] as const
+      const side = [-fwd[1], fwd[0]] as const
+      const fwdV = [fwd[0], 0, fwd[1]] as const
+      const ph = t + p.phase
+
+      switch (p.kind) {
+        case 'drone': {
+          // Hover bob, and rotors that actually turn.
+          const y = 0.205 + Math.sin(ph * 1.7) * 0.012
+          box3(p.x, p.z, fwd, side, 0.022, 0.016, y, y + 0.02)
+          for (const [f, s] of CORNERS) {
+            const ax = p.x + fwd[0] * 0.036 * f + side[0] * 0.036 * s
+            const az = p.z + fwd[1] * 0.036 * f + side[1] * 0.036 * s
+            line(p.x, y + 0.01, p.z, ax, y + 0.014, az)
+            circle3(ax, y + 0.018, az, 0.019, XZ_A, XZ_B, 12)
+            const spin = ph * 9 + f + s
+            const bx = Math.cos(spin) * 0.019
+            const bz = Math.sin(spin) * 0.019
+            line(ax - bx, y + 0.018, az - bz, ax + bx, y + 0.018, az + bz)
+          }
+          for (const s of [1, -1]) {
+            const sx = p.x + side[0] * 0.013 * s
+            const sz = p.z + side[1] * 0.013 * s
+            line(sx, y, sz, sx, y - 0.02, sz)
+            line(
+              sx + fwd[0] * 0.018,
+              y - 0.02,
+              sz + fwd[1] * 0.018,
+              sx - fwd[0] * 0.018,
+              y - 0.02,
+              sz - fwd[1] * 0.018,
+            )
+          }
+          break
+        }
+
+        case 'arm': {
+          // A two-link manipulator sweeping through its workspace.
+          // Kept well off vertical so the elbow is always visible — a folded
+          // arm at this scale is indistinguishable from a pole.
+          const j1 = 0.95 + Math.sin(ph * 0.5) * 0.4
+          const j2 = j1 - 1.6 + Math.sin(ph * 0.5 + 1.2) * 0.5
+          const r = 0.028
+          circle3(p.x, 0.002, p.z, r, XZ_A, XZ_B, 16)
+          circle3(p.x, 0.03, p.z, r * 0.8, XZ_A, XZ_B, 16)
+          for (let i = 0; i < 6; i++) {
+            const a = (i / 6) * Math.PI * 2
+            line(
+              p.x + Math.cos(a) * r,
+              0.002,
+              p.z + Math.sin(a) * r,
+              p.x + Math.cos(a) * r * 0.8,
+              0.03,
+              p.z + Math.sin(a) * r * 0.8,
+            )
+          }
+          const sy = 0.06
+          const ex = p.x + fwd[0] * Math.sin(j1) * 0.085
+          const ey = sy + Math.cos(j1) * 0.085
+          const ez = p.z + fwd[1] * Math.sin(j1) * 0.085
+          const wx = ex + fwd[0] * Math.sin(j2) * 0.07
+          const wy = ey + Math.cos(j2) * 0.07
+          const wz = ez + fwd[1] * Math.sin(j2) * 0.07
+          line(p.x, 0.03, p.z, p.x, sy, p.z)
+          // Links as pairs of rails rather than bare lines, so they read as
+          // structure; discs mark the revolute joints between them.
+          for (const s of [1, -1]) {
+            const ox = side[0] * 0.007 * s
+            const oz = side[1] * 0.007 * s
+            line(p.x + ox, sy, p.z + oz, ex + ox, ey, ez + oz)
+            line(ex + ox, ey, ez + oz, wx + ox, wy, wz + oz)
+          }
+          circle3(p.x, sy, p.z, 0.013, fwdV, UP, 10)
+          circle3(ex, ey, ez, 0.011, fwdV, UP, 10)
+          for (const s of [1, -1]) {
+            line(
+              wx,
+              wy,
+              wz,
+              wx + side[0] * 0.012 * s + fwd[0] * 0.012,
+              wy - 0.005,
+              wz + side[1] * 0.012 * s + fwd[1] * 0.012,
+            )
+          }
+          break
+        }
+
+        case 'quadruped': {
+          const bodyY = 0.075 + Math.sin(ph * 1.4) * 0.005
+          box3(p.x, p.z, fwd, side, 0.042, 0.024, bodyY, bodyY + 0.03)
+          box3(
+            p.x + fwd[0] * 0.05,
+            p.z + fwd[1] * 0.05,
+            fwd,
+            side,
+            0.014,
+            0.012,
+            bodyY + 0.008,
+            bodyY + 0.032,
+          )
+          CORNERS.forEach(([f, s], i) => {
+            // Diagonal pairs in phase, as a trotting gait actually runs.
+            const gait = Math.sin(ph * 2.6 + i * (Math.PI / 2)) * 0.018
+            const hipX = p.x + fwd[0] * 0.032 * f + side[0] * 0.022 * s
+            const hipZ = p.z + fwd[1] * 0.032 * f + side[1] * 0.022 * s
+            const kneeX = hipX + fwd[0] * 0.015
+            const kneeZ = hipZ + fwd[1] * 0.015
+            line(hipX, bodyY, hipZ, kneeX, bodyY * 0.5, kneeZ)
+            line(
+              kneeX,
+              bodyY * 0.5,
+              kneeZ,
+              hipX + fwd[0] * gait,
+              0.002,
+              hipZ + fwd[1] * gait,
+            )
+          })
+          break
+        }
+
+        case 'humanoid': {
+          const swing = Math.sin(ph * 1.1) * 0.014
+          const hip = 0.12
+          const sh = 0.2
+          for (const s of [1, -1]) {
+            const hx = p.x + side[0] * 0.012 * s
+            const hz = p.z + side[1] * 0.012 * s
+            line(hx, hip, hz, hx + fwd[0] * swing * s, 0.002, hz + fwd[1] * swing * s)
+          }
+          box3(p.x, p.z, fwd, side, 0.012, 0.026, hip, sh)
+          line(p.x, sh, p.z, p.x, sh + 0.008, p.z)
+          box3(p.x, p.z, fwd, side, 0.011, 0.011, sh + 0.008, sh + 0.032)
+          for (const s of [1, -1]) {
+            const ax = p.x + side[0] * 0.028 * s
+            const az = p.z + side[1] * 0.028 * s
+            // Arms counter-swing against the legs.
+            line(ax, sh, az, ax - fwd[0] * swing * s, hip + 0.012, az - fwd[1] * swing * s)
+          }
+          break
+        }
+
+        case 'agv': {
+          // A low deck transport carrying a load — no mast, no sensor.
+          box3(p.x, p.z, fwd, side, 0.04, 0.028, 0.018, 0.048)
+          box3(p.x, p.z, fwd, side, 0.026, 0.02, 0.048, 0.073)
+          for (const [f, s] of CORNERS) {
+            circle3(
+              p.x + side[0] * 0.03 * s + fwd[0] * 0.024 * f,
+              0.014,
+              p.z + side[1] * 0.03 * s + fwd[1] * 0.024 * f,
+              0.013,
+              fwdV,
+              UP,
+              10,
+            )
+          }
+          break
+        }
       }
     }
 
@@ -443,12 +694,19 @@ export default function LidarBackdrop() {
       // Wall wireframe: base, cap, and the vertical edges that give it height.
       ctx.strokeStyle = `rgb(${inkStr} / 0.13)`
       ctx.beginPath()
-      for (const s of SCENE) {
-        line(s.x1, 0, s.z1, s.x2, 0, s.z2)
+      for (const s of WALLS) {
+        line(s.x1, s.y0, s.z1, s.x2, s.y0, s.z2)
         line(s.x1, s.h, s.z1, s.x2, s.h, s.z2)
-        line(s.x1, 0, s.z1, s.x1, s.h, s.z1)
-        line(s.x2, 0, s.z2, s.x2, s.h, s.z2)
+        line(s.x1, s.y0, s.z1, s.x1, s.h, s.z1)
+        line(s.x2, s.y0, s.z2, s.x2, s.h, s.z2)
       }
+      ctx.stroke()
+
+      // The fleet, drawn brighter than the room they stand in.
+      ctx.strokeStyle = `rgb(${inkStr} / 0.62)`
+      ctx.lineWidth = 1.15
+      ctx.beginPath()
+      for (const p of PROPS) drawProp(p, elapsed)
       ctx.stroke()
 
       // Global plan: the whole loop the robot intends to follow, on the floor.
@@ -546,36 +804,46 @@ export default function LidarBackdrop() {
         }
       }
 
-      // Detections: obstacles the stack is tracking, boxed once they are close
-      // enough to have been scanned, fading in the way a real track does.
+      // Detections: the machines the stack is tracking, boxed as they come into
+      // range and fading in the way a real track does. Only the nearest few are
+      // labelled — a tag on every hull is clutter, not information.
       ctx.font = '10px ui-monospace, SFMono-Regular, Menlo, monospace'
-      for (const b of BOXES) {
-        const cxB = (b.minX + b.maxX) / 2
-        const czB = (b.minZ + b.maxZ) / 2
-        const d = Math.hypot(cxB - pose.x, czB - pose.z)
-        const conf = Math.max(0, Math.min(1, (MAX_DIST + 0.15 - d) / 0.45))
-        if (conf <= 0.01) continue
+      const tracked = PROPS.map((p) => ({
+        p,
+        d: Math.hypot(p.x - pose.x, p.z - pose.z),
+      }))
+        .sort((a, b) => a.d - b.d)
+        .map((t, rank) => ({ ...t, rank }))
 
-        ctx.strokeStyle = `rgb(${inkStr} / ${(0.5 * conf).toFixed(2)})`
-        ctx.lineWidth = 1.2
+      for (const { p, d, rank } of tracked) {
+        // Only the nearest few are boxed at all — a hull around every machine
+        // buries the machines themselves.
+        if (rank > 2) continue
+        const b = p.hull
+        const conf = Math.max(0, Math.min(1, (MAX_DIST + 0.1 - d) / 0.4))
+        if (conf <= 0.01) continue
+        const y0 = b.y0 ?? 0
+
+        ctx.strokeStyle = `rgb(${inkStr} / ${(0.3 * conf).toFixed(2)})`
+        ctx.lineWidth = 1
         ctx.beginPath()
-        for (const y of [0, b.h]) {
+        for (const y of [y0, b.h]) {
           line(b.minX, y, b.minZ, b.maxX, y, b.minZ)
           line(b.maxX, y, b.minZ, b.maxX, y, b.maxZ)
           line(b.maxX, y, b.maxZ, b.minX, y, b.maxZ)
           line(b.minX, y, b.maxZ, b.minX, y, b.minZ)
         }
-        line(b.minX, 0, b.minZ, b.minX, b.h, b.minZ)
-        line(b.maxX, 0, b.minZ, b.maxX, b.h, b.minZ)
-        line(b.maxX, 0, b.maxZ, b.maxX, b.h, b.maxZ)
-        line(b.minX, 0, b.maxZ, b.minX, b.h, b.maxZ)
+        line(b.minX, y0, b.minZ, b.minX, b.h, b.minZ)
+        line(b.maxX, y0, b.minZ, b.maxX, b.h, b.minZ)
+        line(b.maxX, y0, b.maxZ, b.maxX, b.h, b.maxZ)
+        line(b.minX, y0, b.maxZ, b.minX, b.h, b.maxZ)
         ctx.stroke()
 
-        const tag = project(cxB, b.h + 0.05, czB)
+        const tag = project(p.x, b.h + 0.05, p.z)
         if (tag) {
-          ctx.fillStyle = `rgb(${inkStr} / ${(0.45 * conf).toFixed(2)})`
-          ctx.fillText(b.label, tag.x + 6, tag.y)
-          ctx.strokeStyle = `rgb(${inkStr} / ${(0.28 * conf).toFixed(2)})`
+          ctx.fillStyle = `rgb(${inkStr} / ${(0.5 * conf).toFixed(2)})`
+          ctx.fillText(p.label, tag.x + 6, tag.y)
+          ctx.strokeStyle = `rgb(${inkStr} / ${(0.3 * conf).toFixed(2)})`
           ctx.lineWidth = 1
           ctx.beginPath()
           ctx.moveTo(tag.x, tag.y + 2)
