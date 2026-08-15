@@ -27,7 +27,7 @@ export default async function Contact({
             Let's work together.
           </p>
           <p className="mt-5 leading-relaxed text-body md:text-[1.0625rem]">
-            I'm open to full-time roles, contract work, and interesting collaborations \u2014
+            I'm open to full-time roles, contract work, and interesting collaborations
             especially anything involving autonomy in the real world. Email is the fastest way to
             reach me.
           </p>
