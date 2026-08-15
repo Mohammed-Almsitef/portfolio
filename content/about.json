@@ -1,5 +1,5 @@
 {
-  "photo": "/about-photo.png",
+  "photo": "/about-photo.de2d44b8.png",
   "paragraphs": [
     "I'm an engineer working at the intersection of robotics and applied AI. My work runs the full width of the problem — training the perception and language models, then earning the right to trust them by putting them on hardware that moves through the real world.",
     "On the AI side that means computer vision (detection, segmentation, visual SLAM), deep learning (CNNs, transformers, reinforcement learning), and increasingly NLP and LLMs for grounding natural-language instructions into robot behaviour. On the systems side it means ROS 2, real-time control, sensor fusion, and the unglamorous work of making a model fast enough to run on an embedded GPU.",
