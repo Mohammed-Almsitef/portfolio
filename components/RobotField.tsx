@@ -338,28 +338,28 @@ const TONES = [
  */
 const LAYOUTS = [
   [
-    { side: 'left', top: 4, size: 104, tilt: -7 },
-    { side: 'right', top: 18, size: 74, tilt: 8 },
-    { side: 'left', top: 36, size: 78, tilt: 6 },
-    { side: 'right', top: 50, size: 110, tilt: -6 },
-    { side: 'left', top: 68, size: 72, tilt: 9 },
-    { side: 'right', top: 82, size: 90, tilt: -8 },
+    { side: 'left', top: 4, size: 88, tilt: -7 },
+    { side: 'right', top: 18, size: 62, tilt: 8 },
+    { side: 'left', top: 36, size: 66, tilt: 6 },
+    { side: 'right', top: 50, size: 92, tilt: -6 },
+    { side: 'left', top: 68, size: 60, tilt: 9 },
+    { side: 'right', top: 82, size: 76, tilt: -8 },
   ],
   [
-    { side: 'right', top: 7, size: 84, tilt: 6 },
-    { side: 'left', top: 21, size: 100, tilt: -9 },
-    { side: 'right', top: 39, size: 70, tilt: 7 },
-    { side: 'left', top: 54, size: 88, tilt: -5 },
-    { side: 'right', top: 70, size: 104, tilt: 9 },
-    { side: 'left', top: 85, size: 76, tilt: -7 },
+    { side: 'right', top: 7, size: 70, tilt: 6 },
+    { side: 'left', top: 21, size: 84, tilt: -9 },
+    { side: 'right', top: 39, size: 60, tilt: 7 },
+    { side: 'left', top: 54, size: 74, tilt: -5 },
+    { side: 'right', top: 70, size: 88, tilt: 9 },
+    { side: 'left', top: 85, size: 64, tilt: -7 },
   ],
   [
-    { side: 'left', top: 9, size: 88, tilt: 8 },
-    { side: 'right', top: 25, size: 78, tilt: -6 },
-    { side: 'right', top: 44, size: 106, tilt: 7 },
-    { side: 'left', top: 57, size: 72, tilt: -8 },
-    { side: 'left', top: 73, size: 96, tilt: 5 },
-    { side: 'right', top: 87, size: 82, tilt: -9 },
+    { side: 'left', top: 9, size: 74, tilt: 8 },
+    { side: 'right', top: 25, size: 66, tilt: -6 },
+    { side: 'right', top: 44, size: 90, tilt: 7 },
+    { side: 'left', top: 57, size: 62, tilt: -8 },
+    { side: 'left', top: 73, size: 80, tilt: 5 },
+    { side: 'right', top: 87, size: 70, tilt: -9 },
   ],
 ] as const
 
@@ -399,8 +399,10 @@ export default function RobotField({
       aria-hidden="true"
       data-print-hide
       // Gutters only exist once the window is wider than the page container, so
-      // the field waits until there is genuinely room beside the content.
-      className="pointer-events-none absolute inset-0 hidden overflow-hidden [@media(min-width:1700px)]:block"
+      // the field waits until there is genuinely room beside the content: the
+      // 44px margin plus the largest machine needs 136px of gutter, which a
+      // 90rem container reaches at about 1712px.
+      className="pointer-events-none absolute inset-0 hidden overflow-hidden [@media(min-width:1720px)]:block"
     >
       {layout.slice(0, count).map(({ side, top, size, tilt }, i) => {
         const machine = RENDERED[(i + shapeStart) % RENDERED.length]
@@ -417,9 +419,9 @@ export default function RobotField({
             style={{
               // Anchored to the content edge, not to a percentage of the
               // viewport: this keeps every machine outside the text column at
-              // any width. The 20px is clear air past the container, so nothing
-              // crowds the copy.
-              [anchor]: `calc(50% + var(--container-page) / 2 + 20px)`,
+              // any width. The 44px is clear air past the container, so
+              // nothing crowds the copy.
+              [anchor]: `calc(50% + var(--container-page) / 2 + 44px)`,
               top: `${top}%`,
               width: size,
               height: size,
