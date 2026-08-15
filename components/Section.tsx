@@ -27,7 +27,7 @@ export default function Section({
       {/* <SectionRule /> */}
 
       {/* Seeded by id, so each section scatters differently but stably. */}
-      <RobotField seed={id} />
+      <RobotField seed={id} tone={tone} />
 
       {/* Positioned, so the content paints above the absolute field. */}
       <div className="relative mx-auto max-w-page px-6 py-10 md:py-15">

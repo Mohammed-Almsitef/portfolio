@@ -19,62 +19,6 @@ function iso([x, y, z]: V3): [number, number] {
   return [(x - z) * ISO_X, (x + z) * 0.5 - y]
 }
 
-function toPath(points: V3[], close = true) {
-  const d = points
-    .map((p, i) => {
-      const [x, y] = iso(p)
-      return `${i === 0 ? 'M' : 'L'}${x.toFixed(2)} ${y.toFixed(2)}`
-    })
-    .join('')
-  return close ? `${d}Z` : d
-}
-
-/** The three faces of an axis-aligned box that face the camera. */
-function box(c: V3, size: V3): string[] {
-  const [cx, cy, cz] = c
-  const [w, h, d] = size.map((n) => n / 2) as V3
-  const x0 = cx - w
-  const x1 = cx + w
-  const y0 = cy - h
-  const y1 = cy + h
-  const z0 = cz - d
-  const z1 = cz + d
-  return [
-    // top
-    toPath([
-      [x0, y1, z0],
-      [x1, y1, z0],
-      [x1, y1, z1],
-      [x0, y1, z1],
-    ]),
-    // the +x side
-    toPath([
-      [x1, y0, z0],
-      [x1, y1, z0],
-      [x1, y1, z1],
-      [x1, y0, z1],
-    ]),
-    // the +z side
-    toPath([
-      [x0, y0, z1],
-      [x0, y1, z1],
-      [x1, y1, z1],
-      [x1, y0, z1],
-    ]),
-  ]
-}
-
-/** A circle in the plane spanned by `u` and `v` — wheels, rotors, turrets. */
-function ring(c: V3, r: number, u: V3, v: V3, segs = 16): string {
-  const pts: V3[] = Array.from({ length: segs }, (_, i) => {
-    const t = (i / segs) * Math.PI * 2
-    const co = Math.cos(t) * r
-    const si = Math.sin(t) * r
-    return [c[0] + u[0] * co + v[0] * si, c[1] + u[1] * co + v[1] * si, c[2] + u[2] * co + v[2] * si]
-  })
-  return toPath(pts)
-}
-
 const sub = (a: V3, b: V3): V3 => [a[0] - b[0], a[1] - b[1], a[2] - b[2]]
 const cross = (a: V3, b: V3): V3 => [
   a[1] * b[2] - a[2] * b[1],
@@ -86,12 +30,126 @@ const norm = (a: V3): V3 => {
   return [a[0] / l, a[1] / l, a[2] / l]
 }
 
+/** A polygon in 3D. `ground` marks the contact shadow, always drawn first. */
+type Face = { pts: V3[]; ground?: boolean }
+
+const LIGHT = norm([0.4, 1, 0.55])
+
+/**
+ * Lambert-ish shading from the face normal, so a top face reads brighter than
+ * a side and the volumes are legible without any outline doing the work.
+ * Magnitude rather than sign, so winding order never has to be policed.
+ *
+ * The range can be this wide because each face is painted over an opaque
+ * backing in the section's own ground colour — occlusion is that backing's
+ * job, leaving the tint free to actually shade.
+ */
+function shade(pts: V3[]) {
+  const n = norm(cross(sub(pts[1], pts[0]), sub(pts[2], pts[0])))
+  const lambert = Math.abs(n[0] * LIGHT[0] + n[1] * LIGHT[1] + n[2] * LIGHT[2])
+  return 0.16 + lambert * 0.5
+}
+
+/** Painter's algorithm: in this isometric view, x + y + z grows toward camera. */
+function depth(pts: V3[]) {
+  let sum = 0
+  for (const p of pts) sum += p[0] + p[1] + p[2]
+  return sum / pts.length
+}
+
+function toPath(points: V3[]) {
+  return (
+    points
+      .map((p, i) => {
+        const [x, y] = iso(p)
+        return `${i === 0 ? 'M' : 'L'}${x.toFixed(2)} ${y.toFixed(2)}`
+      })
+      .join('') + 'Z'
+  )
+}
+
+/** The three faces of an axis-aligned box that face the camera. */
+function box(c: V3, size: V3): Face[] {
+  const [cx, cy, cz] = c
+  const [w, h, d] = size.map((n) => n / 2) as V3
+  const x0 = cx - w
+  const x1 = cx + w
+  const y0 = cy - h
+  const y1 = cy + h
+  const z0 = cz - d
+  const z1 = cz + d
+  return [
+    {
+      pts: [
+        [x0, y1, z0],
+        [x1, y1, z0],
+        [x1, y1, z1],
+        [x0, y1, z1],
+      ],
+    },
+    {
+      pts: [
+        [x1, y0, z0],
+        [x1, y1, z0],
+        [x1, y1, z1],
+        [x1, y0, z1],
+      ],
+    },
+    {
+      pts: [
+        [x0, y0, z1],
+        [x0, y1, z1],
+        [x1, y1, z1],
+        [x1, y0, z1],
+      ],
+    },
+  ]
+}
+
+/** A disc in the plane spanned by `u` and `v` — wheels, rotors, turret plates. */
+function disc(c: V3, r: number, u: V3, v: V3, segs = 16): Face {
+  return {
+    pts: Array.from({ length: segs }, (_, i) => {
+      const t = (i / segs) * Math.PI * 2
+      const co = Math.cos(t) * r
+      const si = Math.sin(t) * r
+      return [
+        c[0] + u[0] * co + v[0] * si,
+        c[1] + u[1] * co + v[1] * si,
+        c[2] + u[2] * co + v[2] * si,
+      ] as V3
+    }),
+  }
+}
+
+/** A short cylinder — turret bases, wheel treads, sensor pucks. */
+function cylinder(c: V3, r: number, axis: V3, len: number, segs = 14): Face[] {
+  const a = norm(axis)
+  const ref: V3 = Math.abs(a[1]) > 0.95 ? [1, 0, 0] : [0, 1, 0]
+  const u = norm(cross(a, ref))
+  const v = norm(cross(a, u))
+  const capC = (s: number): V3 => [
+    c[0] + a[0] * len * s,
+    c[1] + a[1] * len * s,
+    c[2] + a[2] * len * s,
+  ]
+  const top = disc(capC(0.5), r, u, v, segs)
+  const bottom = disc(capC(-0.5), r, u, v, segs)
+  const walls: Face[] = top.pts.map((p, i) => {
+    const q = top.pts[(i + 1) % top.pts.length]
+    const p2 = bottom.pts[i]
+    const q2 = bottom.pts[(i + 1) % bottom.pts.length]
+    return { pts: [p, q, q2, p2] }
+  })
+  return [bottom, ...walls, top]
+}
+
 /**
  * A square-section beam between two points — limbs, legs, masts and arms.
- * Built with a frame perpendicular to the beam, so it stays solid-looking at
- * any angle instead of collapsing to a line.
+ * Built with a frame perpendicular to the beam, so it stays solid at any angle
+ * instead of collapsing to a line.
  */
-function beam(a: V3, b: V3, w: number): string[] {
+function beam(a: V3, b: V3, w: number): Face[] {
   const dir = norm(sub(b, a))
   const ref: V3 = Math.abs(dir[1]) > 0.95 ? [1, 0, 0] : [0, 1, 0]
   const r = norm(cross(dir, ref))
@@ -110,93 +168,151 @@ function beam(a: V3, b: V3, w: number): string[] {
   const capA = signs.map(([s1, s2]) => corner(a, s1, s2))
   const capB = signs.map(([s1, s2]) => corner(b, s1, s2))
   return [
-    toPath(capA),
-    toPath(capB),
-    ...capA.map((p, i) => toPath([p, capB[i]], false)),
+    { pts: capA },
+    { pts: capB },
+    ...capA.map((p, i) => ({
+      pts: [p, capA[(i + 1) % 4], capB[(i + 1) % 4], capB[i]],
+    })),
   ]
 }
 
-const HORIZONTAL: [V3, V3] = [
-  [1, 0, 0],
-  [0, 0, 1],
-]
-const AXLE_Z: [V3, V3] = [
-  [1, 0, 0],
-  [0, 1, 0],
+/** The contact patch on the floor — cheap grounding, and it reads as weight. */
+function shadow(cx: number, cz: number, r: number): Face {
+  return { ...disc([cx, 0, cz], r, [1, 0, 0], [0, 0, 1], 18), ground: true }
+}
+
+const CORNERS: [number, number][] = [
+  [1, 1],
+  [1, -1],
+  [-1, -1],
+  [-1, 1],
 ]
 
-/** Quadrotor: body, four booms, rotor discs, landing legs. */
-const DRONE = [
-  ...box([0, 7, 0], [8, 4, 8]),
-  ...[
-    [1, 1],
-    [1, -1],
-    [-1, -1],
-    [-1, 1],
-  ].flatMap(([sx, sz]) => [
-    ...beam([sx * 3, 7, sz * 3], [sx * 7.5, 8, sz * 7.5], 0.5),
-    ring([sx * 7.5, 8.8, sz * 7.5], 3.4, ...HORIZONTAL, 14),
-    ...beam([sx * 3, 5, sz * 3], [sx * 4.5, 0, sz * 4.5], 0.5),
+/** Quadrotor: body, canopy, four booms with rotor hubs, landing skids. */
+const DRONE: Face[] = [
+  shadow(0, 0, 9),
+  ...box([0, 6.5, 0], [9, 4, 9]),
+  ...box([0, 9, 0], [5.5, 1.6, 5.5]),
+  ...CORNERS.flatMap(([sx, sz]) => [
+    // Booms leave from the body's corner rather than from inside it.
+    ...beam([sx * 4.4, 6.5, sz * 4.4], [sx * 8, 7.6, sz * 8], 0.6),
+    ...cylinder([sx * 8, 8.4, sz * 8], 1.1, [0, 1, 0], 1.4, 10),
+    disc([sx * 8, 9.2, sz * 8], 3.6, [1, 0, 0], [0, 0, 1], 16),
+    ...beam([sx * 3, 4.6, sz * 3], [sx * 5, 0.4, sz * 5], 0.55),
   ]),
 ]
 
-/** Manipulator: turret base, two links, gripper. */
-const ARM = [
-  ring([0, 0, 0], 6, ...HORIZONTAL),
-  ring([0, 2.5, 0], 6, ...HORIZONTAL),
-  ...[0, 1, 2, 3].map((i) => {
-    const t = (i / 4) * Math.PI * 2
-    const x = Math.cos(t) * 6
-    const z = Math.sin(t) * 6
-    return toPath([[x, 0, z] as V3, [x, 2.5, z] as V3], false)
-  }),
-  ...box([0, 5, 0], [5, 5, 5]),
-  ...beam([0, 7.5, 0], [7, 15, 0], 1.2),
-  ...beam([7, 15, 0], [2, 21, 0], 1),
-  ...beam([2, 21, 0], [-1, 23, 1.6], 0.5),
-  ...beam([2, 21, 0], [-1, 23, -1.6], 0.5),
+/** Manipulator: turret, shoulder, two links with a wrist and gripper. */
+const ARM: Face[] = [
+  shadow(0, 0, 7),
+  ...cylinder([0, 1.4, 0], 6.4, [0, 1, 0], 2.8, 18),
+  ...box([0, 5.2, 0], [6, 5, 6]),
+  // Shoulder clears the turret box rather than sitting buried in it.
+  ...cylinder([0, 8.6, 0], 1.9, [0, 0, 1], 5, 12),
+  ...beam([0, 8.6, 0], [7, 15.5, 0], 1.3),
+  ...cylinder([7, 15.5, 0], 1.6, [0, 0, 1], 4.2, 12),
+  ...beam([7, 15.5, 0], [2, 21, 0], 1),
+  ...cylinder([2, 21, 0], 1.1, [0, 0, 1], 3, 10),
+  ...beam([2, 21, 0], [-1.2, 23, 1.8], 0.5),
+  ...beam([2, 21, 0], [-1.2, 23, -1.8], 0.5),
 ]
 
-/** Quadruped: body, head, four two-segment legs. */
-const QUADRUPED = [
-  ...box([0, 9, 0], [16, 6, 8]),
-  ...box([10.5, 10, 0], [5, 4, 5]),
-  ...[
-    [1, 1],
-    [1, -1],
-    [-1, -1],
-    [-1, 1],
-  ].flatMap(([sx, sz]) => [
-    ...beam([sx * 5, 6, sz * 3.5], [sx * 6.5, 3, sz * 3.5], 0.6),
-    ...beam([sx * 6.5, 3, sz * 3.5], [sx * 5, 0, sz * 3.5], 0.5),
+/** Quadruped: body, sensor head, four two-segment legs with knee joints. */
+const QUADRUPED: Face[] = [
+  shadow(0, 0, 9),
+  ...box([0, 9, 0], [17, 6, 9]),
+  ...box([10.5, 10.5, 0], [5, 4, 5.5]),
+  ...cylinder([12.5, 10.5, 0], 1.6, [1, 0, 0], 1.4, 12),
+  // Hips ride outboard of the body, as a real quadruped's do — and, less
+  // romantically, a joint buried inside a parent volume is one that centroid
+  // depth sorting cannot resolve, so it ghosts through the panel above it.
+  ...CORNERS.flatMap(([sx, sz]) => [
+    ...cylinder([sx * 5.5, 6.4, sz * 5.4], 1.3, [0, 0, 1], 2, 10),
+    ...beam([sx * 5.5, 6.2, sz * 5.4], [sx * 7, 3, sz * 5.4], 0.65),
+    ...cylinder([sx * 7, 3, sz * 5.4], 0.95, [0, 0, 1], 1.5, 10),
+    ...beam([sx * 7, 3, sz * 5.4], [sx * 5.5, 0.3, sz * 5.4], 0.5),
   ]),
 ]
 
-/** Humanoid: torso, head, arms, legs. */
-const HUMANOID = [
-  ...beam([2.5, 9, 0], [2.5, 0, 0], 1),
-  ...beam([-2.5, 9, 0], [-2.5, 0, 0], 1),
-  ...box([0, 14, 0], [7, 10, 5]),
-  ...beam([0, 19, 0], [0, 20, 0], 1.2),
-  ...box([0, 22.5, 0], [4.5, 4.5, 4.5]),
-  ...beam([4.5, 18, 0], [6, 10, 0], 0.8),
-  ...beam([-4.5, 18, 0], [-6, 10, 0], 0.8),
+/** Humanoid: torso, visored head, shouldered arms, jointed legs. */
+const HUMANOID: Face[] = [
+  shadow(0, 0, 6),
+  ...CORNERS.slice(0, 2).flatMap(([s]) => [
+    ...beam([s * 2.6, 9, 0], [s * 2.6, 4.5, 0], 1.1),
+    ...cylinder([s * 2.6, 4.5, 0], 1.1, [0, 0, 1], 1.6, 10),
+    ...beam([s * 2.6, 4.5, 0], [s * 2.6, 0.6, 0], 0.95),
+    ...box([s * 2.6, 0.4, 0.8], [2.6, 0.9, 4.4]),
+  ]),
+  ...box([0, 14, 0], [7.5, 10, 5]),
+  ...cylinder([0, 19.4, 0], 1.2, [0, 1, 0], 1.6, 10),
+  ...box([0, 22.4, 0], [4.6, 4.4, 4.8]),
+  ...box([1.6, 22.6, 0], [1.6, 2, 3.6]),
+  ...CORNERS.slice(0, 2).flatMap(([s]) => [
+    ...cylinder([s * 4.6, 18.2, 0], 1.3, [0, 0, 1], 1.6, 10),
+    ...beam([s * 4.6, 18.2, 0], [s * 6, 10, 0], 0.85),
+  ]),
 ]
 
-/** Wheeled rover: deck, sensor mast, four wheels. */
-const ROVER = [
-  ...box([0, 5.5, 0], [16, 4, 9]),
-  ...beam([4, 7.5, 0], [4, 13, 0], 0.7),
-  ...box([4, 14.5, 0], [4.5, 3, 4.5]),
-  ...[
-    [1, 1],
-    [1, -1],
-    [-1, -1],
-    [-1, 1],
-  ].map(([sx, sz]) => ring([sx * 5, 3, sz * 5.5], 3, ...AXLE_Z, 12)),
+/** Wheeled rover: deck, mast, lidar puck, four wheels on hubs. */
+const ROVER: Face[] = [
+  shadow(0, 0, 9),
+  ...box([0, 5.5, 0], [17, 4, 10]),
+  ...box([-2, 8, 0], [7, 1.4, 7]),
+  ...beam([4.5, 7.5, 0], [4.5, 12.5, 0], 0.8),
+  ...cylinder([4.5, 13.8, 0], 2.6, [0, 1, 0], 2.6, 16),
+  ...CORNERS.flatMap(([sx, sz]) => [
+    ...cylinder([sx * 5.5, 3, sz * 5.6], 3, [0, 0, 1], 2.2, 14),
+    ...cylinder([sx * 5.5, 3, sz * 5.6], 1.1, [0, 0, 1], 2.6, 8),
+  ]),
 ]
 
-const SHAPES: string[][] = [DRONE, ARM, QUADRUPED, HUMANOID, ROVER]
+const SHAPES: Face[][] = [DRONE, ARM, QUADRUPED, HUMANOID, ROVER]
+
+/**
+ * Sorted back to front once, at module load. Ground shadows come first so a
+ * machine never paints its own contact patch over a leg.
+ *
+ * Each machine also gets its own viewBox, centred on its own bounds but sized
+ * to the widest span across all five — so every one sits centred in its tile
+ * while the group still keeps its relative scale: the rover reads low and wide
+ * beside a tall manipulator, rather than both swelling to fill their frames.
+ */
+const RENDERED = (() => {
+  const measured = SHAPES.map((faces) => {
+    let minX = Infinity
+    let maxX = -Infinity
+    let minY = Infinity
+    let maxY = -Infinity
+    for (const f of faces) {
+      for (const p of f.pts) {
+        const [x, y] = iso(p)
+        if (x < minX) minX = x
+        if (x > maxX) maxX = x
+        if (y < minY) minY = y
+        if (y > maxY) maxY = y
+      }
+    }
+    return {
+      cx: (minX + maxX) / 2,
+      cy: (minY + maxY) / 2,
+      span: Math.max(maxX - minX, maxY - minY),
+      paths: faces
+        .map((f) => ({
+          d: toPath(f.pts),
+          fill: f.ground ? 0.08 : shade(f.pts),
+          ground: !!f.ground,
+          z: depth(f.pts),
+        }))
+        .sort((a, b) => Number(b.ground) - Number(a.ground) || a.z - b.z),
+    }
+  })
+
+  const span = Math.max(...measured.map((m) => m.span)) * 1.06
+  return measured.map(({ cx, cy, paths }) => ({
+    paths,
+    viewBox: `${(cx - span / 2).toFixed(2)} ${(cy - span / 2).toFixed(2)} ${span.toFixed(2)} ${span.toFixed(2)}`,
+  }))
+})()
 
 /** The full palette, so the field is as varied in hue as the skills grid. */
 const TONES = [
@@ -259,11 +375,15 @@ function hash(text: string) {
 export default function RobotField({
   seed,
   count = 6,
+  tone = 'base',
 }: {
   /** Anything stable and distinct per section — the section id works. */
   seed: string
   count?: number
+  /** The ground the field sits on, so backing faces match it exactly. */
+  tone?: 'base' | 'raised'
 }) {
+  const ground = tone === 'raised' ? 'var(--color-surface)' : 'var(--color-bg)'
   // The seed picks the arrangement, the machine the cycle starts on, and where
   // the palette starts — three independent rotations, so no two sections read
   // as the same composition in the same colours.
@@ -283,7 +403,7 @@ export default function RobotField({
       className="pointer-events-none absolute inset-0 hidden overflow-hidden [@media(min-width:1700px)]:block"
     >
       {layout.slice(0, count).map(({ side, top, size, tilt }, i) => {
-        const paths = SHAPES[(i + shapeStart) % SHAPES.length]
+        const machine = RENDERED[(i + shapeStart) % RENDERED.length]
         // Stride of two through nine tones: six distinct hues per section, and
         // adjacent machines never land on neighbouring shades.
         const tone = TONES[(i * 2 + toneStart) % TONES.length]
@@ -309,19 +429,27 @@ export default function RobotField({
               transform: `rotate(${tilt}deg) scaleX(${side === 'right' ? -1 : 1})`,
             }}
           >
-            {/* One viewBox for every machine, sized to the tallest — so they
-                keep their relative scale instead of each filling the frame. */}
             <svg
-              viewBox="-22 -32 44 44"
+              viewBox={machine.viewBox}
               className="size-full"
-              fill="none"
+              fill="currentColor"
               stroke="currentColor"
-              strokeWidth="1.1"
-              strokeLinecap="round"
+              strokeWidth="0.45"
               strokeLinejoin="round"
             >
-              {paths.map((d, j) => (
-                <path key={j} d={d} />
+              {machine.paths.map(({ d, fill, ground: isShadow }, j) => (
+                <g key={j}>
+                  {/* Opaque backing in the section's own ground colour: this is
+                      what hides the geometry behind, so the tint above it is
+                      free to shade rather than having to be near-solid. */}
+                  {!isShadow && <path d={d} fill={ground} stroke={ground} />}
+                  <path
+                    d={d}
+                    fillOpacity={fill}
+                    // The contact patch is a soft blot, not an outlined disc.
+                    strokeOpacity={isShadow ? 0 : 0.85}
+                  />
+                </g>
               ))}
             </svg>
           </div>
