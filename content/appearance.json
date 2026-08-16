@@ -1,6 +1,6 @@
 {
-  "defaultTheme": "light",
-  "decorShow": true,
+  "defaultTheme": "dark",
+  "decorShow": false,
   "decorArrangement": "auto",
   "decorWeight": "vivid"
 }
