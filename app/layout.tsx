@@ -73,7 +73,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const { defaultTheme } = await getAppearance()
+  const { defaultTheme, accent } = await getAppearance()
 
   return (
     // suppressHydrationWarning: the inline script below adds a class to <html>
@@ -82,6 +82,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html
       lang="en"
       suppressHydrationWarning
+      // Server-rendered, so the accent is right in the first paint — no flash
+      // of blue before a client effect could correct it.
+      data-accent={accent}
       className={`${inter.variable} ${mono.variable} ${arabic.variable}`}
     >
       <head>

@@ -545,6 +545,13 @@ export default config({
           ],
           defaultValue: 'light',
         }),
+        accent: fields.select({
+          label: 'Accent colour',
+          description:
+            'The site-wide highlight — links, buttons, headings and the hero scan. Same palette the skill groups use.',
+          options: [...TONES],
+          defaultValue: 'blue',
+        }),
         decorShow: fields.checkbox({
           label: 'Show the robot shapes beside the content',
           description:

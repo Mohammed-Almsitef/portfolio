@@ -66,10 +66,23 @@ const TREE = {
 
 export type Appearance = {
   defaultTheme: 'light' | 'dark'
+  accent: Tone
   decorShow: boolean
   decorArrangement: 'auto' | 'a' | 'b' | 'c'
   decorWeight: 'vivid' | 'soft'
 }
+
+const TONE_NAMES: readonly Tone[] = [
+  'blue',
+  'violet',
+  'purple',
+  'cyan',
+  'rose',
+  'emerald',
+  'amber',
+  'teal',
+  'lime',
+]
 
 /**
  * Site chrome: the colour mode a first-time visitor gets, and how the margin
@@ -80,6 +93,9 @@ export async function getAppearance(): Promise<Appearance> {
   const a = await reader.singletons.appearance.read()
   return {
     defaultTheme: a?.defaultTheme === 'dark' ? 'dark' : 'light',
+    // Validated against the known set rather than cast: the value reaches a CSS
+    // variable name, so an unrecognised one would silently blank the accent.
+    accent: TONE_NAMES.includes(a?.accent as Tone) ? (a!.accent as Tone) : 'blue',
     decorShow: a?.decorShow !== false,
     decorArrangement: a?.decorArrangement ?? 'auto',
     decorWeight: a?.decorWeight === 'soft' ? 'soft' : 'vivid',

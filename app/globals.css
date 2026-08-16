@@ -192,6 +192,29 @@
   }
 }
 
+/*
+ * Site accent, chosen in the manager and stamped on <html> by the layout.
+ *
+ * Deliberately after the two dark selectors: those also assign `--accent-tone`
+ * and carry identical specificity, so source order is what decides. The tones
+ * themselves are already theme-aware, which is why one rule per colour covers
+ * both grounds instead of needing a light and a dark variant each.
+ *
+ * A hover retint writes `--accent-tone` inline, which outranks all of this,
+ * and removing that inline value falls straight back to the rule below —
+ * which is why the chosen accent is set here rather than inline on <html>,
+ * where the hover's cleanup would wipe it.
+ */
+:root[data-accent='blue'] { --accent-tone: var(--tone-blue); }
+:root[data-accent='violet'] { --accent-tone: var(--tone-violet); }
+:root[data-accent='purple'] { --accent-tone: var(--tone-purple); }
+:root[data-accent='cyan'] { --accent-tone: var(--tone-cyan); }
+:root[data-accent='rose'] { --accent-tone: var(--tone-rose); }
+:root[data-accent='emerald'] { --accent-tone: var(--tone-emerald); }
+:root[data-accent='amber'] { --accent-tone: var(--tone-amber); }
+:root[data-accent='teal'] { --accent-tone: var(--tone-teal); }
+:root[data-accent='lime'] { --accent-tone: var(--tone-lime); }
+
 html {
   scroll-behavior: smooth;
   /* Keeps anchored section headings clear of the fixed header. */
