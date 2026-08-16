@@ -41,8 +41,8 @@
 
      `--accent-tone` is the single triplet everything accented derives from, so
      assigning it one of the `--tone-*` values repaints the accent, the glows
-     and the hero scan together. Skills sets it on hover; nothing else writes
-     it, and it falls back to the theme's blue. */
+     and the hero scan together. The manager's Appearance screen picks which
+     one, via the `[data-accent]` rules below; this is the fallback. */
   --accent-tone: 29 78 216;
   --color-accent: rgb(var(--accent-tone));
   --color-accent-dim: #3b62c4;
@@ -200,10 +200,6 @@
  * themselves are already theme-aware, which is why one rule per colour covers
  * both grounds instead of needing a light and a dark variant each.
  *
- * A hover retint writes `--accent-tone` inline, which outranks all of this,
- * and removing that inline value falls straight back to the rule below —
- * which is why the chosen accent is set here rather than inline on <html>,
- * where the hover's cleanup would wipe it.
  */
 :root[data-accent='blue'] { --accent-tone: var(--tone-blue); }
 :root[data-accent='violet'] { --accent-tone: var(--tone-violet); }
