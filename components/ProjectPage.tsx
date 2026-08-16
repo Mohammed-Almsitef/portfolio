@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { arabicEnabled, getProjects, getSite } from '@/lib/content'
@@ -161,6 +162,20 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
             />
           ) : project.videoUrl ? (
             <VideoEmbed url={project.videoUrl} title={project.title} />
+          ) : project.image ? (
+            // A photo of the real thing still beats generated art, even though
+            // it loses to anything that moves. Without this branch an uploaded
+            // image showed on the card and then vanished on this page.
+            <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-border">
+              <Image
+                src={project.image}
+                alt=""
+                fill
+                sizes="(max-width: 1024px) 100vw, 900px"
+                className="object-cover"
+                priority
+              />
+            </div>
           ) : (
             <ProjectVisual
               kind={project.visual}
