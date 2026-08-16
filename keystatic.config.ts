@@ -82,7 +82,7 @@ const projectsDef = (dir: string, tag: string) =>
       year: fields.text({ label: 'Year' }),
       featured: fields.checkbox({
         label: 'Featured',
-        description: 'Featured projects take a full-width card with the art beside the text.',
+        description: 'Featured projects sort to the front of the grid.',
         defaultValue: false,
       }),
       tone: fields.select({
@@ -188,7 +188,7 @@ const sectionsDef = (dir: string, tag: string) =>
           }),
           label: fields.text({
             label: 'Heading shown on the page',
-            description: 'The numbering (01, 02…) follows this list automatically.',
+            description: 'Shown as the section heading on the page.',
           }),
           visible: fields.checkbox({
             label: 'Show on the site',
@@ -291,6 +291,28 @@ const aboutDef = (dir: string, tag: string) =>
             `${props.fields.value.value} ${props.fields.label.value}`.trim() || 'Stat',
         },
       ),
+    },
+  })
+
+const contactDef = (dir: string, tag: string) =>
+  singleton({
+    label: `Contact${tag}`,
+    path: `${dir}/contact`,
+    format: { data: 'json' },
+    schema: {
+      headline: fields.text({
+        label: 'Headline',
+        description: 'The large line at the top of the contact section.',
+      }),
+      blurb: fields.text({
+        label: 'Intro',
+        description: 'A short paragraph under the headline — what you are open to.',
+        multiline: true,
+      }),
+      responseTime: fields.text({
+        label: 'Typical response time',
+        description: 'e.g. Within a couple of days. Leave empty to hide the row.',
+      }),
     },
   })
 
@@ -468,10 +490,10 @@ export default config({
     brand: { name: 'Portfolio' },
     navigation: {
       'Page setup': ['sections', 'site', 'appearance'],
-      Content: ['about', 'projects', 'openSource', 'skills', 'experience'],
+      Content: ['about', 'projects', 'openSource', 'skills', 'experience', 'contact'],
       'Credentials & links': ['education', 'publications', 'socials'],
       'العربية · إعداد الصفحة': ['sectionsAr', 'siteAr'],
-      'العربية · المحتوى': ['aboutAr', 'projectsAr', 'openSourceAr', 'skillsAr', 'experienceAr'],
+      'العربية · المحتوى': ['aboutAr', 'projectsAr', 'openSourceAr', 'skillsAr', 'experienceAr', 'contactAr'],
       'العربية · الروابط': ['educationAr', 'publicationsAr', 'socialsAr'],
       'العربية · النشر': ['arabicSettings'],
     },
@@ -487,6 +509,7 @@ export default config({
     site: siteDef('content', ''),
     socials: socialsDef('content', ''),
     about: aboutDef('content', ''),
+    contact: contactDef('content', ''),
     skills: skillsDef('content', ''),
     experience: experienceDef('content', ''),
     education: educationDef('content', ''),
@@ -496,6 +519,7 @@ export default config({
     siteAr: siteDef('content/ar', ' · عربي'),
     socialsAr: socialsDef('content/ar', ' · عربي'),
     aboutAr: aboutDef('content/ar', ' · عربي'),
+    contactAr: contactDef('content/ar', ' · عربي'),
     skillsAr: skillsDef('content/ar', ' · عربي'),
     experienceAr: experienceDef('content/ar', ' · عربي'),
     educationAr: educationDef('content/ar', ' · عربي'),

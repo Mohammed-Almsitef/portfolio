@@ -1,6 +1,6 @@
 import { getEducation, getExperience, getPublications, getSite } from '@/lib/content'
 import Section from './Section'
-import type { Locale } from '@/lib/locale'
+import { t, type Locale } from '@/lib/locale'
 
 function SubHeading({ children }: { children: React.ReactNode }) {
   return (
@@ -10,11 +10,9 @@ function SubHeading({ children }: { children: React.ReactNode }) {
 
 export default async function Experience({
   title,
-  index,
   locale = 'en',
 }: {
   title: string
-  index: string
   locale?: Locale
 }) {
   const [experience, education, publications, site] = await Promise.all([
@@ -25,7 +23,7 @@ export default async function Experience({
   ])
 
   return (
-    <Section id="experience" title={title} index={index} tone="raised">
+    <Section id="experience" title={title} tone="raised">
       <ol className="relative space-y-12 border-s border-border ps-8">
         {experience.map((job) => (
           <li key={`${job.company}-${job.period}`} className="relative">
@@ -116,7 +114,7 @@ export default async function Experience({
         data-print-hide
         className="mt-12 inline-block rounded-md border border-border-strong px-5 py-2.5 text-sm font-medium transition-colors hover:border-accent hover:text-accent"
       >
-        Download full résumé
+        {t(locale, 'downloadResume')}
       </a>
     </Section>
   )

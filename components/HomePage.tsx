@@ -68,7 +68,6 @@ export default async function HomePage({ locale }: { locale: Locale }) {
             <Section
               key={section.key}
               title={section.label}
-              index={section.index}
               locale={locale}
             />
           ) : null

@@ -1,11 +1,9 @@
 import Link from 'next/link'
 import { type Locale } from '@/lib/locale'
 
-const LOCALES: Locale[] = ['en', 'ar']
-
 const LABEL: Record<Locale, { text: string; name: string; dir: 'ltr' | 'rtl'; code: string }> = {
-  en: { text: 'EN', name: 'English', dir: 'ltr', code: "en" },
-  ar: { text: 'عربي', name: 'العربية', dir: 'rtl', code: "ar" },
+  en: { text: 'EN', name: 'English', dir: 'ltr', code: 'en' },
+  ar: { text: 'عربي', name: 'العربية', dir: 'rtl', code: 'ar' },
 }
 
 export default function LanguageSwitch({

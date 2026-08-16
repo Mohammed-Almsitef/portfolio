@@ -4,17 +4,15 @@ import type { Locale } from '@/lib/locale'
 
 export default async function OpenSource({
   title,
-  index,
   locale = 'en',
 }: {
   title: string
-  index: string
   locale?: Locale
 }) {
   const { intro, items } = await getOpenSource(locale)
 
   return (
-    <Section id="open-source" title={title} index={index} tone="raised">
+    <Section id="open-source" title={title} tone="raised">
       {intro && <p className="mb-10 max-w-2xl leading-relaxed text-body">{intro}</p>}
 
       <ul className="space-y-4">

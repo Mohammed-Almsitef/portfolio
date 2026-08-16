@@ -1,19 +1,15 @@
 import Reveal from './Reveal'
 import RobotField from './RobotField'
-import SectionRule from './SectionRule'
 
 export default function Section({
   id,
   title,
-  index,
   tone = 'base',
   children,
 }: {
   id: string
   /** Heading text, set per section in the manager. */
   title: string
-  /** Running number, derived from the section's position. */
-  index: string
   /** Alternating grounds give the page chapters instead of one long column. */
   tone?: 'base' | 'raised'
   children: React.ReactNode
@@ -24,8 +20,6 @@ export default function Section({
       aria-labelledby={`${id}-heading`}
       className={`relative overflow-hidden ${tone === 'raised' ? 'bg-surface' : ''}`}
     >
-      {/* <SectionRule /> */}
-
       {/* Seeded by id, so each section scatters differently but stably. */}
       <RobotField seed={id} tone={tone} />
 

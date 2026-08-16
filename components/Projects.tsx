@@ -114,17 +114,15 @@ function Body({ p, index, locale }: { p: Project; index: number; locale: Locale 
 
 export default async function Projects({
   title,
-  index,
   locale = 'en',
 }: {
   title: string
-  index: string
   locale?: Locale
 }) {
   const projects = await getProjects(locale)
 
   return (
-    <Section id="projects" title={title} index={index} tone="raised">
+    <Section id="projects" title={title} tone="raised">
       {/* Every card takes one column, featured or not, so each row always holds
           two. Featured still decides ordering, just not footprint. */}
       <ul className="grid gap-5 md:grid-cols-2">

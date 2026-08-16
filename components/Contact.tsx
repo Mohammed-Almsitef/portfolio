@@ -1,7 +1,7 @@
-import { getSite, getSocials } from '@/lib/content'
+import { getContact, getSite, getSocials } from '@/lib/content'
 import CopyEmail from './CopyEmail'
 import Section from './Section'
-import type { Locale } from '@/lib/locale'
+import { t, type Locale } from '@/lib/locale'
 
 /**
  * The single home for how to reach me. Availability and focus areas are stated
@@ -10,27 +10,27 @@ import type { Locale } from '@/lib/locale'
  */
 export default async function Contact({
   title,
-  index,
   locale = 'en',
 }: {
   title: string
-  index: string
   locale?: Locale
 }) {
-  const [site, socials] = await Promise.all([getSite(locale), getSocials(locale)])
+  const [site, socials, contact] = await Promise.all([
+    getSite(locale),
+    getSocials(locale),
+    getContact(locale),
+  ])
 
   return (
-    <Section id="contact" title={title} index={index}>
+    <Section id="contact" title={title}>
       <div className="grid gap-12 md:grid-cols-[1.4fr_1fr] md:gap-16">
         <div>
           <p className="text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-tight tracking-tight">
-            Let's work together.
+            {contact.headline}
           </p>
-          <p className="mt-5 leading-relaxed text-body md:text-[1.0625rem]">
-            I'm open to full-time roles, contract work, and interesting collaborations
-            especially anything involving autonomy in the real world. Email is the fastest way to
-            reach me.
-          </p>
+          {contact.blurb && (
+            <p className="mt-5 leading-relaxed text-body md:text-[1.0625rem]">{contact.blurb}</p>
+          )}
 
           <div className="mt-9">
             <CopyEmail email={site.email} />
@@ -56,16 +56,18 @@ export default async function Contact({
         <dl className="space-y-6 self-start rounded-xl border border-border bg-surface p-6">
           <div>
             <dt className="font-mono text-[0.6875rem] uppercase tracking-wider text-muted">
-              Based in
+              {t(locale, 'basedIn')}
             </dt>
             <dd className="mt-1.5 text-sm">{site.location}</dd>
           </div>
-          <div>
-            <dt className="font-mono text-[0.6875rem] uppercase tracking-wider text-muted">
-              Response time
-            </dt>
-            <dd className="mt-1.5 text-sm">Within a couple of days</dd>
-          </div>
+          {contact.responseTime && (
+            <div>
+              <dt className="font-mono text-[0.6875rem] uppercase tracking-wider text-muted">
+                {t(locale, 'responseTime')}
+              </dt>
+              <dd className="mt-1.5 text-sm">{contact.responseTime}</dd>
+            </div>
+          )}
         </dl>
       </div>
     </Section>

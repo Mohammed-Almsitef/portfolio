@@ -4,17 +4,15 @@ import type { Locale } from '@/lib/locale'
 
 export default async function Skills({
   title,
-  index,
   locale = 'en',
 }: {
   title: string
-  index: string
   locale?: Locale
 }) {
   const groups = await getSkillGroups(locale)
 
   return (
-    <Section id="skills" title={title} index={index}>
+    <Section id="skills" title={title}>
       <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
         {groups.map((g) => (
           <div

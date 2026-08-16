@@ -6,18 +6,16 @@ import type { Locale } from '@/lib/locale'
 
 export default async function About({
   title,
-  index,
   locale = 'en',
 }: {
   title: string
-  index: string
   locale?: Locale
 }) {
   const [about, site] = await Promise.all([getAbout(locale), getSite(locale)])
 
   return (
-    <Section id="about" title={title} index={index}>
-      <div className='flex gap-20 w-full items-center'>
+    <Section id="about" title={title}>
+      <div className="flex w-full items-center gap-20">
         {/* Set in the manager under About. Hidden entirely if none is set,
             rather than leaving a broken image or a reserved gap. */}
         {about.photo && (
@@ -31,7 +29,9 @@ export default async function About({
             />
           </div>
         )}
-        <div className="md:max-w-2xl flex flex-col w-full items center gap-12 md:grid-cols-[1.55fr_1fr] md:gap-16">
+        {/* `items center` was two dead classes, and the grid-cols track list
+            never applied to a flex container. */}
+        <div className="flex w-full flex-col gap-12 md:max-w-2xl md:gap-16">
           {about.paragraphs.map((p, i) => (
             <p key={i} className="leading-relaxed text-body md:text-[1.0625rem] text-justify">
               {p}

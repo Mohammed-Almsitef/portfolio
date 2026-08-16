@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import ThemeToggle from './ThemeToggle'
-import type { Locale } from '@/lib/locale'
+import { t, type Locale } from '@/lib/locale'
 import LanguageSwitch from './LanguageSwitch'
 
 /** Section keys map to the DOM ids the components render. */
@@ -112,14 +112,14 @@ export default function Nav({
             </a>
 
             {availableForWork && (
-              <p title="Available for work" className="inline-flex w-fit items-center gap-1.5 rounded-full border border-[rgb(var(--tone-status)/0.35)] bg-[rgb(var(--tone-status)/0.12)] sm:px-2 px-1 py-1 font-mono text-[0.6875rem] font-medium text-[rgb(var(--tone-status))] shadow-[0_0_12px_rgb(var(--tone-status)/0.25)] cursor-help">
+              <p title={t(locale, 'availableForWork')} className="inline-flex w-fit items-center gap-1.5 rounded-full border border-[rgb(var(--tone-status)/0.35)] bg-[rgb(var(--tone-status)/0.12)] sm:px-2 px-1 py-1 font-mono text-[0.6875rem] font-medium text-[rgb(var(--tone-status))] shadow-[0_0_12px_rgb(var(--tone-status)/0.25)] cursor-help">
                 <span className="relative flex size-1.5 shrink-0">
                   <span className="absolute inline-flex size-full animate-ping rounded-full bg-[rgb(var(--tone-status))] opacity-75" />
                   <span className="relative inline-flex size-1.5 rounded-full bg-[rgb(var(--tone-status))]" />
                 </span>
                 {/* The dot alone reads fine on a phone-width bar; the label only
                     earns its space once there's room next to the name and links. */}
-                <span className="hidden sm:inline">Available for work</span>
+                <span className="hidden sm:inline">{t(locale, 'availableForWork')}</span>
               </p>
             )}
           </div>

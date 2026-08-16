@@ -2,27 +2,27 @@
   "order": [
     {
       "key": "about",
-      "label": "About",
+      "label": "نبذة عني",
       "visible": true
     },
     {
       "key": "projects",
-      "label": "Projects",
+      "label": "المشاريع",
       "visible": true
     },
     {
       "key": "skills",
-      "label": "Skills",
+      "label": "المهارات",
       "visible": true
     },
     {
       "key": "experience",
-      "label": "Experience",
+      "label": "الخبرة",
       "visible": true
     },
     {
       "key": "contact",
-      "label": "Contact",
+      "label": "تواصل",
       "visible": true
     }
   ]

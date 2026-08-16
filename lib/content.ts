@@ -41,6 +41,7 @@ const TREE = {
     site: reader.singletons.site,
     socials: reader.singletons.socials,
     about: reader.singletons.about,
+    contact: reader.singletons.contact,
     skills: reader.singletons.skills,
     experience: reader.singletons.experience,
     education: reader.singletons.education,
@@ -53,6 +54,7 @@ const TREE = {
     site: reader.singletons.siteAr,
     socials: reader.singletons.socialsAr,
     about: reader.singletons.aboutAr,
+    contact: reader.singletons.contactAr,
     skills: reader.singletons.skillsAr,
     experience: reader.singletons.experienceAr,
     education: reader.singletons.educationAr,
@@ -116,6 +118,20 @@ export async function getAbout(locale: Locale = 'en') {
     stats: about.stats.map((s) => ({ value: s.value, label: s.label })),
   }
   return base
+}
+
+/**
+ * Contact copy. Every field falls back to the English wording so the section
+ * still reads if the file is missing — but the fallbacks are English, which is
+ * why the Arabic tree ships its own file rather than relying on them.
+ */
+export async function getContact(locale: Locale = 'en') {
+  const c = await TREE[locale].contact.read()
+  return {
+    headline: c?.headline || 'Let’s work together.',
+    blurb: c?.blurb || '',
+    responseTime: c?.responseTime || '',
+  }
 }
 
 export async function getSkillGroups(locale: Locale = 'en') {
@@ -235,22 +251,16 @@ export async function getProjects(locale: Locale = 'en'): Promise<Project[]> {
   return base
 }
 
-export type SectionEntry = { key: SectionKey; label: string; index: string }
+export type SectionEntry = { key: SectionKey; label: string }
 
-/**
- * Visible sections in page order, already numbered. The numbering follows the
- * list rather than being stored, so hiding a section renumbers the rest
- * instead of leaving a gap.
- */
+/** Visible sections, in the page order set in the manager. */
 export async function getSections(locale: Locale = 'en'): Promise<SectionEntry[]> {
   const { order } = await TREE[locale].sections.readOrThrow()
 
-  const base = order
+  return order
     .filter((s) => s.visible)
-    .map((s, i) => ({
+    .map((s) => ({
       key: s.key as SectionKey,
       label: s.label || s.key,
-      index: String(i + 1).padStart(2, '0'),
     }))
-  return base
 }

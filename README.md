@@ -168,7 +168,7 @@ Two helper classes carry the polish:
 
 Anything that can't inherit a CSS colour needs the theme fed to it explicitly. [`components/LidarBackdrop.tsx`](components/LidarBackdrop.tsx) reads the `--canvas-ink` triplet and re-reads it on a `data-theme` mutation and on OS-preference change; add new canvas work the same way rather than hardcoding a colour.
 
-Section numbering is derived from the order in the manager, not stored — hide a section and the rest renumber rather than leaving a gap.
+Section order and headings come from the manager; hiding a section removes it from the page without touching the rest.
 
 `next.config.mjs` must keep `outputFileTracingIncludes` for `content/**`. The reader loads those JSON files with `fs` at runtime, and Next only bundles files it can trace through imports — without it, prerendered pages keep working (they were built while the files existed) but every dynamic route, `/keystatic` included, throws `Singleton "site" not found`.
 
