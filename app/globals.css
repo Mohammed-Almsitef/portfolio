@@ -37,8 +37,14 @@
 
   /* Engineering blue rather than a consumer teal — the register robotics and
      AI research read as credible. The hue differs per theme by necessity: a
-     blue light enough for a dark ground is unreadable on white. */
-  --color-accent: #1d4ed8;
+     blue light enough for a dark ground is unreadable on white.
+
+     `--accent-tone` is the single triplet everything accented derives from, so
+     assigning it one of the `--tone-*` values repaints the accent, the glows
+     and the hero scan together. Skills sets it on hover; nothing else writes
+     it, and it falls back to the theme's blue. */
+  --accent-tone: 29 78 216;
+  --color-accent: rgb(var(--accent-tone));
   --color-accent-dim: #3b62c4;
   --color-accent-alt: #4f46e5;
 
@@ -74,10 +80,10 @@
   --tone-status: var(--tone-emerald);
 
   /* Light-theme values for the properties Tailwind doesn't generate. */
-  --canvas-ink: 29 78 216;
-  --glow: rgb(29 78 216 / 0.06);
-  --card-glow: rgb(29 78 216 / 0.09);
-  --btn-glow: rgb(29 78 216 / 0.3);
+  --canvas-ink: var(--accent-tone);
+  --glow: rgb(var(--accent-tone) / 0.06);
+  --card-glow: rgb(var(--accent-tone) / 0.09);
+  --btn-glow: rgb(var(--accent-tone) / 0.3);
   --card-shadow: 0 1px 2px rgb(11 18 32 / 0.04), 0 10px 26px -14px rgb(11 18 32 / 0.14);
   --grain: 0.02;
   --headline-gradient: linear-gradient(115deg, #0b1220 12%, #22314a 50%, var(--color-accent) 98%);
@@ -106,13 +112,13 @@
   --d-text: #eaeef6;
   --d-body: #b6bdcd;
   --d-muted: #868fa0;
-  --d-accent: #60a5fa;
+  --d-accent-tone: 96 165 250;
   --d-accent-dim: #6b98d6;
   --d-accent-alt: #818cf8;
-  --d-canvas-ink: 96 165 250;
-  --d-glow: rgb(96 165 250 / 0.08);
-  --d-card-glow: rgb(96 165 250 / 0.12);
-  --d-btn-glow: rgb(96 165 250 / 0.5);
+  --d-canvas-ink: var(--accent-tone);
+  --d-glow: rgb(var(--accent-tone) / 0.08);
+  --d-card-glow: rgb(var(--accent-tone) / 0.12);
+  --d-btn-glow: rgb(var(--accent-tone) / 0.5);
   --d-card-shadow: none;
   --d-grain: 0.022;
   --d-headline-gradient: linear-gradient(115deg, #ffffff 14%, #dce6f5 50%, var(--color-accent) 98%);
@@ -129,7 +135,8 @@
   --color-text: var(--d-text);
   --color-body: var(--d-body);
   --color-muted: var(--d-muted);
-  --color-accent: var(--d-accent);
+  --accent-tone: var(--d-accent-tone);
+  --color-accent: rgb(var(--accent-tone));
   --color-accent-dim: var(--d-accent-dim);
   --color-accent-alt: var(--d-accent-alt);
   --tone-blue: var(--d-tone-blue);
@@ -162,7 +169,8 @@
     --color-text: var(--d-text);
     --color-body: var(--d-body);
     --color-muted: var(--d-muted);
-    --color-accent: var(--d-accent);
+    --accent-tone: var(--d-accent-tone);
+    --color-accent: rgb(var(--accent-tone));
     --color-accent-dim: var(--d-accent-dim);
     --color-accent-alt: var(--d-accent-alt);
     --tone-blue: var(--d-tone-blue);

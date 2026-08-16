@@ -124,10 +124,13 @@ export default function LidarBackdrop() {
     }
     read()
 
+    // `style` as well as `data-theme`: the accent is retinted by writing
+    // `--accent-tone` inline on <html>, and canvas colours are copied at read
+    // time rather than inherited, so without this the scan keeps the old hue.
     const mo = new MutationObserver(read)
     mo.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['data-theme'],
+      attributeFilter: ['data-theme', 'style'],
     })
     const mq = window.matchMedia('(prefers-color-scheme: dark)')
     mq.addEventListener('change', read)

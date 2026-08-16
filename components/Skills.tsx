@@ -1,4 +1,5 @@
 import { getSkillGroups } from '@/lib/content'
+import AccentOnHover from './AccentOnHover'
 import Section from './Section'
 import type { Locale } from '@/lib/locale'
 
@@ -15,11 +16,9 @@ export default async function Skills({
     <Section id="skills" title={title}>
       <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
         {groups.map((g) => (
-          <div
+          <AccentOnHover
             key={g.title}
-            // The tone is resolved per theme by globals.css; only the variable
-            // reference is dynamic, so no Tailwind class is built at runtime.
-            style={{ '--tone': `var(--tone-${g.tone})` } as React.CSSProperties}
+            tone={g.tone}
             className="group border-s-2 border-[rgb(var(--tone)/0.45)] ps-5 transition-colors duration-300 hover:border-[rgb(var(--tone))]"
           >
             <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold tracking-tight">
@@ -36,7 +35,7 @@ export default async function Skills({
                 </li>
               ))}
             </ul>
-          </div>
+          </AccentOnHover>
         ))}
       </div>
     </Section>
