@@ -74,7 +74,16 @@ function Body({ p, index, locale }: { p: Project; index: number; locale: Locale 
           <span aria-hidden="true" className="me-3 font-mono text-xs text-[rgb(var(--tone))]">
             {String(index + 1).padStart(2, '0')}
           </span>
-          {p.title}
+          {/* The title is the card's link, stretched over the whole card by its
+              own ::after. One link with real text beats an unlabelled overlay:
+              the accessible name is the project, and the card still reads as a
+              single target to a screen reader rather than a bare region. */}
+          <Link
+            href={localePath(locale, `/projects/${p.slug}`)}
+            className="after:absolute after:inset-0 after:content-['']"
+          >
+            {p.title}
+          </Link>
         </h3>
         <span className="shrink-0 font-mono text-xs text-muted">{p.year}</span>
       </div>
@@ -92,22 +101,15 @@ function Body({ p, index, locale }: { p: Project; index: number; locale: Locale 
         ))}
       </ul>
 
-      <div className="mt-6 flex flex-wrap items-center gap-5 border-t border-border pt-5">
-        <Link
-          href={localePath(locale, `/projects/${p.slug}`)}
-          className="tap gap-1 font-mono text-xs text-[rgb(var(--tone))] underline-offset-4 hover:underline"
-        >
-          {t(locale, 'readCaseStudy')}
-          <span
-            aria-hidden="true"
-            className="rtl:-scale-x-100 transition-transform duration-200 group-hover:translate-x-0.5"
-          >
-            →
-          </span>
-        </Link>
-        {p.repoUrl && <ProjectLink href={p.repoUrl}>{t(locale, 'source')}</ProjectLink>}
-        {p.videoUrl && <ProjectLink href={p.videoUrl}>{t(locale, 'video')}</ProjectLink>}
-      </div>
+      {/* `relative` lifts these clear of the title's stretched ::after, which
+          would otherwise swallow their clicks. Hidden entirely when a project
+          has neither, rather than leaving a rule above empty space. */}
+      {(p.repoUrl || p.videoUrl) && (
+        <div className="relative mt-6 flex flex-wrap items-center gap-5 border-t border-border pt-5">
+          {p.repoUrl && <ProjectLink href={p.repoUrl}>{t(locale, 'source')}</ProjectLink>}
+          {p.videoUrl && <ProjectLink href={p.videoUrl}>{t(locale, 'video')}</ProjectLink>}
+        </div>
+      )}
     </div>
   )
 }

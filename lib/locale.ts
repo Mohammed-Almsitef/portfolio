@@ -25,7 +25,6 @@ const STRINGS = {
   en: {
     skipToContent: 'Skip to content',
     allProjects: 'All projects',
-    readCaseStudy: 'Read the case study',
     source: 'Source',
     video: 'Video',
     liveDemo: 'Live demo',
@@ -52,7 +51,6 @@ const STRINGS = {
   ar: {
     skipToContent: 'تخطَّ إلى المحتوى',
     allProjects: 'كل المشاريع',
-    readCaseStudy: 'اقرأ دراسة الحالة',
     source: 'الشيفرة',
     video: 'فيديو',
     liveDemo: 'تجربة مباشرة',
