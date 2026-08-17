@@ -1,5 +1,6 @@
 import { collection, config, fields, singleton } from '@keystatic/core'
 import { PLATFORM_IDS, platformName } from '@/lib/socials'
+import BrandMark from '@/components/manager/BrandMark'
 
 /**
  * Content schema for the portfolio manager at /keystatic.
@@ -518,7 +519,7 @@ export default config({
     : { kind: 'local' },
 
   ui: {
-    brand: { name: 'Portfolio' },
+    brand: { name: 'Mohammed Almsitef', mark: BrandMark },
     navigation: {
       'Page setup': ['sections', 'site', 'appearance'],
       // `socials` sits beside `contact` because that is the only section it

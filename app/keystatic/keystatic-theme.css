@@ -1,0 +1,192 @@
+/*
+ * The manager, wearing the site's colours.
+ *
+ * Keystatic's UI (Keystar) is built entirely on `--kui-*` custom properties, and
+ * every component derives from a small Radix-style scale rather than hard-coding
+ * anything. So the whole dashboard can be re-themed by redefining two scales —
+ * no reaching for generated class names, which are hashed and would break on the
+ * next Keystatic release.
+ *
+ * `slate` is the neutral: Keystar ships a pure grey, and every grey on the site
+ * is tinted navy, which is most of why the manager felt like a different
+ * product. `indigo` is the accent, repointed at the blue the site already uses.
+ *
+ * Two details about the selectors, both dictated by how Keystar declares its
+ * own:
+ *
+ *   - The scheme class lands on <html> *and* on an inner wrapper, so a
+ *     descendant combinator would miss the outer one. Both classes are always
+ *     present together, so `.kui-theme.kui-scheme--x` matches either element and
+ *     is one step more specific than Keystar's single-class rule — which matters
+ *     because Keystar injects its styles at runtime and their order relative to
+ *     this file is not guaranteed.
+ *
+ *   - There are three scopes, not two: an explicit light, an explicit dark, and
+ *     an `auto` that follows the system through a media query. So the dark
+ *     palette is stated twice, once per dark scope. Keystar's own stylesheet has
+ *     the same shape, and keeping it makes the two comparable.
+ */
+
+/* ------------------------------------------------- light, and auto by day ---- */
+
+.kui-theme.kui-scheme--light,
+.kui-theme.kui-scheme--auto {
+  --kui-color-scale-slate1: #ffffff; /* canvas */
+  --kui-color-scale-slate2: #f7f9fc; /* sidebar, cards */
+  --kui-color-scale-slate3: #f1f4fa; /* raised rows, inputs */
+  --kui-color-scale-slate4: #e8edf5; /* hovered rows */
+  --kui-color-scale-slate5: #dfe5ef;
+  --kui-color-scale-slate6: #d9dfe9; /* the site's --color-border */
+  --kui-color-scale-slate7: #b6bfcd; /* --color-border-strong */
+  --kui-color-scale-slate8: #9aa5b6;
+  --kui-color-scale-slate9: #5d6675; /* --color-muted */
+  --kui-color-scale-slate10: #36404f; /* --color-body */
+  --kui-color-scale-slate11: #0b1220; /* --color-text */
+
+  /* The site's light accent, #1d4ed8. The two themes cannot share one blue: one
+     light enough to sit on a dark ground is unreadable on white. */
+  --kui-color-scale-indigo1: #fdfdfe;
+  --kui-color-scale-indigo2: #f6f8ff;
+  --kui-color-scale-indigo3: #edf2ff;
+  --kui-color-scale-indigo4: #e0e8fd;
+  --kui-color-scale-indigo5: #cfdbfa;
+  --kui-color-scale-indigo6: #b8caf6;
+  --kui-color-scale-indigo7: #97b0ef;
+  --kui-color-scale-indigo8: #6c8ee6;
+  --kui-color-scale-indigo9: #1d4ed8; /* Save, selected nav, focus ring */
+  --kui-color-scale-indigo10: #1a45c0;
+  --kui-color-scale-indigo11: #1c46bd; /* accent text and links */
+}
+
+/* ------------------------------------------------------------ dark, chosen ---- */
+
+.kui-theme.kui-scheme--dark {
+  /* Canvas darkest, panels lighter — Keystar's convention, and the site's
+     --d-bg / --d-surface / --d-elevated ladder already follows it. */
+  --kui-color-scale-slate1: #131720;
+  --kui-color-scale-slate2: #1a1f2b;
+  --kui-color-scale-slate3: #212836;
+  --kui-color-scale-slate4: #273040;
+  --kui-color-scale-slate5: #2a3140;
+  --kui-color-scale-slate6: #333c4d;
+  --kui-color-scale-slate7: #3a4355;
+  --kui-color-scale-slate8: #4b566b;
+  --kui-color-scale-slate9: #868fa0;
+  --kui-color-scale-slate10: #b6bdcd;
+  --kui-color-scale-slate11: #eaeef6;
+
+  /* The site's dark accent, #60a5fa, across the ramp. */
+  --kui-color-scale-indigo1: #131a26;
+  --kui-color-scale-indigo2: #16202f;
+  --kui-color-scale-indigo3: #17293f;
+  --kui-color-scale-indigo4: #1b3350;
+  --kui-color-scale-indigo5: #1f3d61;
+  --kui-color-scale-indigo6: #244a76;
+  --kui-color-scale-indigo7: #2b5b90;
+  --kui-color-scale-indigo8: #3672b4;
+  --kui-color-scale-indigo9: #60a5fa;
+  --kui-color-scale-indigo10: #7db4fb;
+  --kui-color-scale-indigo11: #9cc6fc;
+
+  /* A fill this light takes dark text, exactly as the site's own accent button
+     does. The positive, caution and critical fills are light enough to take it
+     too, so one value holds for all of them. */
+  --kui-color-foreground-on-emphasis: #0f1420;
+}
+
+/* ---------------------------------------------------- dark, by system pref ---- */
+
+@media (prefers-color-scheme: dark) {
+  .kui-theme.kui-scheme--auto {
+    --kui-color-scale-slate1: #131720;
+    --kui-color-scale-slate2: #1a1f2b;
+    --kui-color-scale-slate3: #212836;
+    --kui-color-scale-slate4: #273040;
+    --kui-color-scale-slate5: #2a3140;
+    --kui-color-scale-slate6: #333c4d;
+    --kui-color-scale-slate7: #3a4355;
+    --kui-color-scale-slate8: #4b566b;
+    --kui-color-scale-slate9: #868fa0;
+    --kui-color-scale-slate10: #b6bdcd;
+    --kui-color-scale-slate11: #eaeef6;
+
+    --kui-color-scale-indigo1: #131a26;
+    --kui-color-scale-indigo2: #16202f;
+    --kui-color-scale-indigo3: #17293f;
+    --kui-color-scale-indigo4: #1b3350;
+    --kui-color-scale-indigo5: #1f3d61;
+    --kui-color-scale-indigo6: #244a76;
+    --kui-color-scale-indigo7: #2b5b90;
+    --kui-color-scale-indigo8: #3672b4;
+    --kui-color-scale-indigo9: #60a5fa;
+    --kui-color-scale-indigo10: #7db4fb;
+    --kui-color-scale-indigo11: #9cc6fc;
+
+    --kui-color-foreground-on-emphasis: #0f1420;
+  }
+}
+
+/* --------------------------------------------------------- type and shape ---- */
+
+.kui-theme.kui-theme {
+  /* Keystar already reaches for --font-inter; its mono was a system stack, so
+     code and identifiers were set in a different face here than on the site. */
+  --kui-typography-font-family-code: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo,
+    Consolas, monospace;
+
+  /* Rounder, to match the site's cards. Keystar's defaults (4/6/8/12) read
+     tighter than anything on the front end. */
+  --kui-size-radius-small: 5px;
+  --kui-size-radius-regular: 8px;
+  --kui-size-radius-medium: 10px;
+  --kui-size-radius-large: 14px;
+  --kui-size-radius-xlarge: 18px;
+}
+
+/* ------------------------------------------------------------ the account chip ---- */
+
+/*
+ * Keystatic renders a full-viewport app whose sidebar only accepts collection
+ * and singleton keys, so the account controls ride above it (see layout.tsx).
+ * Painting them from `--kui-*` is what makes them read as part of the app: the
+ * manager's colour scheme is its own setting, independent of the site's, so
+ * anything themed off the site's variables would invert at the wrong moment.
+ */
+.kst-chip {
+  position: fixed;
+  z-index: 50;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+  padding: 0.25rem;
+  font-size: 0.75rem;
+  border: 1px solid var(--kui-color-border-neutral);
+  border-radius: var(--kui-size-radius-full);
+  background: var(--kui-color-background-surface);
+  box-shadow: 0 8px 24px -12px rgb(0 0 0 / 0.45);
+}
+
+.kst-chip-action {
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--kui-size-radius-full);
+  font-weight: 500;
+  color: var(--kui-color-foreground-neutral-secondary);
+  transition:
+    background-color 150ms,
+    color 150ms;
+}
+
+.kst-chip-action:hover {
+  background: var(--kui-color-alias-background-hovered);
+  color: var(--kui-color-foreground-neutral);
+}
+
+.kst-chip-warn {
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--kui-size-radius-full);
+  font-weight: 500;
+  background: var(--kui-color-background-critical);
+  color: var(--kui-color-foreground-critical);
+}

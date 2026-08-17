@@ -1,5 +1,7 @@
 import Link from 'next/link'
 
+import './keystatic-theme.css'
+
 import { gateStatus } from '@/lib/manager/auth'
 import { signOutAction } from '../manager/actions'
 
@@ -22,29 +24,23 @@ export default async function KeystaticLayout({ children }: { children: React.Re
     <>
       {children}
 
-      <div className="fixed bottom-3 right-3 z-50 flex items-center gap-1 rounded-full border border-border bg-surface/90 px-1 py-1 text-xs shadow-lg backdrop-blur-sm">
+      {/* Painted from Keystatic's own tokens rather than the site's. The two
+          carry independent light/dark settings, so a chip themed off the site
+          would sit light-on-dark whenever the manager is set the other way. */}
+      <div className="kst-chip">
         {unprotected && (
-          <span
-            title="Anyone with this URL can open the manager"
-            className="rounded-full bg-rose-500/15 px-2 py-1 font-medium text-text"
-          >
+          <span title="Anyone with this URL can open the manager" className="kst-chip-warn">
             No password
           </span>
         )}
 
-        <Link
-          href="/manager/account"
-          className="rounded-full px-2.5 py-1 font-medium text-body transition hover:bg-elevated hover:text-text"
-        >
+        <Link href="/manager/account" className="kst-chip-action">
           Account
         </Link>
 
         {!unprotected && (
           <form action={signOutAction}>
-            <button
-              type="submit"
-              className="rounded-full px-2.5 py-1 font-medium text-body transition hover:bg-elevated hover:text-text"
-            >
+            <button type="submit" className="kst-chip-action">
               Sign out
             </button>
           </form>
