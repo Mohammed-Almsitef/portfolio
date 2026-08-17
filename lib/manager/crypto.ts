@@ -98,6 +98,11 @@ export function safeEqual(a: string, b: string): boolean {
   return timingSafeEqual(ha, hb)
 }
 
+/** Whether a session can be signed at all, for callers that must fail cleanly. */
+export function sessionSecretConfigured(): boolean {
+  return Boolean(process.env.MANAGER_SESSION_SECRET || process.env.KEYSTATIC_SECRET)
+}
+
 function sessionSecret(): string {
   // KEYSTATIC_SECRET is already required for the GitHub login flow, so reusing
   // it keeps the setup to one fewer variable. A dedicated value wins if set.

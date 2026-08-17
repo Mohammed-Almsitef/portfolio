@@ -22,7 +22,8 @@ export default async function OpenSource({
             style={{ '--tone': `var(--tone-${c.tone})` } as React.CSSProperties}
             className="group rounded-xl border border-border bg-surface p-6 shadow-[var(--card-shadow)] transition-colors duration-300 hover:border-[rgb(var(--tone)/0.45)]"
           >
-            <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            {/* The status reads as part of the heading, so it sits with it. */}
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
               <h3 className="text-lg font-medium tracking-tight">
                 <a
                   href={c.projectUrl}

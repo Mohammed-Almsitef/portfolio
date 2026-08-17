@@ -1,4 +1,5 @@
 import { getSite } from '@/lib/content'
+import Logo from './Logo'
 import SectionRule from './SectionRule'
 import type { Locale } from '@/lib/locale'
 
@@ -14,7 +15,10 @@ export default async function Footer({ locale = 'en' }: { locale?: Locale }) {
       <SectionRule />
 
       <div className="mx-auto flex max-w-page flex-wrap items-center justify-between gap-3 px-6 py-10">
-        <p className="mono-label font-mono text-sm">{site.name}</p>
+        <p className="mono-label flex items-center gap-2.5 font-mono text-sm">
+          <Logo id="footer-logo" weight="small" className="h-8 w-auto shrink-0" />
+          {site.name}
+        </p>
         <p className="font-mono text-xs text-muted">
           © {new Date().getFullYear()} · Built with Next.js
         </p>

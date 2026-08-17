@@ -79,6 +79,16 @@
      changing a project's colour can never change what "available" looks like. */
   --tone-status: var(--tone-emerald);
 
+  /* The monogram's own two colours.
+   *
+   * Deliberately not derived from --accent-tone: the accent is chosen in the
+   * manager and the handoff forbids recolouring the mark outside its palette.
+   * The pairing is also not interchangeable — #1D4ED8 must never sit on a dark
+   * ground, nor #60A5FA on a light one — which is the whole reason these are
+   * theme-scoped variables rather than one value. */
+  --logo-ink: #201e1d;
+  --logo-accent: #1d4ed8;
+
   /* Light-theme values for the properties Tailwind doesn't generate. */
   --canvas-ink: var(--accent-tone);
   --glow: rgb(var(--accent-tone) / 0.06);
@@ -122,12 +132,16 @@
   --d-card-shadow: none;
   --d-grain: 0.022;
   --d-headline-gradient: linear-gradient(115deg, #ffffff 14%, #dce6f5 50%, var(--color-accent) 98%);
+  --d-logo-ink: #f3f2f2;
+  --d-logo-accent: #60a5fa;
 }
 
 /* Explicit dark choice, and the resolved value the inline script writes. */
 :root[data-theme='dark'] {
   color-scheme: dark;
   --color-bg: var(--d-bg);
+  --logo-ink: var(--d-logo-ink);
+  --logo-accent: var(--d-logo-accent);
   --color-surface: var(--d-surface);
   --color-elevated: var(--d-elevated);
   --color-border: var(--d-border);
@@ -162,6 +176,8 @@
   :root:not([data-theme]) {
     color-scheme: dark;
     --color-bg: var(--d-bg);
+    --logo-ink: var(--d-logo-ink);
+    --logo-accent: var(--d-logo-accent);
     --color-surface: var(--d-surface);
     --color-elevated: var(--d-elevated);
     --color-border: var(--d-border);

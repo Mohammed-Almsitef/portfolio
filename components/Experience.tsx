@@ -75,7 +75,9 @@ export default async function Experience({
           <SubHeading>{t(locale, 'education')}</SubHeading>
           <ul className="space-y-3">
             {education.map((e) => (
-              <li key={e.degree} className="flex flex-wrap items-baseline justify-between gap-x-4">
+              // Same as the jobs above: the period follows the school instead of
+              // being pushed to the far edge, where a wide screen strands it.
+              <li key={e.degree} className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                 <span>
                   <span className="font-medium">{e.degree}</span>
                   <span className="text-muted"> · {e.school}</span>
@@ -92,7 +94,7 @@ export default async function Experience({
           <SubHeading>{t(locale, 'publications')}</SubHeading>
           <ul className="space-y-4">
             {publications.map((p) => (
-              <li key={p.title} className="flex flex-wrap items-baseline justify-between gap-x-4">
+              <li key={p.title} className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                 <span className="max-w-2xl">
                   <a
                     href={p.url}

@@ -23,7 +23,12 @@ export default async function About({
         {/* Set in the manager under About. Hidden entirely if none is set,
             rather than leaving a broken image or a reserved gap. */}
         {about.photo && (
-          <AboutPhoto src={about.photo} alt={site.name} onPhones={about.photoOnPhones} />
+          <AboutPhoto
+            src={about.photo}
+            alt={site.name}
+            backdrop={about.photoBackdrop}
+            onPhones={about.photoOnPhones}
+          />
         )}
         {/* `items center` was two dead classes, and the grid-cols track list
             never applied to a flex container. */}

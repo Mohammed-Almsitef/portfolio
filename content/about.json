@@ -1,5 +1,6 @@
 {
-  "photo": "/about-photo.de2d44b8.png",
+  "photo": "/photo.png",
+  "photoBackdrop": "studio",
   "photoOnPhones": true,
   "paragraphs": [
     "I'm an engineer working at the intersection of robotics and applied AI. My work runs the full width of the problem — training the perception and language models, then earning the right to trust them by putting them on hardware that moves through the real world.",

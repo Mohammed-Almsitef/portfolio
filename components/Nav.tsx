@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import Logo from './Logo'
 import ThemeToggle from './ThemeToggle'
 import { t, type Locale } from '@/lib/locale'
 import LanguageSwitch from './LanguageSwitch'
@@ -106,8 +107,11 @@ export default function Nav({
           <div className="flex min-w-0 items-center gap-3">
             <a
               href="#top"
-              className="mono-label tap shrink-0 font-mono text-sm font-medium tracking-tight transition-colors hover:text-accent"
+              className="mono-label tap shrink-0 items-center gap-2.5 font-mono text-sm font-medium tracking-tight transition-colors hover:text-accent"
             >
+              {/* The name is right beside it, so the mark is decoration to a
+                  screen reader rather than a second copy of the same words. */}
+              <Logo id="nav-logo" weight="medium" className="h-10 w-auto shrink-0" />
               {siteName}
             </a>
 

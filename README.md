@@ -96,13 +96,20 @@ The password is stored as an scrypt hash in a Redis store. It **cannot** live in
 
 | Situation                                           | Manager        |
 | --------------------------------------------------- | -------------- |
-| No Redis variables set                              | Open, unlocked |
+| No Redis variables and no `MANAGER_PASSWORD`        | Open, unlocked |
 | Redis set, no password saved, no `MANAGER_PASSWORD` | Open, unlocked |
 | Password saved, or `MANAGER_PASSWORD` set           | Password asked |
+| Password in force, no signing secret set            | **Closed**     |
 | Removed from **Account → Danger zone**              | Open, unlocked |
 | Redis configured but **not answering**              | **Closed**     |
 
 That last row is deliberate. If the store can't be reached, the gate stays shut rather than defaulting open — an outage shouldn't quietly publish the manager. It also means an unreachable store locks _you_ out until it recovers.
+
+`MANAGER_PASSWORD` is honoured on its own, with no Redis behind it — a password
+set in the environment protects the manager whether or not a store exists. What
+it cannot do is be *changed* from **Account**, since there is nowhere to write
+the new hash; that screen says as much. Rate limiting still applies, but in
+memory rather than in Redis, so it resets on redeploy and counts per instance.
 
 Missing variables, by contrast, leave the manager open: that's the state before setup, and failing closed there would lock you out of a manager you hadn't secured yet. The manager shows a **No password** badge whenever it's unprotected.
 

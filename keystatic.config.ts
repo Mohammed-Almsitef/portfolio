@@ -281,7 +281,7 @@ const socialsDef = (dir: string, tag: string) =>
         {
           label: 'Links',
           description:
-            'The tiles in the contact section, in this order. Drag to reorder, and add or remove a platform freely — each one draws its own icon and reads its handle out of the address.',
+            'The links in the contact section, in this order. Drag to reorder, and add or remove a platform freely — each one draws its own icon and reads its handle out of the address. Whether they show as bare icons or as cards with names is set under Appearance.',
           // The URL is what distinguishes two rows on the same platform, so the
           // collapsed row shows it rather than just the label.
           itemLabel: (props) =>
@@ -303,6 +303,21 @@ const aboutDef = (dir: string, tag: string) =>
         label: 'Profile photo',
         directory: 'public',
         publicPath: '/',
+      }),
+      photoBackdrop: fields.select({
+        label: 'Photo background',
+        description:
+          'What sits behind the portrait. All six are drawn from the site’s own palette, so each ' +
+          'one follows the colour mode and the accent you picked.',
+        options: [
+          { label: 'Engineering grid', value: 'grid' },
+          { label: 'Dot matrix', value: 'dots' },
+          { label: 'Spotlight', value: 'spotlight' },
+          { label: 'Studio sweep', value: 'studio' },
+          { label: 'Sensor sweep (LiDAR)', value: 'sweep' },
+          { label: 'None — no background', value: 'none' },
+        ],
+        defaultValue: 'grid',
       }),
       photoOnPhones: fields.checkbox({
         label: 'Show the photo on phones',
@@ -592,6 +607,18 @@ export default config({
             'The site-wide highlight — links, buttons, headings and the hero scan. Same palette the skill groups use.',
           options: [...TONES],
           defaultValue: 'blue',
+        }),
+        contactLinks: fields.select({
+          label: 'Contact links',
+          description:
+            'How the links in the contact section are drawn. Icons only is compact and lets the ' +
+            'marks do the work; cards also print the platform and your handle. The links ' +
+            'themselves are edited under Contact links.',
+          options: [
+            { label: 'Icons only', value: 'icons' },
+            { label: 'Cards with name and handle', value: 'tiles' },
+          ],
+          defaultValue: 'icons',
         }),
         decorShow: fields.checkbox({
           label: 'Show the robot shapes beside the content',

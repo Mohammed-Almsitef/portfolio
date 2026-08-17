@@ -72,9 +72,12 @@ const TREE = {
   },
 } as const
 
+export type ContactLinkStyle = 'icons' | 'tiles'
+
 export type Appearance = {
   defaultTheme: 'light' | 'dark'
   accent: Tone
+  contactLinks: ContactLinkStyle
   decorShow: boolean
   decorArrangement: 'auto' | 'a' | 'b' | 'c'
   decorWeight: 'vivid' | 'soft'
@@ -104,6 +107,7 @@ export async function getAppearance(): Promise<Appearance> {
     // Validated against the known set rather than cast: the value reaches a CSS
     // variable name, so an unrecognised one would silently blank the accent.
     accent: TONE_NAMES.includes(a?.accent as Tone) ? (a!.accent as Tone) : 'blue',
+    contactLinks: a?.contactLinks === 'tiles' ? 'tiles' : 'icons',
     decorShow: a?.decorShow !== false,
     decorArrangement: a?.decorArrangement ?? 'auto',
     decorWeight: a?.decorWeight === 'soft' ? 'soft' : 'vivid',
@@ -165,6 +169,9 @@ export async function getSocials(locale: Locale = 'en'): Promise<Social[]> {
   })
 }
 
+export const PHOTO_BACKDROPS = ['grid', 'dots', 'spotlight', 'studio', 'sweep', 'none'] as const
+export type PhotoBackdrop = (typeof PHOTO_BACKDROPS)[number]
+
 export async function getAbout(locale: Locale = 'en') {
   const about = await TREE[locale].about.readOrThrow()
   const base = {
@@ -172,6 +179,9 @@ export async function getAbout(locale: Locale = 'en') {
     // not a broken image pointing at a file that may never have existed.
     photo: about.photo || null,
     photoOnPhones: about.photoOnPhones !== false,
+    photoBackdrop: PHOTO_BACKDROPS.includes(about.photoBackdrop as PhotoBackdrop)
+      ? (about.photoBackdrop as PhotoBackdrop)
+      : ('grid' as PhotoBackdrop),
     paragraphs: [...about.paragraphs],
     stats: about.stats.map((s) => ({ value: s.value, label: s.label })),
   }

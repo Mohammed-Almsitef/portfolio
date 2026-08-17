@@ -1,4 +1,4 @@
-import { getContact, getSite, getSocials } from '@/lib/content'
+import { getAppearance, getContact, getSite, getSocials } from '@/lib/content'
 import CopyEmail from './CopyEmail'
 import Section from './Section'
 import SocialLink from './SocialLink'
@@ -41,11 +41,14 @@ export default async function Contact({
   title: string
   locale?: Locale
 }) {
-  const [site, socials, contact] = await Promise.all([
+  const [site, socials, contact, appearance] = await Promise.all([
     getSite(locale),
     getSocials(locale),
     getContact(locale),
+    getAppearance(),
   ])
+
+  const iconsOnly = appearance.contactLinks === 'icons'
 
   return (
     <Section id="contact" title={title}>
@@ -94,10 +97,18 @@ export default async function Contact({
       {socials.length > 0 && (
         <div className="mt-14">
           <h3 className={EYEBROW}>{t(locale, 'findMeOn')}</h3>
-          <ul className="mt-3 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Icons wrap in a row and are sized by their own content; cards need a
+              grid to line up. */}
+          <ul
+            className={
+              iconsOnly
+                ? 'mt-4 flex flex-wrap gap-3'
+                : 'mt-3 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3'
+            }
+          >
             {socials.map((s) => (
               <li key={s.href}>
-                <SocialLink social={s} />
+                <SocialLink social={s} style={appearance.contactLinks} />
               </li>
             ))}
           </ul>

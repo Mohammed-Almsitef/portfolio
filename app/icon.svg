@@ -1,16 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <rect width="32" height="32" rx="7" fill="#131720"/>
-  <!-- Sensor origin sweeping to three returns: the site's LiDAR motif, reduced
-       to something that still reads at 16px. -->
-  <g stroke="#60a5fa" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.55">
-    <path d="M10 22 L22 10"/>
-    <path d="M10 22 L23 19"/>
-    <path d="M10 22 L14 8"/>
-  </g>
-  <g fill="#60a5fa">
-    <circle cx="22" cy="10" r="2"/>
-    <circle cx="23" cy="19" r="2"/>
-    <circle cx="14" cy="8" r="2"/>
-    <circle cx="10" cy="22" r="3.2"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240" role="img" aria-label="MA monogram — Mohammed Almsitef">
+<rect x="0" y="0" width="240" height="240" fill="#201e1d"></rect><g transform="translate(49.33 82.5) scale(0.721)">
+  <defs><mask id="icon-seam" maskUnits="userSpaceOnUse" x="-6" y="-34" width="208" height="172">
+    <rect x="-6" y="-34" width="208" height="172" fill="#fff"></rect>
+    <path d="M108 104 L140 16 L172 104" stroke="#000" stroke-width="35" fill="none" stroke-linejoin="miter"></path>
+  </mask></defs>
+  <g fill="none" stroke-linejoin="miter">
+    <path d="M20 104 V16 L66 104 L112 16 V104" stroke="#f3f2f2" stroke-width="19" mask="url(#icon-seam)"></path>
+    <path d="M108 104 L140 16 L172 104" stroke="#60A5FA" stroke-width="19"></path>
+    <path d="M118 76 H162" stroke="#60A5FA" stroke-width="19"></path>
+  </g></g>
 </svg>

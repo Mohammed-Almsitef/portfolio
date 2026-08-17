@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { arabicEnabled, getProjects, getSite } from '@/lib/content'
 import { dir, localePath, t, type Locale } from '@/lib/locale'
 import Footer from '@/components/Footer'
+import Logo from '@/components/Logo'
 import LanguageSwitch from '@/components/LanguageSwitch'
 import ProjectClip from '@/components/ProjectClip'
 import ProjectVisual from '@/components/ProjectVisual'
@@ -82,8 +83,9 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-4 px-6 py-4">
           <Link
             href={localePath(locale)}
-            className="mono-label tap font-mono text-sm font-medium tracking-tight transition-colors hover:text-accent"
+            className="mono-label tap items-center gap-2.5 font-mono text-sm font-medium tracking-tight transition-colors hover:text-accent"
           >
+            <Logo id="case-study-logo" weight="medium" className="h-9 w-auto shrink-0" />
             {site.name}
           </Link>
           {/* The case study has its own header rather than the site nav, so the

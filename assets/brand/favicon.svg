@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240" role="img" aria-label="MA monogram — Mohammed Almsitef">
+<rect x="0" y="0" width="240" height="240" fill="#1D4ED8"></rect><g transform="translate(49.33 82.5) scale(0.721)">
+  <defs><mask id="seam" maskUnits="userSpaceOnUse" x="-6" y="-34" width="208" height="172">
+    <rect x="-6" y="-34" width="208" height="172" fill="#fff"></rect>
+    <path d="M108 104 L140 16 L172 104" stroke="#000" stroke-width="35" fill="none" stroke-linejoin="miter"></path>
+  </mask></defs>
+  <g fill="none" stroke-linejoin="miter">
+    <path d="M20 104 V16 L66 104 L112 16 V104" stroke="#f3f2f2" stroke-width="19" mask="url(#seam)"></path>
+    <path d="M108 104 L140 16 L172 104" stroke="#f3f2f2" stroke-width="19"></path>
+    <path d="M118 76 H162" stroke="#f3f2f2" stroke-width="19"></path>
+  </g></g>
+</svg>

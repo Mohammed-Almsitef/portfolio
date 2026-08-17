@@ -26,6 +26,13 @@ function safeRedirect(target: FormDataEntryValue | null): string {
   return value.startsWith('/') && !value.startsWith('//') ? value : '/keystatic'
 }
 
+/** "3 attempts left." — only once it's worth warning about. */
+function withRemaining(error: string, remaining?: number): string {
+  return remaining !== undefined && remaining > 0 && remaining <= 3
+    ? `${error} ${remaining} attempt${remaining === 1 ? '' : 's'} left.`
+    : error
+}
+
 export async function loginAction(_prev: FormState, formData: FormData): Promise<FormState> {
   const password = String(formData.get('password') ?? '')
   const destination = safeRedirect(formData.get('from'))
@@ -34,13 +41,7 @@ export async function loginAction(_prev: FormState, formData: FormData): Promise
 
   const result = await attemptLogin(password, await clientIp())
 
-  if (!result.ok) {
-    const suffix =
-      result.remaining !== undefined && result.remaining > 0 && result.remaining <= 3
-        ? ` ${result.remaining} attempt${result.remaining === 1 ? '' : 's'} left.`
-        : ''
-    return { error: result.error + suffix }
-  }
+  if (!result.ok) return { error: withRemaining(result.error, result.remaining) }
 
   redirect(destination)
 }
@@ -60,8 +61,8 @@ export async function changePasswordAction(
 
   if (next !== confirm) return { error: 'The new passwords do not match.' }
 
-  const result = await changePassword(current, next)
-  if (!result.ok) return { error: result.error }
+  const result = await changePassword(current, next, await clientIp())
+  if (!result.ok) return { error: withRemaining(result.error, result.remaining) }
 
   return { notice: 'Password updated. Use the new one next time you sign in.' }
 }
@@ -76,8 +77,8 @@ export async function removePasswordAction(
     return { error: 'The confirmation did not match, so nothing was changed.' }
   }
 
-  const result = await removePassword(current)
-  if (!result.ok) return { error: result.error }
+  const result = await removePassword(current, await clientIp())
+  if (!result.ok) return { error: withRemaining(result.error, result.remaining) }
 
   return { notice: 'Password protection removed. Anyone with the link can now open the manager.' }
 }

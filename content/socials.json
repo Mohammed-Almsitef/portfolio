@@ -40,7 +40,7 @@
       "label": "Telegram",
       "href": "t.me/Mohammed_Almsitef",
       "icon": "auto",
-      "visible": false
+      "visible": true
     }
   ]
 }

@@ -49,5 +49,8 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/keystatic', '/keystatic/:path*', '/api/keystatic/:path*'],
+  // `/manager/login` is deliberately absent: gating the login page behind the
+  // gate would redirect it to itself. `/manager/account` is included because it
+  // reports whether protection is on, and its forms take the current password.
+  matcher: ['/keystatic', '/keystatic/:path*', '/api/keystatic/:path*', '/manager/account'],
 }
