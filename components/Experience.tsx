@@ -32,7 +32,9 @@ export default async function Experience({
               className="absolute -start-[2.19rem] top-2 size-2.5 rounded-full border border-border-strong bg-bg"
             />
 
-            <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            {/* No `justify-between`: the period sits directly after the company
+                rather than being pushed to the far edge of the column. */}
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
               <h3 className="text-lg font-medium tracking-tight">
                 {job.role} <span className="text-muted">·</span>{' '}
                 {job.companyUrl ? (
