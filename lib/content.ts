@@ -171,6 +171,7 @@ export async function getAbout(locale: Locale = 'en') {
     // Null rather than a guessed path: an unset photo should mean "no photo",
     // not a broken image pointing at a file that may never have existed.
     photo: about.photo || null,
+    photoOnPhones: about.photoOnPhones !== false,
     paragraphs: [...about.paragraphs],
     stats: about.stats.map((s) => ({ value: s.value, label: s.label })),
   }

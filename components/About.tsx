@@ -1,5 +1,5 @@
-import Image from 'next/image'
 import { getAbout, getSite } from '@/lib/content'
+import AboutPhoto from './AboutPhoto'
 import CountUp from './CountUp'
 import Section from './Section'
 import type { Locale } from '@/lib/locale'
@@ -15,24 +15,15 @@ export default async function About({
 
   return (
     <Section id="about" title={title}>
-      {/* Stacked on a phone and side by side from lg. The photo is first in the
-          DOM either way, so the column order needs no `order-*`: on a narrow
-          screen it simply reads as a portrait above the bio. */}
-      <div className="flex w-full flex-col items-center gap-8 lg:flex-row lg:gap-20">
+      {/* Side by side from lg, stacked below it — and stacked, the bio comes
+          first and the portrait closes the section. `flex-col-reverse` does that
+          without `order-*` on either child, since the photo stays first in the
+          DOM for the row layout to place it on the left. */}
+      <div className="flex w-full flex-col-reverse items-center gap-8 lg:flex-row lg:gap-20">
         {/* Set in the manager under About. Hidden entirely if none is set,
             rather than leaving a broken image or a reserved gap. */}
         {about.photo && (
-          <div className="shrink-0 lg:p-6">
-            <Image
-              src={about.photo}
-              alt={site.name}
-              // The real pixel size of the source, so the box reserved during
-              // load has the photo's own aspect ratio and nothing shifts.
-              width={1024}
-              height={1137}
-              className="h-auto w-44 rounded-2xl object-cover sm:w-56 lg:w-100"
-            />
-          </div>
+          <AboutPhoto src={about.photo} alt={site.name} onPhones={about.photoOnPhones} />
         )}
         {/* `items center` was two dead classes, and the grid-cols track list
             never applied to a flex container. */}

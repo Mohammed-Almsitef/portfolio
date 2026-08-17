@@ -304,6 +304,13 @@ const aboutDef = (dir: string, tag: string) =>
         directory: 'public',
         publicPath: '/',
       }),
+      photoOnPhones: fields.checkbox({
+        label: 'Show the photo on phones',
+        description:
+          'Untick to hide it on screens narrower than 640px, where it costs a screenful of ' +
+          'scrolling before the bio. It still shows on tablets and desktops.',
+        defaultValue: true,
+      }),
       paragraphs: fields.array(fields.text({ label: 'Paragraph', multiline: true }), {
         label: 'Bio paragraphs',
         itemLabel: (props) => props.value.slice(0, 60) || 'Paragraph',
