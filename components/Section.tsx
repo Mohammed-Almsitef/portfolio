@@ -29,7 +29,7 @@ export default function Section({
           <div className="relative mb-12 flex items-center gap-4">
             <h2
               id={`${id}-heading`}
-              className={`relative z-10 mx-auto border-x-2 border-border-strong px-5 font-mono text-3xl font-bold uppercase tracking-[0.2em] text-accent shadow-[0_0_20px_-6px_rgb(var(--tone-blue)/0.4)] ${tone === 'raised' ? 'bg-surface' : 'bg-bg'}`}
+              className={`mono-label relative z-10 mx-auto border-x-2 border-border-strong px-4 font-mono text-2xl font-bold uppercase tracking-[0.15em] text-accent shadow-[0_0_20px_-6px_rgb(var(--tone-blue)/0.4)] sm:px-5 sm:text-3xl sm:tracking-[0.2em] ${tone === 'raised' ? 'bg-surface' : 'bg-bg'}`}
             >
               {title}
             </h2>

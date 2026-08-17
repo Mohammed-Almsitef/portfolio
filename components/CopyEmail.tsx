@@ -23,15 +23,17 @@ export default function CopyEmail({ email, locale = 'en' }: { email: string; loc
   }
 
   return (
-    <span className="inline-flex flex-wrap items-center gap-2">
+    <span className="flex flex-wrap items-center gap-2">
       <a
         href={`mailto:${email}`}
-        className="inline-flex items-center gap-2.5 rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-bg shadow-[0_6px_20px_-10px_var(--btn-glow)] transition-opacity hover:opacity-90"
+        className="inline-flex min-w-0 items-center gap-2 rounded-md bg-accent px-4 py-2.5 sm:gap-2.5 sm:px-5 text-sm font-medium text-bg shadow-[0_6px_20px_-10px_var(--btn-glow)] transition-opacity hover:opacity-90"
       >
-        {/* The address is the label, so the mark is decoration, not information. */}
+        {/* The address is the label, so the mark is decoration — and the first
+            thing to go on a narrow screen, where dropping it is what keeps the
+            address and the copy button on one line. */}
         <svg
           viewBox="0 0 24 24"
-          className="size-4 shrink-0"
+          className="hidden size-4 shrink-0 sm:block"
           fill="none"
           stroke="currentColor"
           strokeWidth={1.7}

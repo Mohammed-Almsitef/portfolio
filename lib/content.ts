@@ -137,7 +137,15 @@ export async function getSite(locale: Locale = 'en') {
  * manager can hold a platform the owner has not filled in yet: the link appears
  * on the site the moment an address is pasted, and never before.
  */
-export async function getSocials(locale: Locale = 'en') {
+export type Social = {
+  label: string
+  href: string
+  platform: PlatformId
+  tone: ReturnType<typeof platformTone>
+  handle: string | null
+}
+
+export async function getSocials(locale: Locale = 'en'): Promise<Social[]> {
   const { items } = await TREE[locale].socials.readOrThrow()
 
   return shown(items).flatMap((s) => {

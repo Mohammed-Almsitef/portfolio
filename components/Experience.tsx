@@ -4,7 +4,7 @@ import { t, type Locale } from '@/lib/locale'
 
 function SubHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="mb-5 font-mono text-xs uppercase tracking-[0.2em] text-accent">{children}</h3>
+    <h3 className="mono-label mb-5 font-mono text-xs uppercase tracking-[0.2em] text-accent">{children}</h3>
   )
 }
 
@@ -72,7 +72,7 @@ export default async function Experience({
 
       {education.length > 0 && (
         <div className="mt-16">
-          <SubHeading>Education</SubHeading>
+          <SubHeading>{t(locale, 'education')}</SubHeading>
           <ul className="space-y-3">
             {education.map((e) => (
               <li key={e.degree} className="flex flex-wrap items-baseline justify-between gap-x-4">
@@ -89,7 +89,7 @@ export default async function Experience({
 
       {publications.length > 0 && (
         <div className="mt-16">
-          <SubHeading>Publications</SubHeading>
+          <SubHeading>{t(locale, 'publications')}</SubHeading>
           <ul className="space-y-4">
             {publications.map((p) => (
               <li key={p.title} className="flex flex-wrap items-baseline justify-between gap-x-4">

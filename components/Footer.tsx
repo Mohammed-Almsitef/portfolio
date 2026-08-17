@@ -14,7 +14,7 @@ export default async function Footer({ locale = 'en' }: { locale?: Locale }) {
       <SectionRule />
 
       <div className="mx-auto flex max-w-page flex-wrap items-center justify-between gap-3 px-6 py-10">
-        <p className="font-mono text-sm">{site.name}</p>
+        <p className="mono-label font-mono text-sm">{site.name}</p>
         <p className="font-mono text-xs text-muted">
           © {new Date().getFullYear()} · Built with Next.js
         </p>

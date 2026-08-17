@@ -576,3 +576,25 @@ body::before {
   direction: ltr;
   unicode-bidi: isolate;
 }
+
+/*
+ * Mono display type: section titles, eyebrows, kickers.
+ *
+ * The rule above is right for a version number or a package name, and wrong for
+ * a heading that happens to be set in the mono face — the mono face carries no
+ * Arabic, so the text falls back glyph by glyph and loses its joins, and the
+ * forced LTR reverses the order of its words. Uppercasing and letter-spacing are
+ * Latin devices as well: Arabic has no case, and spacing pulls a joined word
+ * apart.
+ *
+ * Marking those headings `.mono-label` undoes all four at once for Arabic, so no
+ * component needs to branch on the locale to set its own type. Must stay after
+ * the `.font-mono` rule: same specificity, so source order decides.
+ */
+[lang='ar'] .mono-label {
+  font-family: var(--font-arabic), var(--font-inter), system-ui, sans-serif;
+  direction: inherit;
+  unicode-bidi: normal;
+  letter-spacing: normal;
+  text-transform: none;
+}

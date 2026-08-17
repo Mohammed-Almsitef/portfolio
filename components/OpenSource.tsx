@@ -1,6 +1,6 @@
 import { getOpenSource } from '@/lib/content'
 import Section from './Section'
-import type { Locale } from '@/lib/locale'
+import { t, type Locale } from '@/lib/locale'
 
 export default async function OpenSource({
   title,
@@ -35,13 +35,13 @@ export default async function OpenSource({
                 <span className="text-muted"> · </span>
                 {c.what}
               </h3>
-              <span className="font-mono text-xs text-muted">{c.status}</span>
+              <span className="mono-label font-mono text-xs text-muted">{c.status}</span>
             </div>
 
             <p className="mt-3 leading-relaxed text-body">{c.detail}</p>
 
             <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
-              <ul className="flex flex-wrap gap-2" aria-label="Technologies used">
+              <ul className="flex flex-wrap gap-2" aria-label={t(locale, 'technologiesUsed')}>
                 {c.tags.map((t) => (
                   <li
                     key={t}
@@ -56,9 +56,9 @@ export default async function OpenSource({
                   href={c.prUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="tap gap-1 font-mono text-xs text-muted underline-offset-4 transition-colors hover:text-text hover:underline"
+                  className="mono-label tap gap-1 font-mono text-xs text-muted underline-offset-4 transition-colors hover:text-text hover:underline"
                 >
-                  View the pull request <span aria-hidden="true">↗</span>
+                  {t(locale, 'viewPullRequest')} <span aria-hidden="true">↗</span>
                 </a>
               )}
             </div>

@@ -195,7 +195,9 @@ export function handleOf(href: string, platform: PlatformId): string | null {
 
   const bare = last.replace(/^@/, '')
   if (style === 'at') return `@${bare}`
-  // A wa.me path is a phone number in international form; the leading `+` is
-  // part of reading it as one.
-  return /^\d{6,}$/.test(bare) ? `+${bare}` : bare
+  // A wa.me path is a phone number in international form, and the leading `+` is
+  // part of reading it as one. An invite or QR link (`wa.me/qr/PIZVM3QFY3WYH1`)
+  // ends in an opaque token instead — printing that under the name says nothing,
+  // so the tile shows only the platform.
+  return /^\d{6,}$/.test(bare) ? `+${bare}` : null
 }

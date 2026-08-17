@@ -22,7 +22,7 @@ function ProjectLink({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className={`group/link tap gap-1 font-mono text-xs underline-offset-4 transition-colors hover:underline ${
+      className={`mono-label group/link tap gap-1 font-mono text-xs underline-offset-4 transition-colors hover:underline ${
         primary ? 'text-[rgb(var(--tone))]' : 'text-muted hover:text-text'
       }`}
     >

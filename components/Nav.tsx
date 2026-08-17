@@ -106,13 +106,13 @@ export default function Nav({
           <div className="flex min-w-0 items-center gap-3">
             <a
               href="#top"
-              className="tap shrink-0 font-mono text-sm font-medium tracking-tight transition-colors hover:text-accent"
+              className="mono-label tap shrink-0 font-mono text-sm font-medium tracking-tight transition-colors hover:text-accent"
             >
               {siteName}
             </a>
 
             {availableForWork && (
-              <p title={t(locale, 'availableForWork')} className="inline-flex w-fit items-center gap-1.5 rounded-full border border-[rgb(var(--tone-status)/0.35)] bg-[rgb(var(--tone-status)/0.12)] sm:px-2 px-1 py-1 font-mono text-[0.6875rem] font-medium text-[rgb(var(--tone-status))] shadow-[0_0_12px_rgb(var(--tone-status)/0.25)] cursor-help">
+              <p title={t(locale, 'availableForWork')} className="mono-label inline-flex w-fit cursor-help items-center gap-1.5 rounded-full border border-[rgb(var(--tone-status)/0.35)] bg-[rgb(var(--tone-status)/0.12)] px-1 py-1 font-mono text-[0.6875rem] font-medium text-[rgb(var(--tone-status))] shadow-[0_0_12px_rgb(var(--tone-status)/0.25)] sm:px-2">
                 <span className="relative flex size-1.5 shrink-0">
                   <span className="absolute inline-flex size-full animate-ping rounded-full bg-[rgb(var(--tone-status))] opacity-75" />
                   <span className="relative inline-flex size-1.5 rounded-full bg-[rgb(var(--tone-status))]" />

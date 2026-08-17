@@ -13,7 +13,7 @@ import VideoEmbed from '@/components/VideoEmbed'
 function Block({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mt-14">
-      <h2 className="mb-5 font-mono text-xs uppercase tracking-[0.2em] text-[rgb(var(--tone))]">
+      <h2 className="mono-label mb-5 font-mono text-xs uppercase tracking-[0.2em] text-[rgb(var(--tone))]">
         {title}
       </h2>
       {children}
@@ -82,7 +82,7 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-4 px-6 py-4">
           <Link
             href={localePath(locale)}
-            className="tap font-mono text-sm font-medium tracking-tight transition-colors hover:text-accent"
+            className="mono-label tap font-mono text-sm font-medium tracking-tight transition-colors hover:text-accent"
           >
             {site.name}
           </Link>
@@ -92,7 +92,7 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
           <div className="flex items-center gap-4">
             <Link
               href={localePath(locale, '/#projects')}
-              className="tap font-mono text-xs text-muted transition-colors hover:text-accent"
+              className="mono-label tap font-mono text-xs text-muted transition-colors hover:text-accent"
             >
               <span aria-hidden="true" className="rtl:-scale-x-100 inline-block">
                 ←
@@ -133,7 +133,7 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
               href={project.repoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="tap gap-1 font-mono text-xs text-[rgb(var(--tone))] underline-offset-4 hover:underline"
+              className="mono-label tap gap-1 font-mono text-xs text-[rgb(var(--tone))] underline-offset-4 hover:underline"
             >
               {t(locale, 'source')} <span aria-hidden="true">↗</span>
             </a>
@@ -143,7 +143,7 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="tap gap-1 font-mono text-xs text-[rgb(var(--tone))] underline-offset-4 hover:underline"
+              className="mono-label tap gap-1 font-mono text-xs text-[rgb(var(--tone))] underline-offset-4 hover:underline"
             >
               {t(locale, 'liveDemo')} <span aria-hidden="true">↗</span>
             </a>
@@ -223,7 +223,7 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
         >
           <Link
             href={localePath(locale, '/#projects')}
-            className="tap font-mono text-xs text-muted transition-colors hover:text-accent"
+            className="mono-label tap font-mono text-xs text-muted transition-colors hover:text-accent"
           >
             <span aria-hidden="true" className="rtl:-scale-x-100 inline-block">
               ←
@@ -232,7 +232,7 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
           </Link>
           <Link
             href={localePath(locale, `/projects/${next.slug}`)}
-            className="tap text-end font-mono text-xs text-muted transition-colors hover:text-accent"
+            className="mono-label tap text-end font-mono text-xs text-muted transition-colors hover:text-accent"
           >
             {t(locale, 'next')}: {next.title}{' '}
             <span aria-hidden="true" className="rtl:-scale-x-100 inline-block">
