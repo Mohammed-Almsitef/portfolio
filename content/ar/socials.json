@@ -2,12 +2,38 @@
   "items": [
     {
       "label": "GitHub",
-      "href": "https://github.com/yourusername",
+      "href": "https://github.com/Mohammed-Almsitef",
+      "icon": "auto",
       "visible": true
     },
     {
       "label": "LinkedIn",
-      "href": "https://linkedin.com/in/yourusername",
+      "href": "https://www.linkedin.com/in/mohammed-almsitef",
+      "icon": "auto",
+      "visible": true
+    },
+    {
+      "label": "X",
+      "href": null,
+      "icon": "auto",
+      "visible": true
+    },
+    {
+      "label": "Facebook",
+      "href": null,
+      "icon": "auto",
+      "visible": true
+    },
+    {
+      "label": "Instagram",
+      "href": null,
+      "icon": "auto",
+      "visible": true
+    },
+    {
+      "label": "WhatsApp",
+      "href": null,
+      "icon": "auto",
       "visible": true
     }
   ]

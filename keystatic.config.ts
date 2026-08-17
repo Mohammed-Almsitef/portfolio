@@ -1,4 +1,5 @@
 import { collection, config, fields, singleton } from '@keystatic/core'
+import { PLATFORM_IDS, platformName } from '@/lib/socials'
 
 /**
  * Content schema for the portfolio manager at /keystatic.
@@ -28,6 +29,15 @@ const VISUALS = [
   { label: 'Point cloud (SLAM)', value: 'cloud' },
   { label: 'Retrieved chunks (RAG)', value: 'layers' },
 ] as const
+
+/**
+ * Icon choices for a social link. The list is built from the icons the site
+ * actually ships, so the manager can never offer one that would render blank.
+ */
+const SOCIAL_ICONS = [
+  { label: 'Automatic (from the URL)', value: 'auto' },
+  ...PLATFORM_IDS.map((id) => ({ label: platformName(id), value: id })),
+]
 
 /** Shown on every item that can be hidden without being deleted. */
 const visible = fields.checkbox({
@@ -243,19 +253,40 @@ const siteDef = (dir: string, tag: string) =>
 
 const socialsDef = (dir: string, tag: string) =>
   singleton({
-    label: `Social links${tag}`,
+    label: `Contact links${tag}`,
     path: `${dir}/socials`,
     format: { data: 'json' },
     schema: {
       items: fields.array(
         fields.object({
-          label: fields.text({ label: 'Label' }),
-          href: fields.url({ label: 'URL' }),
+          label: fields.text({
+            label: 'Label',
+            description: 'Shown on the tile. Leave empty to use the platform’s own name.',
+          }),
+          href: fields.url({
+            label: 'URL',
+            description:
+              'The full address — https://github.com/you, https://wa.me/905551234567, or mailto:you@example.com. A link with no address yet simply stays off the site.',
+          }),
+          icon: fields.select({
+            label: 'Icon',
+            description:
+              'Automatic reads the icon off the address — github.com gets the GitHub mark, a mailto: gets an envelope. Only pick one by hand when the address does not give it away.',
+            options: SOCIAL_ICONS,
+            defaultValue: 'auto',
+          }),
           visible: fields.checkbox({ label: 'Show', defaultValue: true }),
         }),
         {
           label: 'Links',
-          itemLabel: (props) => props.fields.label.value || 'Link',
+          description:
+            'The tiles in the contact section, in this order. Drag to reorder, and add or remove a platform freely — each one draws its own icon and reads its handle out of the address.',
+          // The URL is what distinguishes two rows on the same platform, so the
+          // collapsed row shows it rather than just the label.
+          itemLabel: (props) =>
+            [props.fields.label.value || 'Link', props.fields.href.value]
+              .filter(Boolean)
+              .join(' · '),
         },
       ),
     },
@@ -490,11 +521,13 @@ export default config({
     brand: { name: 'Portfolio' },
     navigation: {
       'Page setup': ['sections', 'site', 'appearance'],
-      Content: ['about', 'projects', 'openSource', 'skills', 'experience', 'contact'],
-      'Credentials & links': ['education', 'publications', 'socials'],
+      // `socials` sits beside `contact` because that is the only section it
+      // appears in — a link list two groups away is a link list you forget.
+      Content: ['about', 'projects', 'openSource', 'skills', 'experience', 'contact', 'socials'],
+      Credentials: ['education', 'publications'],
       'العربية · إعداد الصفحة': ['sectionsAr', 'siteAr'],
-      'العربية · المحتوى': ['aboutAr', 'projectsAr', 'openSourceAr', 'skillsAr', 'experienceAr', 'contactAr'],
-      'العربية · الروابط': ['educationAr', 'publicationsAr', 'socialsAr'],
+      'العربية · المحتوى': ['aboutAr', 'projectsAr', 'openSourceAr', 'skillsAr', 'experienceAr', 'contactAr', 'socialsAr'],
+      'العربية · الروابط': ['educationAr', 'publicationsAr'],
       'العربية · النشر': ['arabicSettings'],
     },
   },

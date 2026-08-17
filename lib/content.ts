@@ -4,6 +4,14 @@ import { createReader } from '@keystatic/core/reader'
 import keystaticConfig from '@/keystatic.config'
 import type { VisualKind } from '@/components/ProjectVisual'
 import type { Locale } from './locale'
+import {
+  detectPlatform,
+  handleOf,
+  hrefOf,
+  platformName,
+  platformTone,
+  type PlatformId,
+} from './socials'
 
 /**
  * The one place the site reads its content.
@@ -119,9 +127,34 @@ export async function getSite(locale: Locale = 'en') {
   }
 }
 
+/**
+ * The social links, each resolved to a platform so the section can show its
+ * mark. The icon is derived from the URL unless the manager names one, and the
+ * label falls back to the platform's own name — a link with a URL but no label
+ * still renders as something a visitor can read.
+ *
+ * A row with no URL yet is dropped rather than rendered as a dead tile, so the
+ * manager can hold a platform the owner has not filled in yet: the link appears
+ * on the site the moment an address is pasted, and never before.
+ */
 export async function getSocials(locale: Locale = 'en') {
   const { items } = await TREE[locale].socials.readOrThrow()
-  return shown(items).map((s) => ({ label: s.label, href: s.href ?? '#' }))
+
+  return shown(items).flatMap((s) => {
+    const href = s.href?.trim()
+    if (!href) return []
+
+    const platform =
+      s.icon && s.icon !== 'auto' ? (s.icon as PlatformId) : detectPlatform(href, s.label)
+
+    return {
+      label: s.label || platformName(platform),
+      href: hrefOf(href),
+      platform,
+      tone: platformTone(platform),
+      handle: handleOf(href, platform),
+    }
+  })
 }
 
 export async function getAbout(locale: Locale = 'en') {

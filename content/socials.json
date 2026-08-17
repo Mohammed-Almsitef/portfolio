@@ -2,13 +2,45 @@
   "items": [
     {
       "label": "GitHub",
-      "href": "https://github.com/yourusername",
+      "href": "https://github.com/Mohammed-Almsitef",
+      "icon": "auto",
       "visible": true
     },
     {
       "label": "LinkedIn",
-      "href": "https://linkedin.com/in/yourusername",
+      "href": "https://www.linkedin.com/in/mohammed-almsitef",
+      "icon": "auto",
       "visible": true
+    },
+    {
+      "label": "X",
+      "href": "https://x.com/almositef34981",
+      "icon": "auto",
+      "visible": true
+    },
+    {
+      "label": "Facebook",
+      "href": "https://www.facebook.com/mohammed.omar.almsitef/",
+      "icon": "auto",
+      "visible": true
+    },
+    {
+      "label": "Instagram",
+      "href": "https://www.instagram.com/mohammed_almsitef",
+      "icon": "auto",
+      "visible": true
+    },
+    {
+      "label": "WhatsApp",
+      "href": "https://wa.me/qr/PIZVM3QFY3WYH1",
+      "icon": "auto",
+      "visible": true
+    },
+    {
+      "label": "Telegram",
+      "href": "t.me/Mohammed_Almsitef",
+      "icon": "auto",
+      "visible": false
     }
   ]
 }
