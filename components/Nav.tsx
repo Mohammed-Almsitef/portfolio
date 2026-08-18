@@ -107,16 +107,20 @@ export default function Nav({
           <div className="flex min-w-0 items-center gap-3">
             <a
               href="#top"
-              className="mono-label tap shrink-0 items-center gap-2.5 font-mono text-sm font-medium tracking-tight transition-colors hover:text-accent"
+              className="mono-label tap min-w-0 items-center gap-2.5 font-mono text-sm font-medium tracking-tight transition-colors hover:text-accent"
             >
               {/* The name is right beside it, so the mark is decoration to a
                   screen reader rather than a second copy of the same words. */}
-              <Logo id="nav-logo" weight="medium" className="h-10 w-auto shrink-0" />
-              {siteName}
+              <Logo id="nav-logo" weight="medium" className="h-9 w-auto shrink-0 sm:h-10" />
+              {/* On a phone the mark carries the identity on its own, and the
+                  words next to it are what pushed the availability dot and the
+                  controls off the bar. The name returns as soon as there is room
+                  for it, and truncates in between rather than colliding. */}
+              <span className="hidden truncate sm:inline">{siteName}</span>
             </a>
 
             {availableForWork && (
-              <p title={t(locale, 'availableForWork')} className="mono-label inline-flex w-fit cursor-help items-center gap-1.5 rounded-full border border-[rgb(var(--tone-status)/0.35)] bg-[rgb(var(--tone-status)/0.12)] px-1 py-1 font-mono text-[0.6875rem] font-medium text-[rgb(var(--tone-status))] shadow-[0_0_12px_rgb(var(--tone-status)/0.25)] sm:px-2">
+              <p title={t(locale, 'availableForWork')} className="mono-label inline-flex w-fit shrink-0 cursor-help items-center gap-1.5 rounded-full border border-[rgb(var(--tone-status)/0.35)] bg-[rgb(var(--tone-status)/0.12)] px-1 py-1 font-mono text-[0.6875rem] font-medium text-[rgb(var(--tone-status))] shadow-[0_0_12px_rgb(var(--tone-status)/0.25)] sm:px-2">
                 <span className="relative flex size-1.5 shrink-0">
                   <span className="absolute inline-flex size-full animate-ping rounded-full bg-[rgb(var(--tone-status))] opacity-75" />
                   <span className="relative inline-flex size-1.5 rounded-full bg-[rgb(var(--tone-status))]" />

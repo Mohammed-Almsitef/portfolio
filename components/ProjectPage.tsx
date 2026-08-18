@@ -86,7 +86,9 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
             className="mono-label tap items-center gap-2.5 font-mono text-sm font-medium tracking-tight transition-colors hover:text-accent"
           >
             <Logo id="case-study-logo" weight="medium" className="h-9 w-auto shrink-0" />
-            {site.name}
+            {/* Same trade as the site nav: on a phone the mark stands alone
+                rather than wrapping the name onto two lines. */}
+            <span className="hidden truncate sm:inline">{site.name}</span>
           </Link>
           {/* The case study has its own header rather than the site nav, so the
               switch has to be repeated here — otherwise a reader who lands on a
@@ -94,7 +96,7 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
           <div className="flex items-center gap-4">
             <Link
               href={localePath(locale, '/#projects')}
-              className="mono-label tap font-mono text-xs text-muted transition-colors hover:text-accent"
+              className="mono-label tap whitespace-nowrap font-mono text-xs text-muted transition-colors hover:text-accent"
             >
               <span aria-hidden="true" className="rtl:-scale-x-100 inline-block">
                 ←
