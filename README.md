@@ -2,6 +2,10 @@
 
 Personal portfolio site for a Robotics & AI engineer — covering robotics, machine learning, deep learning, computer vision, and NLP. Built with Next.js 16 (App Router), TypeScript, and Tailwind CSS v4.
 
+This file is the quick start and the editing guide. **[DOCS.md](DOCS.md)** is the
+full reference: every route, every field, the design and brand systems, the
+bilingual architecture, how indexing works, and the recipes for common changes.
+
 ## Getting started
 
 ```bash
@@ -17,16 +21,20 @@ Run `npm run dev` and open **http://localhost:3000/keystatic**. No login, no dat
 
 You can add, delete, hide and reorder everything from there:
 
-| Screen                                            | Controls                                                                                    |
-| ------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| **Sections**                                      | Page order (drag), visibility, and the heading text. Numbering follows the list.            |
-| **Site & contact**                                | Name, role, tagline, email, location, URL, résumé path, availability badge, expertise chips |
-| **About**                                         | Photo, bio paragraphs, headline figures                                                     |
-| **Projects**                                      | One entry per case study — add, delete, reorder, hide                                       |
-| **Open source**                                   | Contributions, with the intro paragraph                                                     |
-| **Skills**                                        | Groups and the skills inside them                                                           |
-| **Experience**                                    | Roles and their highlights                                                                  |
-| **Education**, **Publications**, **Social links** | Add / remove / hide                                                                         |
+| Screen                                             | Controls                                                                                                      |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| **Sections**                                       | Page order (drag), visibility, and the heading text. Numbering follows the list.                               |
+| **Site & contact**                                 | Name, role, tagline, email, location, URL, résumé path, availability badge, expertise chips, name spellings    |
+| **Appearance**                                     | Default colour mode, accent colour, contact links as icons or cards, and the gutter decorations                |
+| **About**                                          | Photo, its background, whether it shows on phones, bio paragraphs, headline figures                           |
+| **Projects**                                       | One entry per case study — add, delete, reorder, hide                                                          |
+| **Open source**                                    | Contributions, with the intro paragraph                                                                       |
+| **Skills**                                         | Groups and the skills inside them                                                                             |
+| **Experience**                                     | Roles and their highlights                                                                                    |
+| **Contact**                                        | The headline, the intro, and the stated response time                                                          |
+| **Contact links**                                  | Your profiles. The icon and handle are read from the URL, so you only paste an address                         |
+| **Education**, **Publications**                    | Add / remove / hide                                                                                            |
+| **العربية**                                        | The same screens again for the Arabic site, plus the one switch that publishes it                              |
 
 **Hiding vs deleting.** Almost everything has a _Show on the site_ checkbox. Unticking hides it without losing the content — a hidden project disappears from the grid, its page returns 404, and it drops out of the sitemap. Deleting removes it for good.
 
