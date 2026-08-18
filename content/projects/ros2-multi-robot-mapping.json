@@ -1,0 +1,44 @@
+{
+  "title": "Multi-Robot Mapping with a Lego EV3 Swarm and ROS 2",
+  "year": "2025",
+  "tone": "emerald",
+  "visual": "cloud",
+  "summary": "Two Lego Mindstorms EV3 robots build a single shared map together, bridged into ROS 2 and SLAM Toolbox over MQTT — my first ROS 2 project, built with hardware that was never meant to run it.",
+  "problem": "Our university lab had no budget to build robots from scratch, so the only robots available were Lego Mindstorms EV3 units — enough to drive motors and read a single infrared sensor, with nowhere near the compute to run ROS 2 on board. The team still needed two robots to explore independently and merge their observations into one consistent map, which meant designing a way to get an EV3 talking to a full ROS 2 stack it could never host itself.",
+  "solution": "A ROS 2 node runs entirely on a central PC and talks to each EV3 brick over an MQTT bridge (Mosquitto broker), with the brick itself running only a thin ev3dev2 Python script that relays sensor readings and executes motor commands. On the PC side, that single infrared reading is synthesized into a 3-beam LaserScan so SLAM Toolbox can run as if a real laser were attached, differential-drive odometry and TF are published per robot, and SLAM Toolbox runs in synchronized multi-robot mode for both robots at once. A separate map-merge package fuses the two occupancy grids and publishes the TF between each robot's map and the merged one.",
+  "how": [
+    "MQTT bridge (Mosquitto) between each EV3's ev3dev2 Python script and a ROS 2 node on the central PC — sensor and encoder data one way, motor commands the other, round-tripping at roughly 10 Hz.",
+    "A single IR proximity sensor per robot, synthesized into a 3-beam sensor_msgs/LaserScan on the PC side so SLAM Toolbox's laser-scan input requirement could be satisfied without a real LiDAR.",
+    "Differential-drive odometry and odom → base_footprint TF broadcast per robot, plus a basic reactive obstacle-avoidance controller running on the PC.",
+    "SLAM Toolbox in synchronized mode, one instance per robot, feeding an external map-merge package that publishes the merged occupancy grid and the TF between each robot's map frame and the shared one.",
+    "Software-only simulators (a physics-and-ray-cast stand-in for the real EV3) built alongside the hardware path, so multi-robot integration could be debugged without needing two robots free at the same time.",
+    "Both a scripted reactive-avoidance flow and a full teleoperated multi-robot launch flow, so the system could be exercised with or without a human driving."
+  ],
+  "testing": "Run on the real Lego EV3 hardware over a Wi-Fi hotspot bridge with two robots exploring simultaneously, and separately exercised against from-scratch software simulators to isolate integration bugs from hardware flakiness.",
+  "results": [
+    "Two robots built a single merged map of the same space in real hardware testing, validating the full pipeline end to end: MQTT bridge, synthetic LaserScan, per-robot SLAM, and map merging.",
+    "First ROS 2 project built from a standing start, on hardware (Lego EV3) with no official ROS 2 support."
+  ],
+  "lessons": [
+    "The EV3 motors and single IR sensor were the real constraint, not the software — most of the design effort went into making SLAM Toolbox happy with far less sensor data than it expects, rather than into the SLAM algorithm itself.",
+    "Building a software simulator early, rather than depending on always having two physical robots free and charged, made integration work far faster to iterate on.",
+    "Bridging over MQTT instead of trying to get any form of ROS 2 onto the brick itself was the only workable path given the EV3's compute — a reminder that the right architecture sometimes means keeping the constrained device as dumb as possible."
+  ],
+  "role": "Team lead; ROS 2 programming for the robot-to-PC communication layer, and running the hardware experiments.",
+  "tags": [
+    "ROS 2",
+    "Python",
+    "MQTT / Mosquitto",
+    "SLAM Toolbox",
+    "TF2",
+    "Lego Mindstorms EV3 (ev3dev2)",
+    "Gazebo"
+  ],
+  "repoUrl": "",
+  "visible": true,
+  "order": 10,
+  "image": null,
+  "liveUrl": "",
+  "videoUrl": "",
+  "featured": true
+}

@@ -1,0 +1,45 @@
+{
+  "title": "Manara Robot",
+  "year": "2025 — Present",
+  "tone": "amber",
+  "visual": "occupancy",
+  "summary": "The ROS 2 platform behind a service robot deployed to help pilgrims at the Two Holy Mosques in Mecca and Medina — autonomous navigation, self-docking and charging, and the sensor pipeline that a 25-language on-screen AI assistant rides on top of.",
+  "problem": "A service robot for pilgrims at Al-Masjid al-Haram and Al-Masjid an-Nabawi needs to move around a busy, changing space on its own, find its way back to charge without help, and stay reliable through long unattended shifts — while an on-screen assistant handles the actual conversations with pilgrims in real time. None of that works if the robotics underneath it isn't solid.",
+  "solution": "At SWB I own the ROS 2 side of the robot: autonomous navigation and mapping, a from-scratch motor driver, a self-docking and charging system I rewrote from the ground up, and the sensor and dashboard infrastructure everything else runs on. The on-screen AI assistant — voice interaction in around 25 languages, with a fallback to a live scholar for questions that need more nuance — is a separate application that sits on top of this platform; my part is the robot underneath it.",
+  "how": [
+    "Custom Modbus/RS-485 driver for the robot's dual BLDC wheel motors, publishing wheel odometry, live motor telemetry and a 13-code fault/recovery system.",
+    "Autonomous navigation and mapping with Nav2 and SLAM Toolbox, both lifecycle-managed so the robot moves cleanly between idle, mapping and navigating states.",
+    "Self-docking and charging rewritten from scratch, with four selectable docking strategies (from simple infrared alignment to a beacon-homing approach) and recovery logic tuned against measured real-robot behaviour, not just simulation.",
+    "Sensor pipeline fusing two lidars with a depth camera — ground-plane detection, filtering the robot's own body out of the point cloud, and blind-spot filtering on the lower lidar.",
+    "A configuration database and state machine tying every subsystem together, plus a REST/WebSocket dashboard bridge for remote monitoring and control.",
+    "Runs as a supervised systemd service with automatic, rate-limited restarts, and ships as versioned packages built and released through CI rather than deployed by hand."
+  ],
+  "testing": "Iterated against the physical robot rather than simulation alone — the docking algorithm in particular went through several redesigns driven by real hardware behaviour (a wheel-rotation sign inversion, measured turn-recovery timings) before settling on its current approach, and the platform now supports more than one hardware board revision in the field.",
+  "results": [
+    "Runs as the robotics foundation of an in-production service robot deployed to help pilgrims at the Two Holy Mosques, hosting an on-screen AI assistant that understands and responds in around 25 languages, with escalation to a live scholar for questions that need one.",
+    "Self-docking and charging system rewritten from scratch and hardened through multiple rounds of real-hardware testing.",
+    "Built and released as versioned, CI-built packages rather than ad hoc scripts, across more than one hardware revision of the robot."
+  ],
+  "lessons": [
+    "The docking system was the hardest part precisely because it touches the real world directly — a rotation-sign bug or a beacon-range assumption that looks fine on paper only shows up by putting the robot in front of its charger and watching it fail.",
+    "Keeping the robotics platform and the on-screen interaction app cleanly separated — the robot only needs to know 'pause' and 'resume' — let two different pieces of work move independently without one blocking the other."
+  ],
+  "role": "Robotics / ROS 2 engineer — autonomous navigation, motor control, self-docking and charging, and the sensor and dashboard infrastructure the robot runs on. The on-screen AI assistant is built by a separate team.",
+  "tags": [
+    "ROS 2",
+    "Nav2",
+    "SLAM Toolbox",
+    "C++",
+    "Modbus / RS-485",
+    "Point Cloud (PCL)",
+    "REST / WebSocket",
+    "systemd"
+  ],
+  "repoUrl": "",
+  "visible": true,
+  "order": 5,
+  "image": null,
+  "liveUrl": "",
+  "videoUrl": "",
+  "featured": true
+}

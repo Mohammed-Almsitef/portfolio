@@ -90,14 +90,21 @@ export default async function Experience({
         <div className="mt-16">
           <SubHeading>{t(locale, 'education')}</SubHeading>
           <ul className="space-y-3">
-            {education.map((e) => (
-              <Entry key={e.degree} when={e.period}>
-                <span>
-                  <span className="font-medium">{e.degree}</span>
-                  <span className="text-muted"> · {e.school}</span>
-                </span>
-              </Entry>
-            ))}
+            {education.map((e) => {
+              const [institution, ...rest] = e.school.split(',')
+              return (
+                <Entry key={e.degree} when={e.period}>
+                  <span>
+                    <span className="font-medium">{e.degree}</span>
+                    <span className="text-muted">
+                      {' · '}
+                      <span className="text-accent">{institution}</span>
+                      {rest.length > 0 ? `,${rest.join(',')}` : ''}
+                    </span>
+                  </span>
+                </Entry>
+              )
+            })}
           </ul>
         </div>
       )}

@@ -1,41 +1,16 @@
 {
   "jobs": [
     {
-      "companyUrl": "https://example.com",
-      "role": "Senior Robotics & AI Engineer",
-      "company": "Company Name",
-      "period": "2023 — Present",
-      "description": "Perception and autonomy for a fleet of N robots deployed across M customer sites.",
-      "highlights": [
-        "Replaced a hand-tuned perception heuristic with a learned segmentation model, lifting obstacle recall from XX% to YY% while holding the inference budget under Z ms on embedded hardware.",
-        "Owned the training-to-deployment path: dataset curation, active-learning loop on field failures, TensorRT export, and shadow-mode evaluation before promotion.",
-        "Built a hardware-in-the-loop CI rig that replays field recordings on every merge — caught N regressions before they reached a robot.",
-        "Mentored N engineers across the ML and robotics sides of the team."
-      ],
-      "visible": true
-    },
-    {
-      "companyUrl": "https://example.com",
-      "role": "Computer Vision & Machine Learning Engineer",
-      "company": "Previous Company",
-      "period": "2021 — 2023",
-      "description": "Vision models for automated inspection and robotic manipulation.",
-      "highlights": [
-        "Trained and shipped detection and segmentation models that raised defect catch rate from XX% to YY% at a Z% false-positive rate.",
-        "Cut inference latency X× through quantization and operator fusion, moving the model from a server GPU to an on-device accelerator.",
-        "Built the labelling and evaluation pipeline — including the class-imbalance handling that made rare-defect metrics trustworthy."
-      ],
-      "visible": true
-    },
-    {
       "companyUrl": "",
       "role": "Robotics Engineer",
-      "company": "First Company",
-      "period": "2020 — 2021",
-      "description": "Early-stage team building an outdoor inspection platform.",
+      "company": "SWB",
+      "period": "June 2025 — Present",
+      "description": "ROS 2 and applied AI for robots — object detection and natural spoken interaction with people.",
       "highlights": [
-        "Developed sensor drivers and time-synchronization for a LiDAR + IMU + stereo rig.",
-        "Prototyped the teleoperation stack and the first autonomous waypoint-following demo."
+        "Own the ROS 2 platform behind Manara, an in-production service robot deployed at the Two Holy Mosques — autonomous navigation, motor control, and a self-docking/charging system rewritten from scratch.",
+        "Develop and maintain ROS 2 software running on deployed robots.",
+        "Build and integrate applied-AI capabilities on the robots, including object recognition and voice-based interaction with people.",
+        "Joined the team before graduating and have stayed on full-time since."
       ],
       "visible": true
     }

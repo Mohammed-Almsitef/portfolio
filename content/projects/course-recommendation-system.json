@@ -1,0 +1,48 @@
+{
+  "title": "Intelligent Courses Recommendation System",
+  "year": "2024",
+  "tone": "rose",
+  "visual": "graph",
+  "summary": "A university graduation project that recommends the right Coursera course from a free-text description of what a learner already knows, trained end to end on a dataset I scraped and cleaned myself.",
+  "problem": "The sheer volume of online course content makes it hard for a learner to find the course that actually matches their current level and goals, without wading through material that is either redundant or over their head. There was no ready-made dataset suited to the task — Kaggle and similar sources came up short, and Coursera itself doesn't offer one.",
+  "solution": "A deep-learning recommendation engine that takes a free-text description of what a learner knows or wants to learn and predicts the title of the most suitable next course, trained on roughly 7,400 English-language Coursera courses that our team scraped, cleaned and stored ourselves, and served through a Django web app.",
+  "how": [
+    "Scraped Coursera directly with Python (requests + BeautifulSoup) across its domain/topic taxonomy, since no usable ready-made dataset existed — collecting title, description, level, duration, syllabus, instructors, skills gained and more for every course.",
+    "Designed a normalized MySQL schema (courses, instructors, skills, domains, topics, modules, syllabi and their many-to-many relations) and loaded the scraped data into it via SQLAlchemy.",
+    "Cleaned the scraped text: a manual typo-correction pass, symbol stripping, URL normalization, and language filtering (langdetect plus a custom heuristic) down to 7,400 usable English courses.",
+    "Trained a Word2Vec embedding from scratch on the course corpus with Gensim rather than using a pretrained one.",
+    "Found that standard zero-padding distorted the embedded text's signal, so instead treated each embedding sequence as an image and used PIL's resize to normalize sequence length — a much cleaner fix than padding.",
+    "Built and compared two sequence models: an LSTM encoder–decoder (description → title) tuned with Keras-Tuner random search, and an LSTM-front-end feeding a Transformer encoder/decoder.",
+    "Built the Django + MySQL website end users interact with: a free-text query box and a results page listing recommended courses, specializations and projects with rating, level, duration and links."
+  ],
+  "testing": "Evaluated each model with MAE loss, R² and cosine similarity on held-out data, and sanity-checked the full pipeline with live free-text queries end to end.",
+  "results": [
+    "The LSTM encoder–decoder was the strongest model: R² of roughly 0.94–0.99 and cosine similarity of roughly 0.96–0.98 between predicted and target course titles.",
+    "The LSTM-to-Transformer variant overfit clearly — training loss kept falling while validation loss rose after about 20 epochs — so the simpler LSTM architecture shipped as the better choice.",
+    "A live query such as \"I want an introduction to programming in Python\" correctly resolved to an introductory Python course, demonstrating the free-text-to-course pipeline working end to end."
+  ],
+  "lessons": [
+    "The Transformer variant looked more sophisticated on paper but generalized worse than the plain LSTM encoder–decoder — a case for validating the simpler model before reaching for a bigger one.",
+    "Most of the real engineering effort went into the data: finding a source, scraping it, and cleaning it, before a single model was ever trained.",
+    "Treating an embedding sequence as an image and resizing it, instead of zero-padding, was a small idea that meaningfully improved training over the naive approach."
+  ],
+  "role": "Team lead; system analysis with the team; collected and helped clean the Coursera dataset; contributed to training the neural network.",
+  "tags": [
+    "Python",
+    "TensorFlow / Keras",
+    "Gensim (Word2Vec)",
+    "NLTK",
+    "BeautifulSoup",
+    "MySQL",
+    "SQLAlchemy",
+    "Django",
+    "Keras-Tuner"
+  ],
+  "repoUrl": "",
+  "visible": true,
+  "order": 20,
+  "image": null,
+  "liveUrl": "",
+  "videoUrl": "",
+  "featured": true
+}

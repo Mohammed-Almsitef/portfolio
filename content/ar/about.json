@@ -1,11 +1,11 @@
 {
   "photo": "/photo.png",
-  "photoBackdrop": "grid",
+  "photoBackdrop": "studio",
   "photoOnPhones": true,
   "paragraphs": [
-    "I'm an engineer working at the intersection of robotics and applied AI. My work runs the full width of the problem — training the perception and language models, then earning the right to trust them by putting them on hardware that moves through the real world.",
-    "On the AI side that means computer vision (detection, segmentation, visual SLAM), deep learning (CNNs, transformers, reinforcement learning), and increasingly NLP and LLMs for grounding natural-language instructions into robot behaviour. On the systems side it means ROS 2, real-time control, sensor fusion, and the unglamorous work of making a model fast enough to run on an embedded GPU.",
-    "The interesting problems live where those two halves meet: distribution shift between simulation and reality, latency budgets that make a great model unusable, and calibrating how much a planner should trust a network that is confidently wrong. I care about measurable results and honest failure analysis."
+    "أنا مهندس روبوتات وذكاء اصطناعي، تخرجت من كلية الهندسة المعلوماتية في جامعة حلب عام 2025 بتخصص الذكاء الاصطناعي، وبتقدير امتياز (معدل 85.317/100).",
+    "أعمل منذ يونيو 2025 مهندس روبوتات في شركة SWB، حيث أطوّر برمجيات ROS 2 العاملة على روبوتات فعلية، وأبني عليها تطبيقات الذكاء الاصطناعي كالتعرف على الأجسام والتفاعل الصوتي الطبيعي مع الأشخاص. الروبوتات هي المجال الذي تعلمته ذاتيًا بعد التخرج، انطلاقًا من أساس التعلم العميق ومعالجة اللغة الطبيعية الذي بنيته خلال دراستي الجامعية.",
+    "أكثر ما يشغلني هو نقطة التقاطع بين الجانبين: تدريب نموذج شيء، وجعله يعمل بموثوقية على عتاد ذي إمكانيات محدودة — محركات ضعيفة، حساس واحد يقوم بدور عدة حساسات، أو اتصال شبكي غير مستقر — شيء مختلف تمامًا. هذا ما ميّز مشروع تخرجي، نظام توصية بكورسات Coursera مدرَّب بالكامل على بيانات جمعتها بنفسي، وأول مشروع لي في ROS 2، حيث بنى روبوتان من طراز Lego EV3 خريطة مشتركة عبر جسر اتصال MQTT."
   ],
   "stats": []
 }
