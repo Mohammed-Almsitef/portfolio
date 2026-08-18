@@ -1,6 +1,7 @@
 import SocialIcon from './SocialIcon'
 import Spotlight from './Spotlight'
 import type { ContactLinkStyle, Social } from '@/lib/content'
+import { isExternal, outbound } from '@/lib/links'
 
 /**
  * One contact link.
@@ -20,13 +21,10 @@ export default function SocialLink({
 }) {
   const { href, label, handle, platform, tone } = social
 
-  // Only a link that leaves the browser gets a new tab; a mailto: handed to
-  // _blank leaves an empty one behind.
-  const external = /^https?:/i.test(href)
-  const linkProps = {
-    href,
-    ...(external ? { target: '_blank' as const, rel: 'noopener noreferrer' } : {}),
-  }
+  // The trailing glyph differs by destination — ↗ leaves, → does not — so the
+  // check is still needed here, even though `outbound` decides the attributes.
+  const external = isExternal(href)
+  const linkProps = outbound(href)
 
   const frame = {
     style: {

@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { getProjects, type Project } from '@/lib/content'
+import { outbound } from '@/lib/links'
 import { localePath, t, type Locale } from '@/lib/locale'
 import ProjectClip from './ProjectClip'
 import ProjectVisual from './ProjectVisual'
@@ -19,9 +20,7 @@ function ProjectLink({
 }) {
   return (
     <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
+      {...outbound(href)}
       className={`mono-label group/link tap gap-1 font-mono text-xs underline-offset-4 transition-colors hover:underline ${
         primary ? 'text-[rgb(var(--tone))]' : 'text-muted hover:text-text'
       }`}

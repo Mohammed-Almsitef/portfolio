@@ -1,10 +1,28 @@
 import { getEducation, getExperience, getPublications, getSite } from '@/lib/content'
 import Section from './Section'
+import { outbound } from '@/lib/links'
 import { t, type Locale } from '@/lib/locale'
 
 function SubHeading({ children }: { children: React.ReactNode }) {
   return (
     <h3 className="mono-label mb-5 font-mono text-xs uppercase tracking-[0.2em] text-accent">{children}</h3>
+  )
+}
+
+/**
+ * A line of the record: what it was, then when.
+ *
+ * The date follows the label rather than being pushed to the column's far edge,
+ * where a wide screen strands it a foot away from what it dates. Baseline
+ * alignment keeps the small mono date sitting on the same line as the name even
+ * when the label wraps to two.
+ */
+function Entry({ when, children }: { when: string; children: React.ReactNode }) {
+  return (
+    <li className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+      {children}
+      <span className="font-mono text-xs text-muted">{when}</span>
+    </li>
   )
 }
 
@@ -39,9 +57,7 @@ export default async function Experience({
                 {job.role} <span className="text-muted">·</span>{' '}
                 {job.companyUrl ? (
                   <a
-                    href={job.companyUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    {...outbound(job.companyUrl)}
                     className="tap-inline text-accent underline-offset-4 hover:underline"
                   >
                     {job.company}
@@ -75,15 +91,12 @@ export default async function Experience({
           <SubHeading>{t(locale, 'education')}</SubHeading>
           <ul className="space-y-3">
             {education.map((e) => (
-              // Same as the jobs above: the period follows the school instead of
-              // being pushed to the far edge, where a wide screen strands it.
-              <li key={e.degree} className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <Entry key={e.degree} when={e.period}>
                 <span>
                   <span className="font-medium">{e.degree}</span>
                   <span className="text-muted"> · {e.school}</span>
                 </span>
-                <span className="font-mono text-xs text-muted">{e.period}</span>
-              </li>
+              </Entry>
             ))}
           </ul>
         </div>
@@ -94,20 +107,17 @@ export default async function Experience({
           <SubHeading>{t(locale, 'publications')}</SubHeading>
           <ul className="space-y-4">
             {publications.map((p) => (
-              <li key={p.title} className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <Entry key={p.title} when={p.year}>
                 <span className="max-w-2xl">
                   <a
-                    href={p.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    {...outbound(p.url)}
                     className="tap font-medium underline-offset-4 transition-colors hover:text-accent hover:underline"
                   >
                     {p.title} <span aria-hidden="true">↗</span>
                   </a>
                   <span className="block text-sm text-muted">{p.venue}</span>
                 </span>
-                <span className="font-mono text-xs text-muted">{p.year}</span>
-              </li>
+              </Entry>
             ))}
           </ul>
         </div>

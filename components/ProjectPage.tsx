@@ -5,6 +5,7 @@ import { arabicEnabled, getProjects, getSite } from '@/lib/content'
 import { dir, localePath, t, type Locale } from '@/lib/locale'
 import Footer from '@/components/Footer'
 import Logo from '@/components/Logo'
+import { outbound } from '@/lib/links'
 import LanguageSwitch from '@/components/LanguageSwitch'
 import ProjectClip from '@/components/ProjectClip'
 import ProjectVisual from '@/components/ProjectVisual'
@@ -134,9 +135,7 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
         <div className="mt-7 flex flex-wrap gap-5">
           {project.repoUrl && (
             <a
-              href={project.repoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+              {...outbound(project.repoUrl)}
               className="mono-label tap gap-1 font-mono text-xs text-[rgb(var(--tone))] underline-offset-4 hover:underline"
             >
               {t(locale, 'source')} <span aria-hidden="true">↗</span>
@@ -144,9 +143,7 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
           )}
           {project.liveUrl && (
             <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+              {...outbound(project.liveUrl)}
               className="mono-label tap gap-1 font-mono text-xs text-[rgb(var(--tone))] underline-offset-4 hover:underline"
             >
               {t(locale, 'liveDemo')} <span aria-hidden="true">↗</span>

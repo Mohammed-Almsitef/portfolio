@@ -7,8 +7,6 @@
  */
 export type Locale = 'en' | 'ar'
 
-export const LOCALES: Locale[] = ['en', 'ar']
-
 /** Where a locale's copy of a page lives. */
 export function localePath(locale: Locale, path = '') {
   return locale === 'ar' ? `/ar${path}` : path || '/'

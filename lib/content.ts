@@ -4,10 +4,10 @@ import { createReader } from '@keystatic/core/reader'
 import keystaticConfig from '@/keystatic.config'
 import type { VisualKind } from '@/components/ProjectVisual'
 import type { Locale } from './locale'
+import { hrefOf } from './links'
 import {
   detectPlatform,
   handleOf,
-  hrefOf,
   platformName,
   platformTone,
   type PlatformId,
@@ -29,7 +29,7 @@ const reader = createReader(process.cwd(), keystaticConfig)
 export type Tone =
   'blue' | 'violet' | 'purple' | 'cyan' | 'rose' | 'emerald' | 'amber' | 'teal' | 'lime'
 
-export type SectionKey = 'about' | 'projects' | 'openSource' | 'skills' | 'experience' | 'contact'
+type SectionKey = 'about' | 'projects' | 'openSource' | 'skills' | 'experience' | 'contact'
 
 const shown = <T extends { visible?: boolean }>(items: readonly T[]) =>
   items.filter((i) => i.visible !== false)
@@ -169,7 +169,7 @@ export async function getSocials(locale: Locale = 'en'): Promise<Social[]> {
   })
 }
 
-export const PHOTO_BACKDROPS = ['grid', 'dots', 'spotlight', 'studio', 'sweep', 'none'] as const
+const PHOTO_BACKDROPS = ['grid', 'dots', 'spotlight', 'studio', 'sweep', 'none'] as const
 export type PhotoBackdrop = (typeof PHOTO_BACKDROPS)[number]
 
 export async function getAbout(locale: Locale = 'en') {

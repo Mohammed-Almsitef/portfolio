@@ -122,9 +122,9 @@ function bareHost(host: string) {
 }
 
 /**
- * A URL is only parseable once it has a scheme. The manager's URL field does
- * not insist on one, so a pasted `github.com/name` has to be given `https://`
- * before it can be read — and before it can be followed, hence `hrefOf`.
+ * Platform detection needs the parsed URL, not just a normalised string, so it
+ * parses here as well — with the same rule as lib/links, which is the one place
+ * that decides what an anchor gets.
  */
 function parse(href: string) {
   try {
@@ -132,11 +132,6 @@ function parse(href: string) {
   } catch {
     return null
   }
-}
-
-/** The href to actually put in the anchor: schemeless input gets `https://`. */
-export function hrefOf(href: string) {
-  return parse(href)?.href ?? href
 }
 
 /**

@@ -1,5 +1,6 @@
 import { getOpenSource } from '@/lib/content'
 import Section from './Section'
+import { outbound } from '@/lib/links'
 import { t, type Locale } from '@/lib/locale'
 
 export default async function OpenSource({
@@ -26,9 +27,7 @@ export default async function OpenSource({
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
               <h3 className="text-lg font-medium tracking-tight">
                 <a
-                  href={c.projectUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  {...outbound(c.projectUrl)}
                   className="tap-inline text-[rgb(var(--tone))] underline-offset-4 hover:underline"
                 >
                   {c.project}
@@ -54,9 +53,7 @@ export default async function OpenSource({
               </ul>
               {c.prUrl && (
                 <a
-                  href={c.prUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  {...outbound(c.prUrl)}
                   className="mono-label tap gap-1 font-mono text-xs text-muted underline-offset-4 transition-colors hover:text-text hover:underline"
                 >
                   {t(locale, 'viewPullRequest')} <span aria-hidden="true">↗</span>

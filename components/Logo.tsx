@@ -44,7 +44,7 @@ const WEIGHTS = {
   tiny: { stroke: 19, mask: 35, mono: true },
 } as const
 
-export type LogoWeight = keyof typeof WEIGHTS
+type LogoWeight = keyof typeof WEIGHTS
 
 export default function Logo({
   id,
