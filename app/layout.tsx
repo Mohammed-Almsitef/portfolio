@@ -69,6 +69,13 @@ export async function generateMetadata(): Promise<Metadata> {
       description: site.tagline,
     },
     robots: { index: true, follow: true },
+    // Search Console offers a meta tag as one way to prove you own the domain.
+    // Read from the environment rather than committed, so the token can be
+    // pasted into Vercel without a code change — and so an empty value simply
+    // omits the tag instead of emitting a broken one.
+    ...(process.env.GOOGLE_SITE_VERIFICATION
+      ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } }
+      : {}),
   }
 }
 

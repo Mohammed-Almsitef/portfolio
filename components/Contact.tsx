@@ -94,15 +94,19 @@ export default async function Contact({
       {/* The only place the social links appear. Full width rather than tucked
           under the headline: they are a grid of equals, and three across leaves
           no dead column beside the card. */}
+      {/* A short row of marks reads as a cluster, so it is centred — and the
+          label with it, since a left-aligned heading over centred icons only
+          looks like a mistake. The cards keep to the left, where they line up
+          with the headline and the rest of the column. */}
       {socials.length > 0 && (
-        <div className="mt-14">
+        <div className={`mt-14 ${iconsOnly ? 'text-center' : ''}`}>
           <h3 className={EYEBROW}>{t(locale, 'findMeOn')}</h3>
           {/* Icons wrap in a row and are sized by their own content; cards need a
               grid to line up. */}
           <ul
             className={
               iconsOnly
-                ? 'mt-4 flex flex-wrap gap-3'
+                ? 'mt-4 flex flex-wrap justify-center gap-3'
                 : 'mt-3 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3'
             }
           >

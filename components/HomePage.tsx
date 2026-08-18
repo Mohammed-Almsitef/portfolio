@@ -9,6 +9,7 @@ import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
 import BackToTop from '@/components/BackToTop'
 import ScrollProgress from '@/components/ScrollProgress'
+import StructuredData from '@/components/StructuredData'
 import { arabicEnabled, getSections, getSite, type SectionEntry } from '@/lib/content'
 import { dir, t, type Locale } from '@/lib/locale'
 
@@ -50,6 +51,9 @@ export default async function HomePage({ locale }: { locale: Locale }) {
       >
         {t(locale, 'skipToContent')}
       </a>
+
+      {/* Machine-readable identity, for the name query. */}
+      <StructuredData locale={locale} />
 
       <ScrollProgress />
       <Nav

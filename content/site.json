@@ -7,6 +7,10 @@
   "url": "https://mohammedalmsitef.me",
   "resumeUrl": "/resume.pdf",
   "availableForWork": true,
+  "alternateNames": [
+    "Mohammed Almositef",
+    "محمد المسيطف"
+  ],
   "domains": [
     "Robotics",
     "Artificial Intelligence",

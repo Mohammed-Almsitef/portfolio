@@ -244,6 +244,15 @@ const siteDef = (dir: string, tag: string) =>
         label: 'Show the "Available for work" badge',
         defaultValue: true,
       }),
+      alternateNames: fields.array(fields.text({ label: 'Spelling' }), {
+        label: 'Other spellings of your name',
+        description:
+          'Every way your name is written elsewhere — the Arabic form, and any transliteration ' +
+          'you use in handles or on other profiles. A search engine treats each spelling as a ' +
+          'different word, so listing them is what lets one search find you either way. Not ' +
+          'shown on the page; it goes into the structured data a crawler reads.',
+        itemLabel: (props) => props.value || 'Spelling',
+      }),
       domains: fields.array(fields.text({ label: 'Area' }), {
         label: 'Expertise chips',
         description: 'Shown under the hero tagline. Five or six keeps the line tidy.',
