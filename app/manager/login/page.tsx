@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 import { gateStatus, isSignedIn } from '@/lib/manager/auth'
+import { storeConfigured } from '@/lib/manager/store'
 import Logo from '@/components/Logo'
 import { Message } from '../ui'
 import LoginForm from './LoginForm'
@@ -32,7 +33,9 @@ export default async function LoginPage({
         <div className="rounded-2xl border border-border bg-surface p-6 sm:p-7">
       <LoginForm from={from || '/manager'} storeError={error === 'store'} />
 
-      {status.protection === 'required' && status.source === 'env' && (
+      {/* Only true when a store exists to save a new password into; without
+          one the password lives in Vercel and is changed there. */}
+      {status.protection === 'required' && status.source === 'env' && storeConfigured() && (
         <div className="mt-5">
           <Message tone="ok">
             Using the bootstrap password from the environment. Set a permanent one from{' '}
