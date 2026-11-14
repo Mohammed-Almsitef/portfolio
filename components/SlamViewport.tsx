@@ -256,7 +256,7 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
 
       // Drawn out to the lethal inflation radius, which the planner keeps clear,
       // so the larger body never visibly overlaps a wall.
-      drawBurgerBot(ctx, P.x * c, P.y * c, P.th, ROBOT_RADIUS * c * 1.6, pal, ink, sim.time)
+      drawBurgerBot(ctx, P.x * c, P.y * c, P.th, ROBOT_RADIUS * c * 1.2, pal, ink, sim.time)
     }
 
     let lastHud = 0

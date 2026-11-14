@@ -38,7 +38,7 @@ const col = (triplet: string) => {
 /** Walls are taller than the robot but low enough to see into rooms. */
 const WALL_H = 4.2
 /** Visual plate radius, as in 2D: out to the lethal inflation radius. */
-const R = ROBOT_RADIUS * 1.6
+const R = ROBOT_RADIUS * 1.2
 /** BurgerBot scale: its real plate radius is 0.125 m. */
 const K = R / 0.125
 /** Squash the stack a little so it does not tower over the walls. */
