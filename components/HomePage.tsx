@@ -8,6 +8,7 @@ import OpenSource from '@/components/OpenSource'
 import Skills from '@/components/Skills'
 import Experience from '@/components/Experience'
 import Contact from '@/components/Contact'
+import Writing from '@/components/Writing'
 import Footer from '@/components/Footer'
 import BackToTop from '@/components/BackToTop'
 import ScrollProgress from '@/components/ScrollProgress'
@@ -33,6 +34,7 @@ const SECTIONS = {
   openSource: OpenSource,
   skills: Skills,
   experience: Experience,
+  writing: Writing,
   contact: Contact,
 } as const
 

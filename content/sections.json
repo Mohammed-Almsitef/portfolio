@@ -21,6 +21,11 @@
       "visible": true
     },
     {
+      "key": "writing",
+      "label": "Writing",
+      "visible": true
+    },
+    {
       "key": "contact",
       "label": "Contact",
       "visible": true

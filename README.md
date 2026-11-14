@@ -34,6 +34,7 @@ You can add, delete, hide and reorder everything from there:
 | **Contact**                                        | The headline, the intro, and the stated response time                                                          |
 | **Contact links**                                  | Your profiles. The icon and handle are read from the URL, so you only paste an address                         |
 | **Education**, **Publications**                    | Add / remove / hide                                                                                            |
+| **Writing**                                        | Engineering notes with a rich-text body. Untick *Published* to keep a post as a draft: drafts show locally and on preview deploys, never on the live site |
 | **العربية**                                        | The same screens again for the Arabic site, plus the one switch that publishes it                              |
 
 **Hiding vs deleting.** Almost everything has a _Show on the site_ checkbox. Unticking hides it without losing the content — a hidden project disappears from the grid, its page returns 404, and it drops out of the sitemap. Deleting removes it for good.

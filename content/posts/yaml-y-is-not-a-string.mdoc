@@ -1,0 +1,44 @@
+---
+title: "In ROS 2 parameters, y is not a string"
+date: 2026-11-11
+summary: >-
+  A parameter set to the axis name y quietly turned into a boolean and broke
+  navigation. YAML 1.1 has more boolean words than you think.
+tags:
+  - ROS 2
+  - YAML
+  - Parameters
+published: false
+---
+A heading-fusion node needed to know which gyroscope axis measured yaw. The natural way to write that in a parameter file is:
+
+```yaml
+gyro_yaw_axis: y
+```
+
+After a release that included this parameter, navigation on one robot went wrong. The node did not read `"y"`. It read `true`.
+
+## Why
+
+ROS 2 loads parameter files through `yaml-cpp`, which follows YAML 1.1. In YAML 1.1 these bare words are booleans, in any common capitalisation:
+
+- `y`, `yes`, `on`, `true`
+- `n`, `no`, `off`, `false`
+
+So `gyro_yaw_axis: y` is a boolean parameter set to `true`, not the string `y`. YAML 1.2 narrowed the list to `true` and `false`, which is why the same file can look fine in other tools.
+
+## The fix
+
+Quote anything that is meant to be a string:
+
+```yaml
+gyro_yaw_axis: "y"
+```
+
+Fixing one file was not enough, because the same trap is waiting for the next person. Our configuration tool now writes these words with quotes whenever the value is meant to be text, so a generated file cannot reintroduce the bug.
+
+## Takeaways
+
+- Treat axis names, compass letters and yes/no-looking codes as strings and quote them.
+- When a parameter "works on my machine" but not on the robot, check the type the node actually received with `ros2 param get`.
+- Fix the generator, not just the generated file.

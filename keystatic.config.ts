@@ -219,6 +219,7 @@ const sectionsDef = (dir: string, tag: string) =>
               { label: 'Open Source', value: 'openSource' },
               { label: 'Skills', value: 'skills' },
               { label: 'Experience', value: 'experience' },
+              { label: 'Writing', value: 'writing' },
               { label: 'Contact', value: 'contact' },
             ],
             defaultValue: 'about',
@@ -589,7 +590,7 @@ export default config({
       'Page setup': ['sections', 'site', 'appearance'],
       // `socials` sits beside `contact` because that is the only section it
       // appears in — a link list two groups away is a link list you forget.
-      Content: ['about', 'projects', 'openSource', 'skills', 'experience', 'contact', 'socials'],
+      Content: ['about', 'projects', 'posts', 'openSource', 'skills', 'experience', 'contact', 'socials'],
       Credentials: ['education', 'publications'],
       'العربية · إعداد الصفحة': ['sectionsAr', 'siteAr'],
       'العربية · المحتوى': ['aboutAr', 'projectsAr', 'openSourceAr', 'skillsAr', 'experienceAr', 'contactAr', 'socialsAr'],
@@ -601,6 +602,36 @@ export default config({
   collections: {
     projects: projectsDef('content', ''),
     projectsAr: projectsDef('content/ar', ' · عربي'),
+    /**
+     * Writing: English-only engineering notes. A post with "Published" unticked
+     * is a draft — visible locally and on preview deploys, never in production.
+     */
+    posts: collection({
+      label: 'Writing',
+      slugField: 'title',
+      path: 'content/posts/*',
+      format: { contentField: 'body' },
+      columns: ['title', 'date'],
+      schema: {
+        title: fields.slug({ name: { label: 'Title' } }),
+        date: fields.date({ label: 'Date', validation: { isRequired: true } }),
+        summary: fields.text({
+          label: 'Summary',
+          description: 'One or two sentences for the list and link previews.',
+          multiline: true,
+        }),
+        tags: fields.array(fields.text({ label: 'Tag' }), {
+          label: 'Tags',
+          itemLabel: (props) => props.value || 'Tag',
+        }),
+        published: fields.checkbox({
+          label: 'Published',
+          description: 'Untick to keep it as a draft (hidden on the live site).',
+          defaultValue: false,
+        }),
+        body: fields.markdoc({ label: 'Body' }),
+      },
+    }),
   },
 
   singletons: {
@@ -614,6 +645,7 @@ export default config({
     education: educationDef('content', ''),
     publications: publicationsDef('content', ''),
     openSource: openSourceDef('content', ''),
+
     sectionsAr: sectionsDef('content/ar', ' · عربي'),
     siteAr: siteDef('content/ar', ' · عربي'),
     socialsAr: socialsDef('content/ar', ' · عربي'),

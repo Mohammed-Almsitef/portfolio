@@ -1,0 +1,38 @@
+---
+title: The udev rule that worked until the next reboot
+date: 2026-11-08
+summary: >-
+  Our serial devices had friendly names like /dev/battery, until a reboot made
+  them disappear. The rule matched on an IRQ number that the kernel does not
+  promise to keep.
+tags:
+  - Linux
+  - udev
+  - Embedded
+published: false
+---
+Robot drivers should not care whether the battery board is `/dev/ttyS3` or `/dev/ttyS4` today. The usual answer is a udev rule that creates a stable name, so the driver opens `/dev/battery` and the motor controller opens `/dev/motor_driver`.
+
+Ours worked, for a while. Then, after some reboots, those names were simply missing, and the drivers failed to start.
+
+## What the rule matched on
+
+The on-board UARTs all look alike to udev, so the original rules told them apart by an attribute that happened to differ between ports at the time the rules were written: the interrupt number (`irq`).
+
+Interrupt numbers are assigned when the kernel probes devices at boot. They are not guaranteed to stay the same across boots or kernel updates. When the numbering shifted, no port matched the rule any more, so the symlinks were never created.
+
+## The fix
+
+Match on something that describes **where** the device is, not how the kernel happened to number it. For on-board UARTs that is the platform device behind each port, which udev exposes through `KERNELS` / `DEVPATH`. Find what is stable on your board with:
+
+```bash
+udevadm info -a -n /dev/ttyS3
+```
+
+Then key the rule on the parent device's path rather than its IRQ. After rebooting several times, check that every symlink is there before trusting it.
+
+## Takeaways
+
+- A udev rule is only as stable as the attribute it matches. Prefer physical paths and serial numbers; avoid anything assigned at runtime.
+- Test device naming across several reboots, not just once with `udevadm trigger`.
+- If a driver depends on a symlink, have it fail loudly with the missing path in the error, so the next person looks at udev first.

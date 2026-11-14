@@ -29,7 +29,7 @@ const reader = createReader(process.cwd(), keystaticConfig)
 
 export type { Tone } from './tones'
 
-type SectionKey = 'about' | 'projects' | 'openSource' | 'skills' | 'experience' | 'contact'
+type SectionKey = 'about' | 'projects' | 'openSource' | 'skills' | 'experience' | 'writing' | 'contact'
 
 const shown = <T extends { visible?: boolean }>(items: readonly T[]) =>
   items.filter((i) => i.visible !== false)
@@ -322,4 +322,46 @@ export async function getSections(locale: Locale = 'en'): Promise<SectionEntry[]
       key: s.key as SectionKey,
       label: s.label || s.key,
     }))
+}
+
+/** Drafts show locally and on preview deploys, never on the production site. */
+const showDrafts = process.env.VERCEL_ENV !== 'production'
+
+export type PostMeta = {
+  slug: string
+  title: string
+  date: string
+  summary: string
+  tags: string[]
+  draft: boolean
+}
+
+export async function getPosts(): Promise<PostMeta[]> {
+  const entries = await reader.collections.posts.all()
+  return entries
+    .filter((e) => e.entry.published || showDrafts)
+    .map(({ slug, entry }) => ({
+      slug,
+      title: entry.title,
+      date: entry.date ?? '',
+      summary: entry.summary,
+      tags: [...entry.tags],
+      draft: !entry.published,
+    }))
+    .sort((a, b) => b.date.localeCompare(a.date))
+}
+
+export async function getPost(slug: string) {
+  const entry = await reader.collections.posts.read(slug)
+  if (!entry || (!entry.published && !showDrafts)) return null
+  const { node } = await entry.body()
+  return {
+    slug,
+    title: entry.title,
+    date: entry.date ?? '',
+    summary: entry.summary,
+    tags: [...entry.tags],
+    draft: !entry.published,
+    node,
+  }
 }

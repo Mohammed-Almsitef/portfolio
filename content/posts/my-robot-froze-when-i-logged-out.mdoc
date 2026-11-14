@@ -1,0 +1,44 @@
+---
+title: My robot froze every time I logged out
+date: 2026-10-21
+summary: >-
+  Odometry and TF stopped the moment the last SSH session closed. The cause was
+  systemd-logind cleaning up shared memory that DDS was still using.
+tags:
+  - ROS 2
+  - DDS
+  - systemd
+published: false
+---
+The symptom looked like a navigation bug. The robot would run fine while I was connected over SSH, and then, shortly after I closed my last terminal, odometry stopped updating and TF froze. Nav2 saw a robot that had stopped moving and stopped trusting its own position.
+
+Nothing in the ROS logs pointed at the cause, because nothing in ROS had crashed.
+
+## What was actually happening
+
+The ROS 2 stack ran as a normal user, the same user I logged in as. On Ubuntu, `systemd-logind` has a setting called `RemoveIPC`, and it defaults to `yes`. When a user's **last** session ends, logind removes that user's System V and POSIX IPC objects, which includes the files in `/dev/shm`.
+
+Fast DDS, the default ROS 2 middleware, uses shared memory for communication between processes on the same machine. Those segments live in `/dev/shm`. So logging out deleted the shared-memory transport out from under nodes that were still running, and messages between them simply stopped arriving.
+
+That explains the timing: one SSH session open, everything worked; the last one closed, everything froze.
+
+## The fix
+
+Tell logind that this user should keep its resources when no one is logged in:
+
+```bash
+sudo loginctl enable-linger <user>
+```
+
+A lingering user keeps its user manager running after logout, so its IPC objects are not removed. Other options work too:
+
+- set `RemoveIPC=no` in `/etc/systemd/logind.conf`, or
+- run the robot stack as a dedicated system user, which logind does not clean up.
+
+I chose linger because it is one command, per robot, with no change to the stack itself.
+
+## Takeaways
+
+- When a robot fails on a human action (logging out, closing a laptop lid), look at the operating system before the robotics code.
+- Shared-memory transports make DDS fast on one machine, and also make it depend on `/dev/shm` behaving.
+- Write the fix into the robot's setup so a newly installed robot does not rediscover it.

@@ -1,9 +1,14 @@
 import type { MetadataRoute } from 'next'
-import { arabicEnabled, getProjects, getSite } from '@/lib/content'
+import { arabicEnabled, getPosts, getProjects, getSite } from '@/lib/content'
 import { localePath, type Locale } from '@/lib/locale'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [projects, site, hasArabic] = await Promise.all([getProjects(), getSite(), arabicEnabled()])
+  const [projects, site, hasArabic, posts] = await Promise.all([
+    getProjects(),
+    getSite(),
+    arabicEnabled(),
+    getPosts(),
+  ])
   const now = new Date()
 
   /**
@@ -35,6 +40,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
       alternates: alternates(`/projects/${p.slug}`),
     })),
+    // Writing is English-only; drafts never reach the index.
+    ...(posts.some((p) => !p.draft) ? [{ url: `${site.url}/writing`, lastModified: now, priority: 0.6 }] : []),
+    ...posts
+      .filter((p) => !p.draft)
+      .map((p) => ({ url: `${site.url}/writing/${p.slug}`, lastModified: new Date(p.date), priority: 0.6 })),
   ]
 
   // The Arabic pages only enter the index once the translation is published.
