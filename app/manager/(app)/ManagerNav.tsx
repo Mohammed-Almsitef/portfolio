@@ -2,10 +2,11 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { editPath } from '@/lib/manager/editPath'
 
 const LINKS = [
   { href: '/manager', label: 'Overview' },
-  { href: '/keystatic', label: 'Edit content' },
+  { href: editPath(), label: 'Edit content' },
   { href: '/manager/account', label: 'Account' },
 ]
 

@@ -71,7 +71,7 @@ const projectsDef = (dir: string, tag: string) =>
     slugField: 'title',
     path: `${dir}/projects/*`,
     format: { data: 'json' },
-    columns: ['title', 'year'],
+    columns: ['title', 'year', 'order'],
     schema: {
       title: fields.slug({
         name: { label: 'Title' },

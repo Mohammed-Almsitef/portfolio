@@ -1,24 +1,25 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { gateStatus, isSignedIn } from '@/lib/manager/auth'
+import { editPath } from '@/lib/manager/editPath'
 import { managerSummary, type Attention } from '@/lib/manager/summary'
 
 /** Rendered per request: it reports live state (drafts, protection). */
 export const dynamic = 'force-dynamic'
 
 const EDIT = [
-  { href: '/keystatic/collection/projects', title: 'Projects', detail: 'Case studies, diagrams, covers' },
-  { href: '/keystatic/collection/posts', title: 'Writing', detail: 'Posts and drafts' },
-  { href: '/keystatic/singleton/about', title: 'About', detail: 'Bio, photo, headline figures' },
-  { href: '/keystatic/singleton/experience', title: 'Experience', detail: 'Roles and highlights' },
-  { href: '/keystatic/singleton/skills', title: 'Skills', detail: 'Groups and evidence links' },
-  { href: '/keystatic/singleton/teaching', title: 'Teaching', detail: 'Courses and material' },
-  { href: '/keystatic/singleton/contact', title: 'Contact', detail: 'Pitch, timezone, form' },
-  { href: '/keystatic/singleton/site', title: 'Site & SEO', detail: 'Name, role, tagline, CV' },
-  { href: '/keystatic/singleton/sections', title: 'Sections', detail: 'Order and visibility' },
-  { href: '/keystatic/singleton/appearance', title: 'Appearance', detail: 'Default theme, accent' },
-  { href: '/keystatic/singleton/aboutAr', title: 'Arabic site', detail: 'The /ar version' },
-  { href: '/keystatic/singleton/socials', title: 'Contact links', detail: 'GitHub, LinkedIn, …' },
+  { href: editPath('/collection/projects'), title: 'Projects', detail: 'Case studies, diagrams, covers' },
+  { href: editPath('/collection/posts'), title: 'Writing', detail: 'Posts and drafts' },
+  { href: editPath('/singleton/about'), title: 'About', detail: 'Bio, photo, headline figures' },
+  { href: editPath('/singleton/experience'), title: 'Experience', detail: 'Roles and highlights' },
+  { href: editPath('/singleton/skills'), title: 'Skills', detail: 'Groups and evidence links' },
+  { href: editPath('/singleton/teaching'), title: 'Teaching', detail: 'Courses and material' },
+  { href: editPath('/singleton/contact'), title: 'Contact', detail: 'Pitch, timezone, form' },
+  { href: editPath('/singleton/site'), title: 'Site & SEO', detail: 'Name, role, tagline, CV' },
+  { href: editPath('/singleton/sections'), title: 'Sections', detail: 'Order and visibility' },
+  { href: editPath('/singleton/appearance'), title: 'Appearance', detail: 'Default theme, accent' },
+  { href: editPath('/singleton/aboutAr'), title: 'Arabic site', detail: 'The /ar version' },
+  { href: editPath('/singleton/socials'), title: 'Contact links', detail: 'GitHub, LinkedIn, …' },
 ]
 
 const TONE: Record<Attention['tone'], { dot: string; ring: string; label: string }> = {
@@ -63,7 +64,7 @@ export default async function OverviewPage() {
           <a href="/" target="_blank" rel="noopener" className="btn-ghost rounded-xl px-5 py-2.5 text-sm font-medium">
             View site ↗
           </a>
-          <Link href="/keystatic" className="btn-primary rounded-xl px-5 py-2.5 text-sm font-semibold">
+          <Link href={editPath()} className="btn-primary rounded-xl px-5 py-2.5 text-sm font-semibold">
             Edit content
           </Link>
         </div>
@@ -75,25 +76,25 @@ export default async function OverviewPage() {
           label="Projects"
           value={`${s.stats.projects.shown}`}
           sub={s.stats.projects.total > s.stats.projects.shown ? `${s.stats.projects.total - s.stats.projects.shown} hidden` : 'all visible'}
-          href="/keystatic/collection/projects"
+          href={editPath('/collection/projects')}
         />
         <Stat
           label="Writing"
           value={`${s.stats.posts.published}`}
           sub={`published · ${s.stats.posts.drafts} draft${s.stats.posts.drafts === 1 ? '' : 's'}`}
-          href="/keystatic/collection/posts"
+          href={editPath('/collection/posts')}
         />
         <Stat
           label="Sections on the page"
           value={`${s.stats.sections.shown}`}
           sub={s.stats.sections.hidden ? `${s.stats.sections.hidden} hidden` : 'none hidden'}
-          href="/keystatic/singleton/sections"
+          href={editPath('/singleton/sections')}
         />
         <Stat
           label="Arabic site"
           value={s.arabicLive ? 'Live' : 'Off'}
           sub={s.arabicLive ? `${s.arabicSections} sections at /ar` : 'not published'}
-          href="/keystatic/singleton/arabicSettings"
+          href={editPath('/singleton/arabicSettings')}
         />
       </section>
 
@@ -138,7 +139,7 @@ export default async function OverviewPage() {
         <section aria-labelledby="recent">
           <div className="flex items-center justify-between">
             <h2 id="recent" className="text-lg font-semibold tracking-tight">Recent writing</h2>
-            <Link href="/keystatic/collection/posts/create" className="text-sm font-medium text-accent hover:underline">
+            <Link href={editPath('/collection/posts/create')} className="text-sm font-medium text-accent hover:underline">
               New post
             </Link>
           </div>
@@ -146,7 +147,7 @@ export default async function OverviewPage() {
             {s.recentPosts.map((p) => (
               <li key={p.slug}>
                 <Link
-                  href={`/keystatic/collection/posts/item/${p.slug}`}
+                  href={editPath(`/collection/posts/item/${p.slug}`)}
                   className="flex items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-border/30"
                 >
                   <span className="min-w-0">
@@ -168,6 +169,74 @@ export default async function OverviewPage() {
           </ul>
         </section>
       </div>
+
+      {/* Content health */}
+      <section aria-labelledby="health">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 id="health" className="text-lg font-semibold tracking-tight">Content health</h2>
+          <p className="text-sm text-muted">What each case study has. Hover a gap for what to add.</p>
+        </div>
+        <div className="relative mt-4 overflow-x-auto rounded-2xl border border-border bg-surface">
+          <table className="w-full min-w-[640px] text-sm">
+            <thead>
+              <tr className="border-b border-border text-start text-xs text-muted">
+                <th scope="col" className="px-5 py-3 text-start font-medium">Project</th>
+                {s.health[0]?.checks.map((c) => (
+                  <th key={c.key} scope="col" className="px-2 py-3 text-center font-medium">
+                    {c.label}
+                  </th>
+                ))}
+                <th scope="col" className="px-5 py-3 text-end font-medium">
+                  <span className="sr-only">Edit</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {s.health.map((p) => {
+                const done = p.checks.filter((c) => c.ok).length
+                return (
+                  <tr key={p.slug} className="transition-colors hover:bg-border/25">
+                    <th scope="row" className="px-5 py-3.5 text-start font-medium">
+                      <span className="flex items-center gap-2.5">
+                        {p.title}
+                        {!p.visible && (
+                          <span className="rounded-full border border-border px-1.5 py-px text-[0.65rem] font-medium text-muted">
+                            Hidden
+                          </span>
+                        )}
+                      </span>
+                      <span className="mt-1 block h-1 w-24 overflow-hidden rounded-full bg-border">
+                        <span
+                          className="block h-full rounded-full bg-accent"
+                          style={{ width: `${(done / p.checks.length) * 100}%` }}
+                        />
+                      </span>
+                    </th>
+                    {p.checks.map((c) => (
+                      <td key={c.key} className="px-2 py-3.5 text-center">
+                        {c.ok ? (
+                          <span className="text-[rgb(var(--tone-status))]" aria-label={`${c.label}: done`}>
+                            ✓
+                          </span>
+                        ) : (
+                          <span title={c.hint} aria-label={`${c.label}: missing. ${c.hint}`} className="cursor-help text-muted">
+                            –
+                          </span>
+                        )}
+                      </td>
+                    ))}
+                    <td className="px-5 py-3.5 text-end">
+                      <Link href={p.href} className="text-sm font-medium text-accent hover:underline">
+                        Edit
+                      </Link>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       {/* Quick edit */}
       <section aria-labelledby="edit">
