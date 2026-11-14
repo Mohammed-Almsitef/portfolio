@@ -2,8 +2,14 @@
   "items": [
     {
       "degree": "B.Sc. in Informatics Engineering · Artificial Intelligence",
-      "school": "University of Aleppo, Faculty of Informatics Engineering · graduated with Honors, GPA 85.317/100",
+      "school": "University of Aleppo · Faculty of Informatics Engineering · Honors, GPA 85.3/100",
       "period": "2021 — 2025",
+      "visible": true
+    },
+    {
+      "degree": "Al-Khwarizmi Fellowship · Artificial Intelligence track",
+      "school": "Al-Khwarizmi Fellowship · NLP, large language models, LLM applications and agentic AI",
+      "period": "2026",
       "visible": true
     }
   ]

@@ -8,9 +8,11 @@
       "description": "ROS 2 and applied AI for robots — object detection and natural spoken interaction with people.",
       "highlights": [
         "Own the ROS 2 platform behind Manara, an in-production service robot deployed at the Two Holy Mosques — autonomous navigation, motor control, and a self-docking/charging system rewritten from scratch.",
-        "Develop and maintain ROS 2 software running on deployed robots.",
-        "Build and integrate applied-AI capabilities on the robots, including object recognition and voice-based interaction with people.",
-        "Joined the team before graduating and have stayed on full-time since."
+        "Lead developer of the fleet's core ROS 2 package (500+ commits): bringup, layered configuration and setup tooling for 4 robots across 3 hardware models.",
+        "Tuned Nav2 (MPPI controller) and AMCL on production robots, and built a heading-fusion node that fuses wheel odometry with gyro data.",
+        "Introduced per-package semantic versioning and monthly fleet releases, shipped as Debian packages through GitHub Actions.",
+        "Shipped a person-following feature across robot, web bridge and follower packages, and made twist_mux plus a two-level e-stop the single path to the wheels.",
+        "Build and integrate applied-AI capabilities on the robots, including object recognition and voice-based interaction with people."
       ],
       "visible": true
     }

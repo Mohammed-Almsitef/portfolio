@@ -78,14 +78,11 @@ export type Appearance = {
   defaultTheme: 'light' | 'dark'
   accent: Tone
   contactLinks: ContactLinkStyle
-  decorShow: boolean
-  decorArrangement: 'auto' | 'a' | 'b' | 'c'
-  decorWeight: 'vivid' | 'soft'
 }
 
 /**
- * Site chrome: the colour mode a first-time visitor gets, and how the margin
- * decorations behave. Shared by both languages, and every field falls back so
+ * Site chrome: the colour mode a first-time visitor gets, the accent and the
+ * contact-link style. Shared by both languages, and every field falls back so
  * a missing or partial file still renders the site.
  */
 export async function getAppearance(): Promise<Appearance> {
@@ -96,9 +93,6 @@ export async function getAppearance(): Promise<Appearance> {
     // variable name, so an unrecognised one would silently blank the accent.
     accent: isTone(a?.accent) ? a.accent : 'blue',
     contactLinks: a?.contactLinks === 'tiles' ? 'tiles' : 'icons',
-    decorShow: a?.decorShow !== false,
-    decorArrangement: a?.decorArrangement ?? 'auto',
-    decorWeight: a?.decorWeight === 'soft' ? 'soft' : 'vivid',
   }
 }
 

@@ -114,11 +114,11 @@
   --d-tone-teal: 45 212 191;
   --d-tone-lime: 163 230 53;
 
-  --d-bg: #131720;
-  --d-surface: #1a1f2b;
-  --d-elevated: #212836;
-  --d-border: #2a3140;
-  --d-border-strong: #3a4355;
+  --d-bg: #0b0e14;
+  --d-surface: #11151d;
+  --d-elevated: #171c26;
+  --d-border: #222937;
+  --d-border-strong: #333c4d;
   --d-text: #eaeef6;
   --d-body: #b6bdcd;
   --d-muted: #868fa0;
@@ -309,47 +309,6 @@ body::before {
     var(--color-border-strong) 93%,
     transparent
   );
-}
-
-/*
- * Gutter machines.
- *
- * Shaded solids in full-strength colour: the fill multiplier pushes the lit
- * faces close to the raw tone, and the field sits at high opacity so the hues
- * actually read rather than washing into the ground. Kept as custom properties
- * rather than inlined in the component so the whole field is tunable here.
- */
-.robot-field {
-  --robot-fill: 1.4;
-  --robot-stroke: 1;
-  --robot-alpha: 0.8;
-  --robot-glow: none;
-}
-
-/* Faded back, for when the machines should sit further behind the page. */
-.robot-field.is-soft {
-  --robot-fill: 1;
-  --robot-stroke: 0.85;
-  --robot-alpha: 0.3;
-}
-
-/*
- * Hero backdrop mask.
- *
- * Two masks intersected: the radial one keeps the scan a soft blob, and the
- * linear one clears its left edge so the headline and tagline sit on empty
- * ground. Without the linear pass the decoration ran straight through the copy
- * at every viewport width.
- */
-.lidar-mask {
-  -webkit-mask-image:
-    radial-gradient(ellipse 62% 62% at 60% 50%, #000 30%, transparent 78%),
-    linear-gradient(to right, transparent 16%, #000 56%);
-  mask-image:
-    radial-gradient(ellipse 62% 62% at 60% 50%, #000 30%, transparent 78%),
-    linear-gradient(to right, transparent 16%, #000 56%);
-  -webkit-mask-composite: source-in;
-  mask-composite: intersect;
 }
 
 /*
@@ -613,4 +572,84 @@ body::before {
   unicode-bidi: normal;
   letter-spacing: normal;
   text-transform: none;
+}
+
+/*
+ * Hero blueprint grid: a 32px drafting grid that fades out downwards, so the
+ * top of the page reads as an engineering sheet without competing with text.
+ */
+.hero-grid {
+  background-image:
+    linear-gradient(to right, rgb(var(--accent-tone) / 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(var(--accent-tone) / 0.07) 1px, transparent 1px);
+  background-size: 32px 32px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 30%, transparent 75%);
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 30%, transparent 75%);
+}
+
+/* Section numbers follow the manager's order: 01, 02, … */
+main {
+  counter-reset: section;
+}
+main > .section {
+  counter-increment: section;
+}
+.section-index::before {
+  content: counter(section, decimal-leading-zero) ' —';
+}
+
+/* The simulation's mode badge takes the colour of what the robot is doing. */
+.slam-mode[data-mode='navigating'],
+.slam-mode[data-mode='reached'] {
+  color: rgb(var(--tone-emerald));
+}
+.slam-mode[data-mode='complete'] {
+  color: rgb(var(--tone-amber));
+}
+.slam-mode[data-mode='unreachable'] {
+  color: rgb(var(--tone-rose));
+}
+
+/*
+ * Corner ticks: the registration marks of a technical drawing, on cards that
+ * opt in with `.ticks`. Pure decoration, drawn with two gradients per corner.
+ */
+.ticks {
+  position: relative;
+}
+.ticks::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  border-radius: inherit;
+  --tk: rgb(var(--tone, var(--accent-tone)) / 0.7);
+  background:
+    linear-gradient(var(--tk), var(--tk)) top left / 12px 1px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) top left / 1px 12px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) top right / 12px 1px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) top right / 1px 12px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) bottom left / 12px 1px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) bottom left / 1px 12px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) bottom right / 12px 1px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) bottom right / 1px 12px no-repeat;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+.ticks:hover::after,
+.ticks:focus-within::after {
+  opacity: 1;
+}
+
+/* A last skill group alone on its row spans the row instead of leaving a gap. */
+@media (min-width: 1024px) {
+  .skills-grid > li:last-child:nth-child(3n + 1) {
+    grid-column: 1 / -1;
+  }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  .skills-grid > li:last-child:nth-child(2n + 1) {
+    grid-column: 1 / -1;
+  }
 }

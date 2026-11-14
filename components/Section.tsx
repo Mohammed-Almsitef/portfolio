@@ -1,10 +1,10 @@
 import Reveal from './Reveal'
-import RobotField from './RobotField'
 
 export default function Section({
   id,
   title,
   tone = 'base',
+  intro,
   children,
 }: {
   id: string
@@ -12,29 +12,35 @@ export default function Section({
   title: string
   /** Alternating grounds give the page chapters instead of one long column. */
   tone?: 'base' | 'raised'
+  /** Optional one-line lead under the heading. */
+  intro?: string
   children: React.ReactNode
 }) {
   return (
     <section
       id={id}
       aria-labelledby={`${id}-heading`}
-      className={`relative overflow-hidden ${tone === 'raised' ? 'bg-surface' : ''}`}
+      className={`section relative ${tone === 'raised' ? 'bg-surface/60' : ''}`}
     >
-      {/* Seeded by id, so each section scatters differently but stably. */}
-      <RobotField seed={id} tone={tone} />
-
-      {/* Positioned, so the content paints above the absolute field. */}
-      <div className="relative mx-auto max-w-page px-6 py-10 md:py-15">
+      <div className="relative mx-auto max-w-page px-6 py-16 md:py-24">
         <Reveal>
-          <div className="relative mb-12 flex items-center gap-4">
-            <h2
-              id={`${id}-heading`}
-              className={`mono-label relative z-10 mx-auto border-x-2 border-border-strong px-4 font-mono text-2xl font-bold uppercase tracking-[0.15em] text-accent shadow-[0_0_20px_-6px_rgb(var(--tone-blue)/0.4)] sm:px-5 sm:text-3xl sm:tracking-[0.2em] ${tone === 'raised' ? 'bg-surface' : 'bg-bg'}`}
-            >
-              {title}
-            </h2>
-            <span aria-hidden="true" className="section-title-rule absolute h-px w-full" />
-          </div>
+          <header className="mb-12 flex items-end justify-between gap-6 border-b border-border pb-5 md:mb-14">
+            <div>
+              {/* The number comes from a CSS counter on <main>, so it follows
+                  the order set in the manager without any prop plumbing. */}
+              <p aria-hidden="true" className="section-index font-mono text-xs text-accent" />
+              <h2
+                id={`${id}-heading`}
+                className="mt-2 text-[clamp(1.9rem,4vw,2.75rem)] font-semibold leading-tight tracking-[-0.03em]"
+              >
+                {title}
+              </h2>
+              {intro && <p className="mt-3 max-w-2xl text-body">{intro}</p>}
+            </div>
+            <span aria-hidden="true" dir="ltr" className="hidden pb-1.5 font-mono text-xs text-muted sm:block">
+              /{id.replace('-', '_')}
+            </span>
+          </header>
         </Reveal>
 
         <Reveal delay={90}>{children}</Reveal>

@@ -145,7 +145,7 @@ beats the generated `visual`.
 | `publications.json` | Publications | `title`, `venue`, `year`, `url`, `visible` |
 | `open-source.json` | Open source | `intro` + items: `project`, `projectUrl`, `what`, `detail`, `status`, `prUrl`, `tone`, `tags[]`, `visible` |
 | `contact.json` | Contact | `headline`, `blurb`, `responseTime` |
-| `appearance.json` | Appearance | `defaultTheme`, `accent`, `contactLinks`, `decorShow`, `decorArrangement`, `decorWeight` |
+| `appearance.json` | Appearance | `defaultTheme`, `accent`, `contactLinks` |
 | `ar/settings.json` | العربية — نشر الموقع | `enabled` — the one switch that publishes the Arabic site |
 
 `appearance.json` and `ar/settings.json` are shared by both languages. Everything
@@ -365,7 +365,7 @@ manager is unprotected.
 `MANAGER_PASSWORD` works on its own, with no Redis. What it cannot do is be
 *changed* from the Account screen, since there is nowhere to write the new hash.
 
-**Appearance** (default theme, accent, contact-link style, gutter decorations) is
+**Appearance** (default theme, accent, contact-link style) is
 edited here too, and applies to both language sites.
 
 ## The generative visuals
@@ -375,8 +375,7 @@ follows the colour mode and the accent.
 
 | Component | What it is |
 | --- | --- |
-| `LidarBackdrop` | the hero: a simulated 3D LiDAR seen the way a robot sees it — a spinning multi-channel sensor, height-coloured returns, ground segmentation, tracked detections, global and local plans |
-| `RobotField` | isometric machines in the page gutters, seeded by section id so each scatters differently but stably; controlled from Appearance and only visible past ~1720px |
+| `SlamViewport` | the hero: a live robot running frontier exploration, lidar mapping, an inflated costmap, A* and pure pursuit (logic in `lib/slam.ts`), drawn like RViz; a click sends a navigation goal |
 | `ProjectVisual` | six generated cover arts (node graph, occupancy grid, detection boxes, joint traces, point cloud, retrieved chunks), used when a project has no clip or image |
 | `AboutPhoto` | the six portrait backdrops |
 | `Spotlight` | the pointer-tracking card glow; writes CSS variables directly rather than re-rendering per mousemove |

@@ -585,7 +585,7 @@ export default config({
 
     /**
      * Chrome rather than content, so it is deliberately NOT duplicated per
-     * language: one theme and one set of margin decorations for both sites.
+     * language: one theme and one accent for both sites.
      */
     appearance: singleton({
       label: 'Appearance',
@@ -605,7 +605,7 @@ export default config({
         accent: fields.select({
           label: 'Accent colour',
           description:
-            'The site-wide highlight — links, buttons, headings and the hero scan. Same palette the skill groups use.',
+            'The site-wide highlight — links, buttons, headings and the robot in the hero simulation. Same palette the skill groups use.',
           options: [...TONES],
           defaultValue: 'blue',
         }),
@@ -620,33 +620,6 @@ export default config({
             { label: 'Cards with name and handle', value: 'tiles' },
           ],
           defaultValue: 'icons',
-        }),
-        decorShow: fields.checkbox({
-          label: 'Show the robot shapes beside the content',
-          description:
-            'The isometric machines in the left and right margins. They only appear on windows wider than about 1720px, where there is a margin to sit in.',
-          defaultValue: true,
-        }),
-        decorArrangement: fields.select({
-          label: 'How the shapes are arranged',
-          description:
-            'Vary means each section gets a different one of the three layouts, so no two sections look alike.',
-          options: [
-            { label: 'Vary per section', value: 'auto' },
-            { label: 'Always arrangement A', value: 'a' },
-            { label: 'Always arrangement B', value: 'b' },
-            { label: 'Always arrangement C', value: 'c' },
-          ],
-          defaultValue: 'auto',
-        }),
-        decorWeight: fields.select({
-          label: 'Shape intensity',
-          description: 'Full colour, or faded back so they sit further behind the page.',
-          options: [
-            { label: 'Full colour', value: 'vivid' },
-            { label: 'Light / faded', value: 'soft' },
-          ],
-          defaultValue: 'vivid',
         }),
       },
     }),

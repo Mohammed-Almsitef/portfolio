@@ -2,7 +2,7 @@ import { getEducation, getExperience, getPublications, getSite } from '@/lib/con
 import Section from './Section'
 import { outbound } from '@/lib/links'
 import { t, type Locale } from '@/lib/locale'
-import { BLOCK_HEADING } from '@/lib/styles'
+import { BLOCK_HEADING, CARD_SURFACE } from '@/lib/styles'
 import ExternalGlyph from './ExternalGlyph'
 
 function SubHeading({ children }: { children: React.ReactNode }) {
@@ -42,19 +42,21 @@ export default async function Experience({
 
   return (
     <Section id="experience" title={title} tone="raised">
-      <ol className="relative space-y-12 border-s border-border ps-8">
-        {experience.map((job) => (
+      <ol className="relative space-y-10 border-s border-border ps-8 md:ps-10">
+        {experience.map((job, ji) => (
           <li key={`${job.company}-${job.period}`} className="relative">
             <span
               aria-hidden="true"
-              className="absolute -start-[2.19rem] top-2 size-2.5 rounded-full border border-border-strong bg-bg"
+              className={`absolute top-2 size-3 rounded-full border-2 -start-[2.45rem] md:-start-[2.95rem] ${
+                ji === 0
+                  ? 'border-accent bg-bg shadow-[0_0_0_4px_rgb(var(--accent-tone)/0.15)]'
+                  : 'border-border-strong bg-bg'
+              }`}
             />
 
-            {/* No `justify-between`: the period sits directly after the company
-                rather than being pushed to the far edge of the column. */}
-            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <h3 className="text-lg font-medium tracking-tight">
-                {job.role} <span className="text-muted">·</span>{' '}
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+              <h3 className="text-xl font-semibold tracking-tight">
+                {job.role} <span className="font-normal text-muted">·</span>{' '}
                 {job.companyUrl ? (
                   <a
                     {...outbound(job.companyUrl)}
@@ -66,17 +68,19 @@ export default async function Experience({
                   <span className="text-accent">{job.company}</span>
                 )}
               </h3>
-              <span className="font-mono text-xs text-muted">{job.period}</span>
+              <span className="rounded-full border border-border px-2.5 py-0.5 font-mono text-xs text-muted">
+                {job.period}
+              </span>
             </div>
 
-            <p className="mt-2 text-sm text-muted">{job.description}</p>
+            <p className="mt-3 max-w-3xl text-body">{job.description}</p>
 
-            <ul className="mt-4 space-y-2.5">
+            <ul className="mt-5 grid gap-x-10 gap-y-3 lg:grid-cols-2">
               {job.highlights.map((h, i) => (
-                <li key={i} className="flex gap-3 text-sm leading-relaxed text-body">
+                <li key={i} className="flex gap-3 text-[0.9375rem] leading-relaxed text-body">
                   <span
                     aria-hidden="true"
-                    className="mt-[0.55rem] size-1 shrink-0 rounded-full bg-accent-dim"
+                    className="mt-[0.6rem] h-px w-3 shrink-0 bg-accent"
                   />
                   {h}
                 </li>
@@ -87,22 +91,20 @@ export default async function Experience({
       </ol>
 
       {education.length > 0 && (
-        <div className="mt-16">
+        <div className="mt-20">
           <SubHeading>{t(locale, 'education')}</SubHeading>
-          <ul className="space-y-3">
+          <ul className="grid gap-4 md:grid-cols-2">
             {education.map((e) => {
-              const [institution, ...rest] = e.school.split(',')
+              const [institution, ...rest] = e.school.split(' · ')
               return (
-                <Entry key={e.degree} when={e.period}>
-                  <span>
-                    <span className="font-medium">{e.degree}</span>
-                    <span className="text-muted">
-                      {' · '}
-                      <span className="text-accent">{institution}</span>
-                      {rest.length > 0 ? `,${rest.join(',')}` : ''}
-                    </span>
-                  </span>
-                </Entry>
+                <li key={e.degree} className={`ticks p-6 ${CARD_SURFACE}`}>
+                  <p className="font-mono text-xs text-muted">{e.period}</p>
+                  <p className="mt-2 font-semibold tracking-tight">{e.degree}</p>
+                  <p className="mt-1.5 text-sm text-body">
+                    <span className="text-accent">{institution}</span>
+                    {rest.length > 0 && <span className="block text-muted">{rest.join(' · ')}</span>}
+                  </p>
+                </li>
               )
             })}
           </ul>

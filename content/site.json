@@ -1,7 +1,7 @@
 {
   "name": "Mohammed Almsitef",
   "role": "Robotics & AI Engineer",
-  "tagline": "I build systems that perceive, reason, and act from deep learning models for vision and language to the real-time autonomy stacks that run them on physical robots.",
+  "tagline": "I build robots that perceive, plan and act — from the ROS 2 autonomy stack that drives a service robot at the Two Holy Mosques to the deep-learning models that let machines understand language.",
   "location": "Aleppo, Syria",
   "email": "almositefmohammed@gmail.com",
   "url": "https://mohammedalmsitef.me",
@@ -12,11 +12,12 @@
     "محمد المصيطف"
   ],
   "domains": [
-    "Robotics",
+    "ROS 2",
+    "Autonomous Navigation",
+    "SLAM",
+    "Robot Perception",
     "Artificial Intelligence",
-    "Machine Learning",
     "Deep Learning",
-    "Computer Vision",
     "NLP"
   ]
 }

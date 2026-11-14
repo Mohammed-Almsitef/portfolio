@@ -1,8 +1,5 @@
 {
   "defaultTheme": "dark",
   "accent": "blue",
-  "contactLinks": "icons",
-  "decorShow": false,
-  "decorArrangement": "auto",
-  "decorWeight": "vivid"
+  "contactLinks": "icons"
 }

@@ -25,7 +25,7 @@ You can add, delete, hide and reorder everything from there:
 | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | **Sections**                                       | Page order (drag), visibility, and the heading text. Numbering follows the list.                               |
 | **Site & contact**                                 | Name, role, tagline, email, location, URL, résumé path, availability badge, expertise chips, name spellings    |
-| **Appearance**                                     | Default colour mode, accent colour, contact links as icons or cards, and the gutter decorations                |
+| **Appearance**                                     | Default colour mode, accent colour, and contact links as icons or cards                                       |
 | **About**                                          | Photo, its background, whether it shows on phones, bio paragraphs, headline figures                           |
 | **Projects**                                       | One entry per case study — add, delete, reorder, hide                                                          |
 | **Open source**                                    | Contributions, with the intro paragraph                                                                       |
@@ -182,7 +182,7 @@ Two helper classes carry the polish:
 - `.section-rule` — the divider between sections, drawn by [`components/SectionRule.tsx`](components/SectionRule.tsx). A hairline that fades at both ends and _draws itself_ across the viewport when scrolled into view, terminating in a short accent segment and a glowing node at the content gutter — an instrument trace rather than a border. The old flat `border-border` version measured 1.2:1 against the page and effectively disappeared; this reads at 1.6–1.8:1. The draw-in is gated on `.js`, so with no JavaScript the rule renders fully drawn instead of collapsed to `scaleX(0)`.
 - `.animate-drift` — the hero scroll cue. Tailwind's `animate-bounce` is too springy for this register; the drift is a slow fade-and-settle.
 
-Anything that can't inherit a CSS colour needs the theme fed to it explicitly. [`components/LidarBackdrop.tsx`](components/LidarBackdrop.tsx) reads the `--canvas-ink` triplet and re-reads it on a `data-theme` mutation and on OS-preference change; add new canvas work the same way rather than hardcoding a colour.
+Anything that can't inherit a CSS colour needs the theme fed to it explicitly. [`components/SlamViewport.tsx`](components/SlamViewport.tsx) reads `--color-text`, `--accent-tone` and the rose/emerald tones from the computed style and re-reads them on a `data-theme` or `data-accent` mutation; add new canvas work the same way rather than hardcoding a colour.
 
 Section order and headings come from the manager; hiding a section removes it from the page without touching the rest.
 
@@ -194,18 +194,16 @@ All content is read through [`lib/content.ts`](lib/content.ts), which is also wh
 
 Verified across 13 widths from 320px to 1920px — no horizontal overflow, nothing escaping the viewport, and every touch target at least 24px at all of them.
 
-| Range       | What changes                                                                             |
-| ----------- | ---------------------------------------------------------------------------------------- |
-| < 768px     | Hamburger nav; project cards stack with art above the copy; hero backdrop at 20% opacity |
-| 768–1023px  | Featured cards go art-beside-copy; still hamburger nav; backdrop 45%                     |
-| 1024–1279px | Inline nav links appear; skills move to three columns; backdrop 70%                      |
-| ≥ 1280px    | Content caps at `max-w-5xl` and centres; backdrop full strength                          |
+| Range       | What changes                                                                    |
+| ----------- | ------------------------------------------------------------------------------- |
+| < 768px     | Hamburger nav; project cards stack with art above the copy; simulation below the copy |
+| 768–1023px  | Lead project card goes art-beside-copy; still hamburger nav                     |
+| ≥ 1024px    | Inline nav links; hero splits into copy and simulation; skills in three columns |
 
-Two constraints that are easy to break:
+Constraints that are easy to break:
 
-- **The hero backdrop must never sit under the copy.** It carries `.lidar-mask`, which intersects a radial mask with a left-to-right one so its left edge clears the headline and tagline, and its opacity climbs with the breakpoint. Measured by hiding the text and sampling pixels: 0–1% of the area behind the copy carries any ink. Geometric overlap is _not_ a useful check here — the bounding box overlaps by 40% even when nothing is drawn there.
+- **The hero simulation lives in its own panel, never under the copy.** It is a framed viewport beside the text (below it on phones), so legibility never depends on masking a backdrop.
 - **The inline nav waits until `lg` (1024px), not `md`.** With six links plus the brand and theme toggle, 768px left only 16px of slack — one longer name from a collision. Tablets in portrait use the hamburger.
-- **Never write `opacity` inline on the backdrop wrapper.** The parallax fade writes to an inner node for exactly this reason; on the wrapper it silently overrides the responsive opacity classes, and the backdrop renders at full strength on phones.
 
 Standalone links carry `.tap` (min 24px hit area, WCAG 2.5.8). Links sitting inline inside a heading carry `.tap-inline`, which adds vertical padding — on an inline element that grows the hit box without changing the line box, so the text does not shift.
 
@@ -235,7 +233,7 @@ The footer deliberately does **not** restate role, location or the social links,
 
 | Component                                                        | What it does                                                                                                                                                    |
 | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`components/LidarBackdrop.tsx`](components/LidarBackdrop.tsx)   | Hero backdrop: a sweeping beam raycast against a closed floor plan, accumulating a fading point cloud. Renders one static frame under `prefers-reduced-motion`. |
+| [`components/SlamViewport.tsx`](components/SlamViewport.tsx) + [`lib/slam.ts`](lib/slam.ts) | Hero simulation: a robot explores a generated floor plan with a 240-beam lidar, builds an occupancy grid and inflated costmap, picks frontiers, plans with A* and drives with pure pursuit (with a back-up recovery). A click sends a goal. Pauses off screen and in hidden tabs; under `prefers-reduced-motion` it renders a still frame and moves only on a click. |
 | [`components/Reveal.tsx`](components/Reveal.tsx)                 | IntersectionObserver scroll reveal.                                                                                                                             |
 | [`components/Nav.tsx`](components/Nav.tsx)                       | Scroll-spy nav, animated hamburger, Escape-to-close.                                                                                                            |
 | [`components/ScrollProgress.tsx`](components/ScrollProgress.tsx) | Reading-progress bar.                                                                                                                                           |
@@ -287,7 +285,7 @@ Two rules if you touch [`ProjectVisual.tsx`](components/ProjectVisual.tsx):
 
 Content notes:
 
-- The six `projects` deliberately span the whole range — LLM grounding, robot autonomy, edge CV, deep RL, visual SLAM, and RAG — so a reader sees breadth without having to read the skills list.
+- Every project, skill and figure is real and verifiable from the owner's work; the first visible project gets the full-width lead card.
 - Each project accepts an optional `videoUrl`; a clip of a robot actually running, or a model working live, is the single most persuasive thing on the page. It renders as a "Watch demo ↗" link.
 - The `publications` section auto-hides if you empty the array.
 - Placeholder metrics are written as `X`, `Y`, `N`, `XX%` on purpose. Replace them with real numbers — quantified results ("lifted obstacle recall from 82% to 96% under a 30 ms budget") are what separate this from a list of technologies.

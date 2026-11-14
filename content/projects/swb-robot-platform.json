@@ -1,0 +1,47 @@
+{
+  "title": "One ROS 2 Codebase for a Mixed Robot Fleet",
+  "year": "2026",
+  "tone": "blue",
+  "visual": "layers",
+  "summary": "The core ROS 2 package that runs every SWB robot — four robots across three hardware models, one codebase, layered configuration, monthly releases shipped as Debian packages through CI.",
+  "problem": "SWB's robots had grown one at a time. Each one carried hand-edited navigation and driver config that had drifted away from the repository, so a fix on one robot quietly failed to reach the others, and updating a robot meant SSH, copying files and hoping. With different bases, lidars, cameras and wheel drivers across the fleet, there was no single answer to the question \"what software is this robot running?\"",
+  "solution": "I rebuilt the robot package around a layered configuration model — package defaults, then a robot-model layer, then a thin per-robot layer — so a robot's config is the shared release plus only what is genuinely unique to it. A terminal setup tool writes the identity and robot layer, and the whole package ships as versioned Debian packages from an apt repository instead of being copied by hand.",
+  "how": [
+    "Layered configuration (defaults → model → robot) with a schema, so every robot of a model shares the same tuning and differs only in identity, domain ID and calibration.",
+    "A terminal setup tool for bringing up a robot: identity, ROS domain, features and hardware checks, without editing YAML by hand.",
+    "Per-package semantic versioning and monthly fleet releases (SWB 2026.11 was the first), tagged builds published to a stable apt channel by GitHub Actions.",
+    "Runtime feature flags, so capabilities such as person following or heading fusion are enabled per robot rather than forked into separate builds.",
+    "twist_mux as the single path to the wheels, with a two-level emergency stop: a direct driver e-stop plus a software lock, both reachable from the web dashboard.",
+    "A heading-fusion node that fuses wheel odometry with gyro data, and a lighter BLDC wheel-driver telemetry design (one health read per cycle, latched status topics) to cut RS-485 bus load.",
+    "ROS 2 interfaces for the rest of the system: 13 custom messages, 23 services and 3 actions covering navigation, charging, waypoints, maps and keepout zones."
+  ],
+  "testing": "Unit tests with GoogleTest and pytest for the navigation, charging, localization and configuration managers, then staged rollouts on the real fleet — one robot first, the rest once it had run cleanly. Field failures became fixes in the package rather than one-off patches: lidar-filter angle wrapping, udev serial names that shifted at boot, DDS shared memory wiped on SSH logout, and YAML booleans that silently broke a parameter.",
+  "results": [
+    "All four robots migrated onto the same layered release, with their hand-edited config reduced to a small, reviewable robot layer.",
+    "Robots update through apt like any other Linux package instead of by copying files over SSH.",
+    "Fixes and features now reach the whole fleet through one release instead of drifting per robot."
+  ],
+  "lessons": [
+    "Configuration drift is a software problem, not a discipline problem: the fix was a structure that makes the right thing the easy thing.",
+    "The bugs that hurt most in the field were at the edges of ROS — udev, systemd, DDS, YAML parsing — not in the algorithms, so the release process has to cover the whole machine, not just the nodes."
+  ],
+  "role": "Lead developer of the package: architecture, configuration system, setup tooling, release pipeline and most of the field debugging.",
+  "tags": [
+    "ROS 2 Humble",
+    "C++17",
+    "Python",
+    "Nav2",
+    "ros2_control",
+    "GitHub Actions",
+    "Debian packaging",
+    "GoogleTest",
+    "systemd"
+  ],
+  "order": 7,
+  "repoUrl": "",
+  "visible": true,
+  "image": null,
+  "liveUrl": "",
+  "videoUrl": "",
+  "featured": true
+}

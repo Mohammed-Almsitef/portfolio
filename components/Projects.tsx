@@ -67,42 +67,98 @@ function Cover({ p, className }: { p: Project; className: string }) {
   return <ProjectVisual kind={p.visual} className={className} sideFade={sideFade} />
 }
 
-function Body({ p, index, locale }: { p: Project; index: number; locale: Locale }) {
+function Body({
+  p,
+  index,
+  locale,
+  lead = false,
+}: {
+  p: Project
+  index: number
+  locale: Locale
+  lead?: boolean
+}) {
   return (
-    <div className="flex flex-1 flex-col p-6 md:p-7">
-      <div className="flex items-baseline justify-between gap-4">
-        <h3 className="text-lg font-medium tracking-tight md:text-xl">
-          <span aria-hidden="true" className="me-3 font-mono text-xs text-[rgb(var(--tone))]">
-            {String(index + 1).padStart(2, '0')}
-          </span>
-          {/* The title is the card's link, stretched over the whole card by its
-              own ::after. One link with real text beats an unlabelled overlay:
-              the accessible name is the project, and the card still reads as a
-              single target to a screen reader rather than a bare region. */}
-          <Link
-            href={localePath(locale, `/projects/${p.slug}`)}
-            className="after:absolute after:inset-0 after:content-['']"
-          >
-            {p.title}
-          </Link>
-        </h3>
-        <span className="shrink-0 font-mono text-xs text-muted">{p.year}</span>
+    <div className={`flex flex-1 flex-col p-6 ${lead ? 'md:p-9' : 'md:p-7'}`}>
+      <div className="flex items-center justify-between gap-4 font-mono text-xs">
+        <span className="text-[rgb(var(--tone))]">
+          {String(index + 1).padStart(2, '0')}
+          {lead && (
+            <span className="mono-label ms-3 rounded-full border border-[rgb(var(--tone)/0.35)] px-2 py-0.5 uppercase tracking-wider">
+              {t(locale, 'featured')}
+            </span>
+          )}
+        </span>
+        <span className="shrink-0 text-muted">{p.year}</span>
       </div>
 
-      <p className="mt-4 flex-1 leading-relaxed text-body">{p.summary}</p>
+      <h3
+        className={`mt-4 font-semibold tracking-[-0.02em] ${lead ? 'text-2xl md:text-[2rem] md:leading-tight' : 'text-xl'}`}
+      >
+        {/* The title is the card's link, stretched over the whole card by its
+            own ::after. One link with real text beats an unlabelled overlay. */}
+        <Link
+          href={localePath(locale, `/projects/${p.slug}`)}
+          className="after:absolute after:inset-0 after:content-['']"
+        >
+          {p.title}
+        </Link>
+      </h3>
 
-      <TagList tags={p.tags} locale={locale} className="mt-6" litByCardHover />
+      <p className={`mt-4 flex-1 leading-relaxed text-body ${lead ? 'md:text-[1.0625rem]' : ''}`}>
+        {p.summary}
+      </p>
 
-      {/* `relative` lifts these clear of the title's stretched ::after, which
-          would otherwise swallow their clicks. Hidden entirely when a project
-          has neither, rather than leaving a rule above empty space. */}
-      {(p.repoUrl || p.videoUrl) && (
-        <div className="relative mt-6 flex flex-wrap items-center gap-5 border-t border-border pt-5">
-          {p.repoUrl && <ProjectLink href={p.repoUrl}>{t(locale, 'source')}</ProjectLink>}
-          {p.videoUrl && <ProjectLink href={p.videoUrl}>{t(locale, 'video')}</ProjectLink>}
-        </div>
-      )}
+      <TagList tags={lead ? p.tags : p.tags.slice(0, 6)} locale={locale} className="mt-6" litByCardHover />
+
+      <div className="relative mt-6 flex flex-wrap items-center gap-5 border-t border-border pt-5">
+        <span className="mono-label pointer-events-none inline-flex items-center gap-1.5 font-mono text-xs text-[rgb(var(--tone))]">
+          {t(locale, 'caseStudy')}
+          <span
+            aria-hidden="true"
+            className="inline-block transition-transform duration-200 group-hover:translate-x-1 rtl:-scale-x-100 rtl:group-hover:-translate-x-1"
+          >
+            →
+          </span>
+        </span>
+        {/* `relative` lifts these clear of the title's stretched ::after. */}
+        {p.repoUrl && <ProjectLink href={p.repoUrl}>{t(locale, 'source')}</ProjectLink>}
+        {p.videoUrl && <ProjectLink href={p.videoUrl}>{t(locale, 'video')}</ProjectLink>}
+      </div>
     </div>
+  )
+}
+
+function Card({
+  p,
+  i,
+  locale,
+  lead = false,
+}: {
+  p: Project
+  i: number
+  locale: Locale
+  lead?: boolean
+}) {
+  return (
+    <Spotlight
+      style={
+        {
+          '--tone': `var(--tone-${p.tone})`,
+          // Spotlight already reads --card-glow; re-point it rather than
+          // teaching the component about tones.
+          '--card-glow': 'rgb(var(--tone) / 0.16)',
+        } as React.CSSProperties
+      }
+      className={`ticks group h-full overflow-hidden ${CARD_SURFACE} transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[rgb(var(--tone)/0.45)]`}
+      innerClassName={`flex h-full flex-col ${lead ? 'md:flex-row' : ''}`}
+    >
+      <Cover
+        p={p}
+        className={lead ? 'h-56 shrink-0 md:h-auto md:w-[46%]' : 'h-44 shrink-0'}
+      />
+      <Body p={p} index={i} locale={locale} lead={lead} />
+    </Spotlight>
   )
 }
 
@@ -114,33 +170,21 @@ export default async function Projects({
   locale?: Locale
 }) {
   const projects = await getProjects(locale)
+  const [lead, ...rest] = projects
 
   return (
     <Section id="projects" title={title} tone="raised">
-      {/* Every card takes one column, featured or not, so each row always holds
-          two. Featured still decides ordering, just not footprint. */}
+      {lead && (
+        <Reveal className="mb-5">
+          <Card p={lead} i={0} locale={locale} lead />
+        </Reveal>
+      )}
       <ul className="grid gap-5 md:grid-cols-2">
-        {projects.map((p, i) => (
-          <li key={p.title}>
+        {rest.map((p, i) => (
+          <li key={p.slug}>
             {/* Staggered so the grid assembles rather than appearing at once. */}
             <Reveal delay={Math.min(i, 3) * 70} className="h-full">
-              <Spotlight
-                style={
-                  {
-                    '--tone': `var(--tone-${p.tone})`,
-                    // Spotlight already reads --card-glow; re-point it rather
-                    // than teaching the component about tones.
-                    '--card-glow': 'rgb(var(--tone) / 0.16)',
-                  } as React.CSSProperties
-                }
-                className={`group h-full overflow-hidden ${CARD_SURFACE} transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[rgb(var(--tone)/0.45)]`}
-                innerClassName="flex h-full flex-col"
-              >
-                {/* The side-by-side cover was sized for a full-width card; in
-                    a half-width column it left no room for the copy. */}
-                <Cover p={p} className="h-40 shrink-0" />
-                <Body p={p} index={i} locale={locale} />
-              </Spotlight>
+              <Card p={p} i={i + 1} locale={locale} />
             </Reveal>
           </li>
         ))}

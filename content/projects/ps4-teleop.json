@@ -1,0 +1,44 @@
+{
+  "title": "ps4_teleop — Gamepad Teleoperation for Any ROS 2 Robot",
+  "year": "2026",
+  "tone": "violet",
+  "visual": "gait",
+  "summary": "A ROS 2 package that drives a robot from a PS4 DualShock 4 controller over USB or Bluetooth — wheeled (differential, holonomic, Ackermann), legged, drone or underwater — with the safety behaviour a real robot needs built in.",
+  "problem": "Driving a robot by hand is the first thing you do with it and the last thing you want to be unsafe. A generic joystick node publishes whatever the stick says: no deadman, no ramps, no reaction when the controller's battery dies or Bluetooth drops, and it keeps fighting Nav2 for the velocity topic even when nobody is driving.",
+  "solution": "A teleop node that sits between the joy driver and the base controller (or twist_mux) and treats safety as the default: motion only while a deadman button is held, a latched e-stop, a watchdog on controller input, acceleration limits on every axis, and silence on the velocity topic when idle so autonomy can take over. Robot type and kinematics switch from the controller itself, with the light bar and rumble confirming the state.",
+  "how": [
+    "Deadman on L1 (or a toggle mode on PS that only engages with centred sticks and disengages on e-stop, controller loss or 60 s idle).",
+    "Latched e-stop on Circle, released only by a deliberate double press at least 1 s later, so a panicked double tap cannot undo it; rumble confirms.",
+    "Watchdog: if /joy stops arriving for 0.5 s — dead battery, dropped Bluetooth, crashed driver — the robot gets an immediate zero command.",
+    "Separate acceleration/deceleration limits for linear and angular motion, an expo curve for fine control, four speed levels per axis and a turbo button.",
+    "Robot type (wheeled, legged, drone, underwater) and kinematics (diff drive, holonomic, Ackermann) cycled from the controller while stopped, shown on the light bar.",
+    "Publishes a few zeros then goes quiet when nobody is driving, so it coexists with Nav2 and twist_mux; Twist or TwistStamped chosen per ROS distro.",
+    "Bluetooth tooling: udev rules and a one-time cable pairing, after which the PS button connects the controller to the robot."
+  ],
+  "testing": "76 unit tests across the core state machine, kinematics, controller mapping and light bar, plus flake8 and pep257 checks in the ROS 2 test suite.",
+  "results": [
+    "One teleop package that works across wheeled, legged, aerial and underwater robots without code changes.",
+    "Safety behaviour — deadman, latched e-stop, watchdog, ramps — is the default rather than something each robot has to add."
+  ],
+  "lessons": [
+    "Safety features are cheapest when they are the tool's default behaviour, not an option someone has to remember to turn on.",
+    "Most of the edge cases were about people, not robots: panicked double taps, a controller dropped on the floor, someone forgetting they left driving enabled."
+  ],
+  "role": "Sole author.",
+  "tags": [
+    "ROS 2 (Humble, Rolling)",
+    "Python",
+    "Teleoperation",
+    "DualShock 4",
+    "Bluetooth / udev",
+    "pytest",
+    "twist_mux"
+  ],
+  "order": 30,
+  "repoUrl": "",
+  "visible": true,
+  "image": null,
+  "liveUrl": "",
+  "videoUrl": "",
+  "featured": false
+}

@@ -1,119 +1,103 @@
 {
   "groups": [
     {
-      "title": "Languages",
+      "title": "ROS 2 & Robotics",
       "tone": "blue",
       "items": [
-        "Python",
-        "C++17 / 20",
-        "CUDA",
-        "SQL",
-        "Bash",
-        "CMake"
+        "ROS 2 (Humble, Jazzy, Rolling)",
+        "rclcpp / rclpy",
+        "Lifecycle nodes",
+        "ros2_control",
+        "TF2, URDF, xacro",
+        "DDS & QoS tuning",
+        "Custom msgs, srvs, actions",
+        "ROS 1"
       ],
       "visible": true
     },
     {
-      "title": "Machine Learning",
-      "tone": "violet",
-      "items": [
-        "scikit-learn",
-        "XGBoost / LightGBM",
-        "Feature engineering",
-        "Hyperparameter search (Optuna)",
-        "Model evaluation & calibration",
-        "Time-series forecasting"
-      ],
-      "visible": true
-    },
-    {
-      "title": "Deep Learning",
-      "tone": "purple",
-      "items": [
-        "PyTorch",
-        "TensorFlow / Keras",
-        "CNNs & Vision Transformers",
-        "Reinforcement learning (PPO / SAC)",
-        "Distributed & mixed-precision training",
-        "Model compression"
-      ],
-      "visible": true
-    },
-    {
-      "title": "Computer Vision",
-      "tone": "cyan",
-      "items": [
-        "OpenCV",
-        "Detection (YOLO / DETR)",
-        "Semantic & instance segmentation",
-        "Stereo & depth estimation",
-        "Visual SLAM / VIO",
-        "Camera calibration"
-      ],
-      "visible": true
-    },
-    {
-      "title": "NLP & LLMs",
-      "tone": "rose",
-      "items": [
-        "Hugging Face Transformers",
-        "Fine-tuning (LoRA / QLoRA)",
-        "RAG & vector search",
-        "Embeddings & semantic search",
-        "Tokenization, spaCy / NLTK",
-        "Evaluation & guardrails"
-      ],
-      "visible": true
-    },
-    {
-      "title": "Robotics",
+      "title": "Navigation & SLAM",
       "tone": "emerald",
       "items": [
-        "ROS 2 (Humble / Jazzy)",
-        "Nav2 & MoveIt 2",
-        "Sensor fusion (EKF / UKF)",
-        "Motion planning",
-        "Real-time control (MPC / PID)",
-        "Behavior trees"
+        "Nav2",
+        "MPPI controller tuning",
+        "Costmaps & keepout zones",
+        "AMCL",
+        "robot_localization (EKF)",
+        "SLAM Toolbox",
+        "twist_mux",
+        "Autonomous docking"
       ],
       "visible": true
     },
     {
-      "title": "Simulation",
+      "title": "Perception & Sensors",
+      "tone": "cyan",
+      "items": [
+        "LiDAR filtering & scan merging",
+        "Depth cameras (Orbbec)",
+        "PCL point clouds",
+        "Ground & self filtering",
+        "IMU / gyro heading fusion",
+        "Camera extrinsic calibration"
+      ],
+      "visible": true
+    },
+    {
+      "title": "Hardware & Embedded",
       "tone": "amber",
       "items": [
-        "NVIDIA Isaac Sim",
-        "Gazebo / Ignition",
-        "MuJoCo",
-        "Domain randomization",
-        "Sim-to-real transfer",
-        "Foxglove / rviz2"
+        "BLDC motor drivers",
+        "Modbus / RS-485",
+        "Serial / UART",
+        "GPIO (libgpiod)",
+        "Battery & power management",
+        "Orange Pi / Raspberry Pi",
+        "udev rules"
       ],
       "visible": true
     },
     {
-      "title": "MLOps & Deployment",
+      "title": "AI & Machine Learning",
+      "tone": "violet",
+      "items": [
+        "Python",
+        "TensorFlow / Keras",
+        "LSTM & Transformer models",
+        "Word2Vec (Gensim)",
+        "NLTK",
+        "Keras-Tuner",
+        "LLM applications & agents"
+      ],
+      "visible": true
+    },
+    {
+      "title": "Engineering & DevOps",
+      "tone": "rose",
+      "items": [
+        "C++17",
+        "Python",
+        "Bash",
+        "CMake & colcon",
+        "GoogleTest & pytest",
+        "Docker",
+        "GitHub Actions CI/CD",
+        "Debian packaging & apt repos",
+        "systemd"
+      ],
+      "visible": true
+    },
+    {
+      "title": "Web & Data",
       "tone": "teal",
       "items": [
-        "Docker & CI/CD",
-        "Weights & Biases, MLflow",
-        "ONNX / TensorRT",
-        "Jetson & edge inference",
-        "Data & experiment versioning",
-        "Monitoring & drift detection"
-      ],
-      "visible": true
-    },
-    {
-      "title": "Embedded & Hardware",
-      "tone": "lime",
-      "items": [
-        "Linux PREEMPT_RT",
-        "STM32 / FreeRTOS",
-        "CAN / CANopen",
-        "LiDAR, IMU, depth cameras",
-        "Time synchronization",
-        "Hardware-in-the-loop"
+        "WebSocket & REST bridges",
+        "Robot dashboards",
+        "MQTT",
+        "Django",
+        "MySQL & SQLAlchemy",
+        "TypeScript / Next.js",
+        "Kotlin (Android)"
       ],
       "visible": true
     }

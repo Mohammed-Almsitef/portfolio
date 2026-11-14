@@ -7,5 +7,18 @@
     "Since June 2025 I've worked as a Robotics Engineer at SWB, where I build ROS 2 software for deployed robots and the applied-AI capabilities that run on them — object recognition and natural spoken interaction with people. Robotics is the part of the stack I taught myself after graduating, on top of the deep learning and NLP foundation from my degree.",
     "My favourite problems sit at that intersection: training a model is one thing, getting it to run reliably on hardware with real constraints — weak actuators, a single sensor doing the job of several, a network link that isn't always there — is another. That's the kind of work behind my graduation project, a Coursera course-recommendation engine trained end to end on data I scraped myself, and my first ROS 2 project, two Lego EV3 robots mapping a space together over an MQTT bridge."
   ],
-  "stats": []
+  "stats": [
+    {
+      "value": "4",
+      "label": "Robots running my ROS 2 stack"
+    },
+    {
+      "value": "3",
+      "label": "Robot models on one codebase"
+    },
+    {
+      "value": "700+",
+      "label": "Commits to production robot repos in 2026"
+    }
+  ]
 }
