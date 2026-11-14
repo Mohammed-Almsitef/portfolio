@@ -47,7 +47,7 @@ export default function SocialLink({
       // tile's chip inside the tile's border left every icon in a double box.
       <Spotlight
         style={frame.style}
-        className="group size-14 rounded-2xl border border-[rgb(var(--tone)/0.3)] bg-[rgb(var(--tone)/0.1)] shadow-[inset_0_1px_0_rgb(255_255_255/0.06),var(--card-shadow)] transition-[transform,border-color,background-color] duration-300 hover:-translate-y-1 hover:border-[rgb(var(--tone)/0.6)] hover:bg-[rgb(var(--tone)/0.16)]"
+        className="group size-12 rounded-xl border border-border bg-surface shadow-[var(--card-shadow)] transition-[transform,border-color,background-color] duration-300 hover:-translate-y-0.5 hover:border-[rgb(var(--tone)/0.5)] hover:bg-[rgb(var(--tone)/0.08)]"
         // Spotlight wraps its children in a div of its own. Without a height on
         // that div the link's `size-full` resolved against an auto-height
         // parent and collapsed to the icon, which then sat at the top of the
@@ -61,9 +61,9 @@ export default function SocialLink({
           {...linkProps}
           aria-label={handle ? `${label} — ${handle}` : label}
           title={handle ? `${label} · ${handle}` : label}
-          className="flex size-full items-center justify-center rounded-2xl text-[rgb(var(--tone))] transition-transform duration-300 group-hover:scale-110"
+          className="flex size-full items-center justify-center rounded-xl text-muted transition-colors duration-300 group-hover:text-[rgb(var(--tone))]"
         >
-          <SocialIcon platform={platform} className="size-[1.375rem]" />
+          <SocialIcon platform={platform} className="size-5" />
         </a>
       </Spotlight>
     )

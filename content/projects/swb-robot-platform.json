@@ -2,7 +2,7 @@
   "title": "One ROS 2 Codebase for a Mixed Robot Fleet",
   "year": "2026",
   "tone": "blue",
-  "visual": "layers",
+  "visual": "fleet",
   "summary": "The core ROS 2 package that runs every SWB robot — four robots across three hardware models, one codebase, layered configuration, monthly releases shipped as Debian packages through CI.",
   "problem": "SWB's robots had grown one at a time. Each one carried hand-edited navigation and driver config that had drifted away from the repository, so a fix on one robot quietly failed to reach the others, and updating a robot meant SSH, copying files and hoping. With different bases, lidars, cameras and wheel drivers across the fleet, there was no single answer to the question \"what software is this robot running?\"",
   "solution": "I rebuilt the robot package around a layered configuration model — package defaults, then a robot-model layer, then a thin per-robot layer — so a robot's config is the shared release plus only what is genuinely unique to it. A terminal setup tool writes the identity and robot layer, and the whole package ships as versioned Debian packages from an apt repository instead of being copied by hand.",

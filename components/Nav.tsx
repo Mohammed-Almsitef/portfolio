@@ -145,6 +145,18 @@ export default function Nav({
               ))}
             </ul>
 
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new Event('command-palette:open'))}
+              aria-label={t(locale, 'openCommandMenu')}
+              className="hidden h-9 items-center gap-2 rounded-lg border border-border bg-surface/70 px-3 text-xs text-muted backdrop-blur-sm transition-colors hover:border-border-strong hover:text-text sm:flex"
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-3.5-3.5" />
+              </svg>
+              <kbd dir="ltr" className="font-mono text-[0.68rem]">⌘K</kbd>
+            </button>
             {languageHrefs && <LanguageSwitch locale={locale} hrefs={languageHrefs} />}
             <ThemeToggle />
 

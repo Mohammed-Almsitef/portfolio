@@ -34,7 +34,7 @@ export default async function Skills({
               {g.items.map((item) => (
                 <li
                   key={item}
-                  className="rounded-md border border-border bg-bg/50 px-2.5 py-1 font-mono text-[0.75rem] text-body transition-colors group-hover:border-[rgb(var(--tone)/0.3)]"
+                  className="rounded-md border border-border bg-bg/50 px-2.5 py-1 text-[0.8125rem] text-body transition-colors group-hover:border-[rgb(var(--tone)/0.3)]"
                 >
                   {item}
                 </li>

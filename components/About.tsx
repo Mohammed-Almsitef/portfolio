@@ -1,9 +1,8 @@
-import { getAbout, getSite } from '@/lib/content'
+import { getAbout, getEducation, getExperience, getSite } from '@/lib/content'
 import AboutPhoto from './AboutPhoto'
-import CountUp from './CountUp'
 import Section from './Section'
-import type { Locale } from '@/lib/locale'
-import { EYEBROW } from '@/lib/styles'
+import { t, type Locale } from '@/lib/locale'
+import { CARD_SURFACE, EYEBROW } from '@/lib/styles'
 
 export default async function About({
   title,
@@ -12,50 +11,81 @@ export default async function About({
   title: string
   locale?: Locale
 }) {
-  const [about, site] = await Promise.all([getAbout(locale), getSite(locale)])
+  const [about, site, jobs, education] = await Promise.all([
+    getAbout(locale),
+    getSite(locale),
+    getExperience(locale),
+    getEducation(locale),
+  ])
+  const job = jobs[0]
+  const degree = education[0]
+
+  // The headline figures live in the hero now; this section carries the story
+  // and a short factual summary a recruiter can scan in five seconds.
+  const facts = [
+    job && { k: t(locale, 'factRole'), v: `${job.role} · ${job.company}` },
+    { k: t(locale, 'factLocation'), v: site.location },
+    degree && {
+      k: t(locale, 'factEducation'),
+      v: `${degree.degree.split(' · ')[0]} · ${degree.school.split(' · ')[0]}`,
+    },
+    site.domains.length > 0 && { k: t(locale, 'factFocus'), v: site.domains.slice(0, 4).join(' · ') },
+  ].filter(Boolean) as { k: string; v: string }[]
 
   return (
     <Section id="about" title={title}>
-      {/* Side by side from lg, stacked below it — and stacked, the bio comes
-          first and the portrait closes the section. `flex-col-reverse` does that
-          without `order-*` on either child, since the photo stays first in the
-          DOM for the row layout to place it on the left. */}
-      <div className="flex w-full flex-col-reverse items-center gap-8 lg:flex-row lg:gap-20">
-        {/* Set in the manager under About. Hidden entirely if none is set,
-            rather than leaving a broken image or a reserved gap. */}
+      <div className="grid items-start gap-12 lg:grid-cols-[auto_minmax(0,1fr)] lg:gap-16">
+        {/* Set in the manager under About. Hidden entirely if none is set. */}
         {about.photo && (
-          <AboutPhoto
-            src={about.photo}
-            alt={site.name}
-            backdrop={about.photoBackdrop}
-            onPhones={about.photoOnPhones}
-          />
+          <div className="mx-auto lg:mx-0">
+            <AboutPhoto
+              src={about.photo}
+              alt={site.name}
+              backdrop={about.photoBackdrop}
+              onPhones={about.photoOnPhones}
+            />
+          </div>
         )}
-        {/* `items center` was two dead classes, and the grid-cols track list
-            never applied to a flex container. */}
-        <div className="flex w-full flex-col gap-12 md:max-w-2xl md:gap-16">
-          {about.paragraphs.map((p, i) => (
-            <p key={i} className="leading-relaxed text-body md:text-justify md:text-[1.0625rem]">
-              {p}
-            </p>
-          ))}
+
+        <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_18rem] xl:gap-12">
+          <div className="max-w-2xl space-y-5">
+            {about.paragraphs.map((p, i) => (
+              <p
+                key={i}
+                className={
+                  i === 0
+                    ? 'text-lg leading-relaxed text-text md:text-xl md:leading-relaxed'
+                    : 'leading-relaxed text-body md:text-[1.0625rem]'
+                }
+              >
+                {p}
+              </p>
+            ))}
+          </div>
+
+          {facts.length > 0 && (
+            <aside className={`self-start p-6 ${CARD_SURFACE}`}>
+              <h3 className={EYEBROW}>{t(locale, 'quickFacts')}</h3>
+              <dl className="mt-5 space-y-4">
+                {facts.map((f) => (
+                  <div key={f.k}>
+                    <dt className="text-xs text-muted">{f.k}</dt>
+                    <dd className="mt-0.5 text-sm font-medium leading-snug">{f.v}</dd>
+                  </div>
+                ))}
+              </dl>
+              {site.resumeUrl && (
+                <a
+                  href={site.resumeUrl}
+                  className="mt-6 flex items-center justify-center gap-2 rounded-lg border border-border-strong px-4 py-2 text-sm font-medium transition-colors hover:border-accent hover:text-accent"
+                >
+                  {t(locale, 'downloadResume')}
+                </a>
+              )}
+            </aside>
+          )}
         </div>
       </div>
-
-      {about.stats.length > 0 && (
-        <dl className="mt-14 grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-3">
-          {about.stats.map((s) => (
-            <div key={s.label} className="bg-bg p-6">
-              <dd className="text-3xl font-semibold tracking-tight tabular-nums md:text-4xl">
-                <CountUp value={s.value} />
-              </dd>
-              <dt className={`mt-2 ${EYEBROW}`}>
-                {s.label}
-              </dt>
-            </div>
-          ))}
-        </dl>
-      )}
     </Section>
   )
 }

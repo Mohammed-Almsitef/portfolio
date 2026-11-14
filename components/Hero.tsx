@@ -1,4 +1,5 @@
-import { getExperience, getSite } from '@/lib/content'
+import { getAbout, getExperience, getSite } from '@/lib/content'
+import CountUp from './CountUp'
 import Reveal from './Reveal'
 import SlamViewport, { type SlamLabels } from './SlamViewport'
 import { t, type Locale } from '@/lib/locale'
@@ -9,7 +10,11 @@ import { t, type Locale } from '@/lib/locale'
  * live in the browser, steerable with a click.
  */
 export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
-  const [site, jobs] = await Promise.all([getSite(locale), getExperience(locale)])
+  const [site, jobs, about] = await Promise.all([
+    getSite(locale),
+    getExperience(locale),
+    getAbout(locale),
+  ])
   const current = jobs[0]
 
   const labels: SlamLabels = {
@@ -52,7 +57,7 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
           )}
 
           <Reveal delay={60}>
-            <h1 className="text-gradient mt-6 text-[clamp(2.75rem,6.6vw,5.25rem)] font-semibold leading-[0.98] tracking-[-0.04em]">
+            <h1 className="text-gradient mt-6 text-[clamp(2.75rem,6vw,4.75rem)] font-semibold leading-[0.98] tracking-[-0.04em]">
               {site.name}
             </h1>
             <p className="mt-4 text-lg font-medium text-accent md:text-xl">{site.role}</p>
@@ -61,21 +66,6 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
           <Reveal delay={140}>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-body">{site.tagline}</p>
           </Reveal>
-
-          {site.domains.length > 0 && (
-            <Reveal delay={200}>
-              <ul className="mt-7 flex max-w-xl flex-wrap gap-2">
-                {site.domains.map((d) => (
-                  <li
-                    key={d}
-                    className="rounded-md border border-border bg-surface/60 px-2.5 py-1 font-mono text-[0.72rem] text-muted"
-                  >
-                    {d}
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-          )}
 
           <Reveal delay={260}>
             <div className="mt-9 flex flex-wrap gap-3">
@@ -94,13 +84,33 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
               {site.resumeUrl && (
                 <a
                   href={site.resumeUrl}
-                  className="rounded-lg px-3 py-2.5 text-sm font-medium text-muted underline-offset-4 transition-colors hover:text-accent hover:underline"
+                  className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm font-medium text-muted transition-colors hover:text-accent"
                 >
-                  {t(locale, 'downloadResume')}
+                  <svg aria-hidden="true" viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14" />
+                  </svg>
+                  {t(locale, 'resume')}
                 </a>
               )}
             </div>
           </Reveal>
+
+          {/* Proof, not adjectives: the headline figures sit right under the
+              claim. Edited in the manager under About → Headline figures. */}
+          {about.stats.length > 0 && (
+            <Reveal delay={320}>
+              <dl className="mt-12 grid max-w-xl grid-cols-3 divide-x divide-border border-y border-border rtl:divide-x-reverse">
+                {about.stats.map((st) => (
+                  <div key={st.label} className="px-4 py-4 first:ps-0">
+                    <dd className="text-2xl font-semibold tracking-tight tabular-nums md:text-3xl">
+                      <CountUp value={st.value} />
+                    </dd>
+                    <dt className="mt-1 text-xs leading-snug text-muted">{st.label}</dt>
+                  </div>
+                ))}
+              </dl>
+            </Reveal>
+          )}
         </div>
 
         <Reveal delay={180} className="min-w-0">

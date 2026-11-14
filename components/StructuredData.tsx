@@ -70,7 +70,8 @@ export default async function StructuredData({ locale = 'en' }: { locale?: Local
       ? {
           alumniOf: education.map((e) => ({
             '@type': 'EducationalOrganization',
-            name: e.school,
+            // The school field carries faculty and honours after ' · '.
+            name: e.school.split(' · ')[0],
           })),
         }
       : {}),

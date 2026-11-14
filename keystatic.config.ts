@@ -21,6 +21,8 @@ const VISUALS = [
   { label: 'Joint traces (control / RL)', value: 'gait' },
   { label: 'Point cloud (SLAM)', value: 'cloud' },
   { label: 'Retrieved chunks (RAG)', value: 'layers' },
+  { label: 'Fleet release (one codebase, many robots)', value: 'fleet' },
+  { label: 'Gamepad teleoperation', value: 'gamepad' },
 ] as const
 
 /**

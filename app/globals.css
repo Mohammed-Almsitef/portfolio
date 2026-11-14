@@ -286,31 +286,6 @@ body::before {
   color: transparent;
 }
 
-/* Hairline that fades out, instead of stopping abruptly. */
-.rule-fade {
-  background-image: linear-gradient(to right, var(--color-border-strong), transparent);
-}
-
-/*
- * Full-width divider a section heading sits on top of.
- *
- * Same fade shape as .section-rule__line below — transparent, solid, solid,
- * transparent — reused here so the footer's divider and a section heading's
- * line come from one gradient definition instead of two that could drift
- * apart. The heading's own background is opaque, so only the fade at each
- * edge of the container is ever visible; the solid middle stretch is always
- * hidden behind the label.
- */
-.section-title-rule {
-  background-image: linear-gradient(
-    to right,
-    transparent,
-    var(--color-border-strong) 7%,
-    var(--color-border-strong) 93%,
-    transparent
-  );
-}
-
 /*
  * Minimum hit area for a standalone link.
  *
@@ -333,83 +308,6 @@ body::before {
  */
 .tap-inline {
   padding-block: 3px;
-}
-
-/*
- * Divider between sections.
- *
- * A flat full-width `border-border` hairline was the faintest token in the
- * palette and barely registered. This is the stronger border tone, fading at
- * both ends so it reads as a deliberate rule rather than an edge cut across
- * the viewport, with an accent segment and node at the content gutter.
- *
- * The draw-in is gated on `.js` so that without JavaScript the rule renders
- * fully drawn rather than collapsed to nothing.
- */
-.section-rule {
-  position: relative;
-  height: 1px;
-}
-
-.section-rule__line {
-  position: absolute;
-  inset: 0;
-  background-image: linear-gradient(
-    to right,
-    transparent,
-    var(--color-border-strong) 7%,
-    var(--color-border-strong) 93%,
-    transparent
-  );
-}
-
-/* Short accent segment sitting on the rule at the content's left edge. */
-.section-rule__mark {
-  position: relative;
-  display: block;
-  width: 2.75rem;
-  height: 2px;
-  margin-top: -0.5px;
-  border-radius: 999px;
-  background-image: linear-gradient(to right, transparent, rgb(var(--tone-blue)));
-  box-shadow: 0 0 12px -2px rgb(var(--tone-blue) / 0.55);
-}
-
-/* The node terminating the segment — the schematic detail that makes the rule
-   look measured rather than drawn. */
-.section-rule__node {
-  position: absolute;
-  right: -1px;
-  top: 50%;
-  width: 5px;
-  height: 5px;
-  margin-top: -2.5px;
-  border-radius: 999px;
-  background-color: rgb(var(--tone-blue));
-  box-shadow: 0 0 0 3px rgb(var(--tone-blue) / 0.16);
-}
-
-.js .section-rule__line {
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 1100ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.js .section-rule__mark {
-  opacity: 0;
-  transform: translateX(-8px);
-  transition:
-    opacity 500ms ease-out 320ms,
-    transform 600ms cubic-bezier(0.22, 1, 0.36, 1) 320ms;
-}
-
-.js [data-rule='drawn'] .section-rule__line {
-  transform: scaleX(1);
-}
-
-.js [data-rule='drawn'] .section-rule__mark {
-  opacity: 1;
-  transform: none;
 }
 
 /*
@@ -450,12 +348,6 @@ body::before {
   }
 
   .js [data-reveal] {
-    opacity: 1;
-    transform: none;
-  }
-
-  .js .section-rule__line,
-  .js .section-rule__mark {
     opacity: 1;
     transform: none;
   }

@@ -76,8 +76,14 @@ export default function CommandPalette({
         else openPalette()
       }
     }
+    // The nav's search button opens it the same way, without a shared store.
+    const onOpen = () => openPalette()
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    window.addEventListener('command-palette:open', onOpen)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('command-palette:open', onOpen)
+    }
   }, [])
 
   const go = (hash: string) => {
@@ -190,21 +196,6 @@ export default function CommandPalette({
 
   return (
     <>
-      <button
-        type="button"
-        onClick={openPalette}
-        aria-label={t(locale, 'openCommandMenu')}
-        data-print-hide
-        // Stacked above BackToTop rather than sharing the opposite corner:
-        // Next's own dev-mode tools indicator also docks bottom-left, and
-        // fighting it for that corner is a losing battle in local dev.
-        className="fixed bottom-20 end-6 z-40 flex h-10 items-center gap-2 rounded-full border border-border-strong bg-surface/90 px-4 text-sm text-muted backdrop-blur-sm transition-colors hover:border-accent hover:text-accent"
-      >
-        <Icon name="search" className="size-4" />
-        <span dir="ltr" className="mono-label hidden font-mono text-xs sm:inline">
-          ⌘K
-        </span>
-      </button>
 
       <dialog
         ref={dialogRef}

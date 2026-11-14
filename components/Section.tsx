@@ -24,7 +24,7 @@ export default function Section({
     >
       <div className="relative mx-auto max-w-page px-6 py-16 md:py-24">
         <Reveal>
-          <header className="mb-12 flex items-end justify-between gap-6 border-b border-border pb-5 md:mb-14">
+          <header className="mb-12 border-b border-border pb-5 md:mb-14">
             <div>
               {/* The number comes from a CSS counter on <main>, so it follows
                   the order set in the manager without any prop plumbing. */}
@@ -37,9 +37,6 @@ export default function Section({
               </h2>
               {intro && <p className="mt-3 max-w-2xl text-body">{intro}</p>}
             </div>
-            <span aria-hidden="true" dir="ltr" className="hidden pb-1.5 font-mono text-xs text-muted sm:block">
-              /{id.replace('-', '_')}
-            </span>
           </header>
         </Reveal>
 

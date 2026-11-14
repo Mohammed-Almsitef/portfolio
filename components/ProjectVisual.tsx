@@ -9,7 +9,15 @@
  * actually does, so the grid reads as designed rather than empty until real
  * screenshots go in via a project's `image` field.
  */
-export type VisualKind = 'graph' | 'occupancy' | 'detect' | 'gait' | 'cloud' | 'layers'
+export type VisualKind =
+  | 'graph'
+  | 'occupancy'
+  | 'detect'
+  | 'gait'
+  | 'cloud'
+  | 'layers'
+  | 'fleet'
+  | 'gamepad'
 
 function seeded(seed: number) {
   let a = seed
@@ -269,6 +277,104 @@ function Layers() {
   )
 }
 
+/** One release, layered config, fanned out to robots of different models. */
+function Fleet() {
+  const stack = [
+    { y: 70, label: 'robot', o: 0.85 },
+    { y: 98, label: 'model', o: 0.55 },
+    { y: 126, label: 'defaults', o: 0.3 },
+  ]
+  const robots = [
+    { x: 300, y: 48, shape: 'circle' },
+    { x: 330, y: 112, shape: 'square' },
+    { x: 300, y: 176, shape: 'circle' },
+    { x: 250, y: 112, shape: 'hex' },
+  ]
+  return (
+    <g>
+      {stack.map((l) => (
+        <g key={l.label}>
+          <rect x={60} y={l.y} width={110} height={22} rx={4} fill="currentColor" opacity={l.o * 0.35} />
+          <rect x={60} y={l.y} width={110} height={22} rx={4} fill="none" stroke="currentColor" strokeWidth="1" opacity={l.o} />
+          <text x={72} y={l.y + 15} fontSize="10" fontFamily="ui-monospace, monospace" fill="currentColor" opacity={0.9}>
+            {l.label}
+          </text>
+        </g>
+      ))}
+      <text x={60} y={60} fontSize="9" fontFamily="ui-monospace, monospace" fill="currentColor" opacity={0.6}>
+        swb_robot v2.x · apt
+      </text>
+      {robots.map((r, i) => (
+        <g key={i}>
+          <path
+            d={`M170 ${92 + i * 3} C 210 ${92 + i * 3}, ${r.x - 40} ${r.y}, ${r.x - 14} ${r.y}`}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.2"
+            strokeDasharray="3 4"
+            opacity="0.5"
+          />
+          {r.shape === 'circle' && <circle cx={r.x} cy={r.y} r={12} fill="none" stroke="currentColor" strokeWidth="2" />}
+          {r.shape === 'square' && (
+            <rect x={r.x - 11} y={r.y - 11} width={22} height={22} rx={4} fill="none" stroke="currentColor" strokeWidth="2" />
+          )}
+          {r.shape === 'hex' && (
+            <polygon
+              points={Array.from({ length: 6 }, (_, k) => {
+                const a = (Math.PI / 3) * k
+                return `${r.x + 12 * Math.cos(a)},${r.y + 12 * Math.sin(a)}`
+              }).join(' ')}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            />
+          )}
+          <line x1={r.x} y1={r.y} x2={r.x + 9} y2={r.y} stroke="currentColor" strokeWidth="2" />
+          <circle cx={r.x} cy={r.y} r={2.5} fill="currentColor" />
+        </g>
+      ))}
+    </g>
+  )
+}
+
+/** A DualShock-style controller driving a robot, with its velocity vector. */
+function Gamepad() {
+  return (
+    <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+      <path
+        d="M70 92 C 70 74, 84 66, 104 66 L 196 66 C 216 66, 230 74, 230 92 L 246 160 C 250 178, 234 190, 220 180 L 196 156 L 104 156 L 80 180 C 66 190, 50 178, 54 160 Z"
+        strokeWidth="2"
+        opacity="0.9"
+      />
+      {/* D-pad */}
+      <path d="M96 100 h10 v-10 h8 v10 h10 v8 h-10 v10 h-8 v-10 h-10 z" strokeWidth="1.5" opacity="0.7" />
+      {/* Face buttons */}
+      {[
+        [200, 92],
+        [214, 106],
+        [200, 120],
+        [186, 106],
+      ].map(([x, y], i) => (
+        <circle key={i} cx={x} cy={y} r={6} strokeWidth="1.5" opacity={i === 1 ? 1 : 0.6} />
+      ))}
+      {/* Sticks */}
+      <circle cx={128} cy={136} r={13} strokeWidth="1.5" opacity="0.7" />
+      <circle cx={172} cy={136} r={13} strokeWidth="1.5" opacity="0.7" />
+      <circle cx={132} cy={131} r={5} fill="currentColor" stroke="none" opacity="0.9" />
+      {/* Light bar */}
+      <path d="M128 70 h44" strokeWidth="3" opacity="0.9" />
+      {/* Command to the robot */}
+      <path d="M250 112 C 275 112, 285 100, 305 100" strokeWidth="1.3" strokeDasharray="3 4" opacity="0.55" />
+      <text x={258} y={92} fontSize="9" fontFamily="ui-monospace, monospace" fill="currentColor" stroke="none" opacity="0.7">
+        /cmd_vel
+      </text>
+      <circle cx={330} cy={100} r={16} strokeWidth="2" />
+      <path d="M330 100 L 358 86" strokeWidth="2" />
+      <path d="M352 82 L 358 86 L 352 92" strokeWidth="2" />
+    </g>
+  )
+}
+
 const SHAPES: Record<VisualKind, () => React.ReactNode> = {
   graph: Graph,
   occupancy: Occupancy,
@@ -276,6 +382,8 @@ const SHAPES: Record<VisualKind, () => React.ReactNode> = {
   gait: Gait,
   cloud: Cloud,
   layers: Layers,
+  fleet: Fleet,
+  gamepad: Gamepad,
 }
 
 export default function ProjectVisual({
@@ -293,6 +401,9 @@ export default function ProjectVisual({
   return (
     <div
       aria-hidden="true"
+      // Drawn in SVG coordinates, which are left-to-right; on the Arabic site
+      // inherited RTL would anchor the labels from their right edge.
+      dir="ltr"
       // Decorative only: on paper it would render as a block of black ink.
       data-print-hide
       className={`relative overflow-hidden bg-bg/40 text-[rgb(var(--tone,var(--tone-blue)))] ${className}`}

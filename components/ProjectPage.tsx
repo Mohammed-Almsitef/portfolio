@@ -19,10 +19,10 @@ import { BLOCK_HEADING } from '@/lib/styles'
 const TONE_LINK =
   'mono-label tap gap-1 font-mono text-xs text-[rgb(var(--tone))] underline-offset-4 hover:underline'
 
-function Block({ title, children }: { title: string; children: React.ReactNode }) {
+function Block({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
-    <section className="mt-14">
-      <h2 className={`${BLOCK_HEADING} text-[rgb(var(--tone))]`}>{title}</h2>
+    <section id={id} className="scroll-mt-24 border-t border-border pt-10 first:border-0 first:pt-0">
+      <h2 className="mb-5 text-xl font-semibold tracking-tight md:text-2xl">{title}</h2>
       {children}
     </section>
   )
@@ -86,7 +86,7 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
       <ScrollProgress />
 
       <header data-print-hide className="border-b border-border">
-        <div className="mx-auto flex max-w-3xl items-center justify-between gap-4 px-6 py-4">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
           <Link
             href={localePath(locale)}
             className="mono-label tap items-center gap-2.5 font-mono text-sm font-medium tracking-tight transition-colors hover:text-accent"
@@ -114,55 +114,40 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
         </div>
       </header>
 
-      <main id="main" className="mx-auto max-w-3xl px-6 pb-24 pt-14 md:pt-20">
-        <p className="font-mono text-xs text-muted">
-          <span className="text-[rgb(var(--tone))]">{String(index + 1).padStart(2, '0')}</span> ·{' '}
-          {project.year}
-        </p>
+      <main id="main" className="mx-auto max-w-6xl px-6 pb-24 pt-14 md:pt-20">
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-14">
+        <div>
+          <p className="font-mono text-xs text-muted">
+            <span className="text-[rgb(var(--tone))]">{String(index + 1).padStart(2, '0')}</span> ·{' '}
+            {project.year}
+          </p>
 
-        <h1 className="mt-4 text-[clamp(2rem,5vw,3rem)] font-semibold leading-[1.08] tracking-[-0.03em]">
-          {project.title}
-        </h1>
+          <h1 className="mt-4 text-[clamp(2.1rem,4.4vw,3.25rem)] font-semibold leading-[1.05] tracking-[-0.035em]">
+            {project.title}
+          </h1>
 
-        <p className="mt-5 text-lg leading-relaxed text-body">{project.summary}</p>
-
-        <TagList tags={project.tags} locale={locale} className="mt-7" />
-
-        <div className="mt-7 flex flex-wrap gap-5">
-          {project.repoUrl && (
-            <a {...outbound(project.repoUrl)} className={TONE_LINK}>
-              {t(locale, 'source')} <ExternalGlyph />
-            </a>
-          )}
-          {project.liveUrl && (
-            <a {...outbound(project.liveUrl)} className={TONE_LINK}>
-              {t(locale, 'liveDemo')} <ExternalGlyph />
-            </a>
-          )}
+          <p className="mt-6 text-lg leading-relaxed text-body">{project.summary}</p>
         </div>
 
         {/* Proof it runs, before any of the prose. A self-hosted clip is the
             strongest form of that, so it wins over an embed or the art. */}
-        <div className="mt-10">
+        <div>
           {project.clip ? (
             <ProjectClip
               src={project.clip}
               poster={project.image}
               title={project.title}
-              className="aspect-video w-full rounded-xl border border-border"
+              className="aspect-[16/10] w-full rounded-2xl border border-border"
             />
           ) : project.videoUrl ? (
             <VideoEmbed url={project.videoUrl} title={project.title} />
           ) : project.image ? (
-            // A photo of the real thing still beats generated art, even though
-            // it loses to anything that moves. Without this branch an uploaded
-            // image showed on the card and then vanished on this page.
-            <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-border">
+            <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-border">
               <Image
                 src={project.image}
                 alt=""
                 fill
-                sizes="(max-width: 1024px) 100vw, 900px"
+                sizes="(max-width: 1024px) 100vw, 560px"
                 className="object-cover"
                 priority
               />
@@ -170,42 +155,121 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
           ) : (
             <ProjectVisual
               kind={project.visual}
-              className="aspect-video w-full rounded-xl border border-border"
+              className="aspect-[16/10] w-full rounded-2xl border border-border"
             />
           )}
         </div>
+        </div>
 
-        <Block title={t(locale, 'theProblem')}>
-          <p className="leading-relaxed text-body">{project.problem}</p>
-        </Block>
-
-        <Block title={t(locale, 'whatIBuilt')}>
-          <p className="leading-relaxed text-body">{project.solution}</p>
-        </Block>
-
-        <Block title={t(locale, 'howItWorks')}>
-          <Bullets items={project.how} />
-        </Block>
-
-        {project.testing && (
-          <Block title={t(locale, 'howItWasTested')}>
-            <p className="leading-relaxed text-body">{project.testing}</p>
-          </Block>
+        {/* Outcomes first: a reader deciding whether to keep going gets the
+            payoff before the narrative. */}
+        {project.results.length > 0 && (
+          <section aria-labelledby="key-results" className="mt-14">
+            <h2 id="key-results" className={`${BLOCK_HEADING} text-[rgb(var(--tone))]`}>
+              {t(locale, 'keyResults')}
+            </h2>
+            <ul className="grid gap-4 md:grid-cols-[repeat(auto-fit,minmax(16rem,1fr))]">
+              {project.results.map((r, i) => (
+                <li
+                  key={i}
+                  className="rounded-2xl border border-border bg-surface p-5 text-[0.9375rem] leading-relaxed text-body shadow-[var(--card-shadow)] [border-top:2px_solid_rgb(var(--tone))]"
+                >
+                  {r}
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
 
-        <Block title={t(locale, 'results')}>
-          <Bullets items={project.results} />
-        </Block>
+        <div className="mt-16 grid gap-12 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-14">
+          <article className="space-y-12">
+            <Block id="problem" title={t(locale, 'theProblem')}>
+              <p className="leading-relaxed text-body md:text-[1.0625rem]">{project.problem}</p>
+            </Block>
 
-        <Block title={t(locale, 'whatILearned')}>
-          <Bullets items={project.lessons} />
-        </Block>
+            <Block id="solution" title={t(locale, 'whatIBuilt')}>
+              <p className="leading-relaxed text-body md:text-[1.0625rem]">{project.solution}</p>
+            </Block>
 
-        {project.role && (
-          <Block title={t(locale, 'myRole')}>
-            <p className="leading-relaxed text-body">{project.role}</p>
-          </Block>
-        )}
+            <Block id="how" title={t(locale, 'howItWorks')}>
+              <Bullets items={project.how} />
+            </Block>
+
+            {project.testing && (
+              <Block id="testing" title={t(locale, 'howItWasTested')}>
+                <p className="leading-relaxed text-body md:text-[1.0625rem]">{project.testing}</p>
+              </Block>
+            )}
+
+            <Block id="lessons" title={t(locale, 'whatILearned')}>
+              <Bullets items={project.lessons} />
+            </Block>
+          </article>
+
+          <aside className="lg:sticky lg:top-24 lg:self-start">
+            <div className="rounded-2xl border border-border bg-surface p-6 shadow-[var(--card-shadow)]">
+              <h2 className={`${BLOCK_HEADING} mb-5 text-muted`}>{t(locale, 'projectFacts')}</h2>
+              <dl className="space-y-5 text-sm">
+                {project.role && (
+                  <div>
+                    <dt className="text-xs text-muted">{t(locale, 'myRole')}</dt>
+                    <dd className="mt-1 leading-relaxed">{project.role}</dd>
+                  </div>
+                )}
+                <div>
+                  <dt className="text-xs text-muted">{t(locale, 'factYear')}</dt>
+                  <dd className="mt-1">{project.year}</dd>
+                </div>
+                {project.tags.length > 0 && (
+                  <div>
+                    <dt className="text-xs text-muted">{t(locale, 'factStack')}</dt>
+                    <dd className="mt-2">
+                      <TagList tags={project.tags} locale={locale} />
+                    </dd>
+                  </div>
+                )}
+                {(project.repoUrl || project.liveUrl) && (
+                  <div>
+                    <dt className="text-xs text-muted">{t(locale, 'links')}</dt>
+                    <dd className="mt-1.5 flex flex-wrap gap-4">
+                      {project.repoUrl && (
+                        <a {...outbound(project.repoUrl)} className={TONE_LINK}>
+                          {t(locale, 'source')} <ExternalGlyph />
+                        </a>
+                      )}
+                      {project.liveUrl && (
+                        <a {...outbound(project.liveUrl)} className={TONE_LINK}>
+                          {t(locale, 'liveDemo')} <ExternalGlyph />
+                        </a>
+                      )}
+                    </dd>
+                  </div>
+                )}
+              </dl>
+            </div>
+
+            <nav aria-label={t(locale, 'projectNavigation')} data-print-hide className="mt-6 hidden px-1 lg:block">
+              <ul className="space-y-2 border-s border-border text-sm">
+                {[
+                  ['problem', t(locale, 'theProblem')],
+                  ['solution', t(locale, 'whatIBuilt')],
+                  ['how', t(locale, 'howItWorks')],
+                  ...(project.testing ? [['testing', t(locale, 'howItWasTested')]] : []),
+                  ['lessons', t(locale, 'whatILearned')],
+                ].map(([id, label]) => (
+                  <li key={id}>
+                    <a
+                      href={`#${id}`}
+                      className="-ms-px block border-s border-transparent ps-4 text-muted transition-colors hover:border-[rgb(var(--tone))] hover:text-text"
+                    >
+                      {label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </aside>
+        </div>
 
         <nav
           data-print-hide
