@@ -48,7 +48,7 @@ lib/
   manager/           auth.ts, crypto.ts, store.ts — the password gate
 content/             the English tree (JSON, edited by the manager)
 content/ar/          the Arabic tree, same schema, independent contents
-assets/brand/        the logo handoff: source SVGs and its spec
+assets/brand/        the logo: source SVGs and its construction spec
 public/              photo, résumé, project media, the OG fallback
 keystatic.config.ts  the schema — the single description of every field
 proxy.ts             the password gate in front of the manager routes
@@ -68,7 +68,7 @@ the check rather than accumulating).
 | `/ar/projects/[slug]` | `app/ar/projects/[slug]/page.tsx` | the Arabic case studies |
 | `/sitemap.xml` | `app/sitemap.ts` | generated: every visible page, both languages, with alternates |
 | `/robots.txt` | `app/robots.ts` | allows the site, disallows `/keystatic`, `/manager`, `/api/` |
-| `/icon.svg` | `app/icon.svg` | the favicon — the monogram on an ink plate |
+| `/icon.svg` | `app/icon.svg` | the favicon — the ligature on a rounded dark plate |
 | `/opengraph-image` | `app/opengraph-image.tsx` | the 1200×630 link-preview card, generated |
 | `/keystatic` | `app/keystatic/[[...params]]` | the manager, behind the password gate |
 | `/manager/login`, `/manager/account` | `app/manager/*` | the gate's own screens |
@@ -258,23 +258,21 @@ Nothing overflows the viewport at 320px in either language.
 
 ## The monogram
 
-An M and an A at one stroke weight, where the A crosses the M and **knocks a
-transparent gap out of it** — a mask on the M, never a background-coloured stroke,
-so the mark works on any ground. `components/Logo.tsx` implements it from the
-geometry in `assets/brand/`, which is the source of truth.
+An **MA ligature** at one stroke weight with round ends: a vertical M stem and
+the M's two diagonals, where the M's second diagonal is also the A's left leg and
+the A's crossbar starts exactly at the M's valley. The A (right leg and crossbar)
+carries the accent. `components/Logo.tsx` implements it from the geometry in
+`assets/brand/readme.txt`, which is the source of truth.
 
-Three rules from the handoff are implemented, not decorative:
-
-- the viewBox `-6 -34 208 172` is fixed; its padding holds the mitre spikes at the
-  M's valley and the A's apex, and tightening it clips them
-- small sizes step the weight up — 15/31 at 48px+, 17/33 at 32px, 18/34 at 24px,
-  19/35 at 16px — and **below 24px the accent is dropped**, which is why the
-  footer mark is monochrome and the nav's is not
+- small sizes step the weight up: 12 at 48px+, 13 at ~32px, 14.5 at ~24px,
+  16 at 16px; the accent holds down to 16px, so there is no monochrome step
+- the viewBox is the mark's bounds plus half a stroke and 2 units of clearance,
+  computed from the weight
 - the two colourways are not interchangeable: `#1D4ED8` never on a dark ground,
   `#60A5FA` never on a light one
 
 That last rule is why the colours live in `--logo-ink` / `--logo-accent` rather
-than deriving from the accent token — the accent is user-selectable, and the mark
+than deriving from the accent token: the accent is user-selectable, and the mark
 is not. The manager passes its colours in explicitly instead, because its
 light/dark setting is its own.
 
