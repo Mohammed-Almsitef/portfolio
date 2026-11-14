@@ -180,6 +180,8 @@ export async function getContact(locale: Locale = 'en') {
     blurb: c?.blurb || '',
     responseTime: c?.responseTime || '',
     timezone: c?.timezone || '',
+    // Only an ID-shaped value is used, so a stray paste cannot point the form elsewhere.
+    formspreeId: /^[a-zA-Z0-9]{6,12}$/.test(c?.formspreeId ?? '') ? (c?.formspreeId as string) : '',
   }
 }
 

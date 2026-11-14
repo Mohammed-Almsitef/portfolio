@@ -1,4 +1,5 @@
 import { getContact, getSite, getSocials } from '@/lib/content'
+import ContactForm from './ContactForm'
 import CopyEmail from './CopyEmail'
 import Section from './Section'
 import SocialIcon from './SocialIcon'
@@ -76,14 +77,32 @@ export default async function Contact({
           )}
         </div>
 
-        <dl className={`space-y-5 self-start p-6 ${CARD_SURFACE}`}>
-          {details.map((d) => (
-            <div key={d.k}>
-              <dt className={EYEBROW}>{d.k}</dt>
-              <dd className="mt-1.5 text-sm font-medium">{d.v}</dd>
-            </div>
-          ))}
-        </dl>
+        <div className="space-y-5 self-start">
+          <dl className={`space-y-5 p-6 ${CARD_SURFACE}`}>
+            {details.map((d) => (
+              <div key={d.k}>
+                <dt className={EYEBROW}>{d.k}</dt>
+                <dd className="mt-1.5 text-sm font-medium">{d.v}</dd>
+              </div>
+            ))}
+          </dl>
+          {contact.formspreeId && (
+            <ContactForm
+              formId={contact.formspreeId}
+              email={site.email}
+              labels={{
+                title: t(locale, 'formTitle'),
+                name: t(locale, 'formName'),
+                email: t(locale, 'formEmail'),
+                message: t(locale, 'formMessage'),
+                send: t(locale, 'formSend'),
+                sending: t(locale, 'formSending'),
+                sent: t(locale, 'formSent'),
+                error: t(locale, 'formError'),
+              }}
+            />
+          )}
+        </div>
       </div>
     </Section>
   )

@@ -412,6 +412,11 @@ const contactDef = (dir: string, tag: string) =>
         label: 'Typical response time',
         description: 'e.g. Within a couple of days. Leave empty to hide the row.',
       }),
+      formspreeId: fields.text({
+        label: 'Contact form — Formspree form ID',
+        description:
+          'The code after formspree.io/f/ (e.g. xyzabcde). Create a free form at formspree.io, paste its ID here and the form appears in the Contact section. Leave empty to hide the form.',
+      }),
       timezone: fields.text({
         label: 'Timezone',
         description: 'e.g. UTC+3 (Aleppo). Recruiters filter on it. Leave empty to hide the row.',
