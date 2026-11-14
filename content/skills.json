@@ -11,7 +11,13 @@
         "ros2_control",
         "Lifecycle nodes, TF2, URDF"
       ],
-      "visible": true
+      "visible": true,
+      "projects": [
+        "manara-robot",
+        "swb-robot-platform",
+        "ros2-multi-robot-mapping",
+        "ps4-teleop"
+      ]
     },
     {
       "title": "Perception & Sensors",
@@ -23,7 +29,11 @@
         "IMU / gyro heading fusion",
         "Camera extrinsic calibration"
       ],
-      "visible": true
+      "visible": true,
+      "projects": [
+        "manara-robot",
+        "swb-robot-platform"
+      ]
     },
     {
       "title": "Embedded & Hardware",
@@ -35,7 +45,12 @@
         "Battery & docking systems",
         "Orange Pi / Raspberry Pi"
       ],
-      "visible": true
+      "visible": true,
+      "projects": [
+        "manara-robot",
+        "swb-robot-platform",
+        "ros2-multi-robot-mapping"
+      ]
     },
     {
       "title": "AI & Machine Learning",
@@ -47,7 +62,10 @@
         "Word2Vec, NLTK",
         "LLM applications & agents"
       ],
-      "visible": true
+      "visible": true,
+      "projects": [
+        "course-recommendation-system"
+      ]
     },
     {
       "title": "Engineering & Delivery",
@@ -60,7 +78,12 @@
         "Debian packaging & apt",
         "systemd & Linux"
       ],
-      "visible": true
+      "visible": true,
+      "projects": [
+        "swb-robot-platform",
+        "manara-robot",
+        "ps4-teleop"
+      ]
     }
   ]
 }

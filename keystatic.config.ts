@@ -86,6 +86,10 @@ const projectsDef = (dir: string, tag: string) =>
         description: 'Lower numbers come first.',
         defaultValue: 10,
       }),
+      shortTitle: fields.text({
+        label: 'Short name',
+        description: 'Two or three words, used where the full title does not fit (e.g. skill evidence links).',
+      }),
       year: fields.text({ label: 'Year' }),
       featured: fields.checkbox({
         label: 'Featured',
@@ -414,7 +418,7 @@ const contactDef = (dir: string, tag: string) =>
     },
   })
 
-const skillsDef = (dir: string, tag: string) =>
+const skillsDef = (dir: string, tag: string, projectsCollection: 'projects' | 'projectsAr') =>
   singleton({
     label: `Skills${tag}`,
     path: `${dir}/skills`,
@@ -433,6 +437,14 @@ const skillsDef = (dir: string, tag: string) =>
             label: 'Skills',
             itemLabel: (props) => props.value || 'Skill',
           }),
+          projects: fields.array(
+            fields.relationship({ label: 'Project', collection: projectsCollection }),
+            {
+              label: 'Projects that show it',
+              description: 'Linked under the group as evidence. Pick only projects that really use these skills.',
+              itemLabel: (props) => props.value || 'Project',
+            },
+          ),
         }),
         {
           label: 'Groups',
@@ -640,7 +652,7 @@ export default config({
     socials: socialsDef('content', ''),
     about: aboutDef('content', ''),
     contact: contactDef('content', ''),
-    skills: skillsDef('content', ''),
+    skills: skillsDef('content', '', 'projects'),
     experience: experienceDef('content', ''),
     education: educationDef('content', ''),
     publications: publicationsDef('content', ''),
@@ -651,7 +663,7 @@ export default config({
     socialsAr: socialsDef('content/ar', ' · عربي'),
     aboutAr: aboutDef('content/ar', ' · عربي'),
     contactAr: contactDef('content/ar', ' · عربي'),
-    skillsAr: skillsDef('content/ar', ' · عربي'),
+    skillsAr: skillsDef('content/ar', ' · عربي', 'projectsAr'),
     experienceAr: experienceDef('content/ar', ' · عربي'),
     educationAr: educationDef('content/ar', ' · عربي'),
     publicationsAr: publicationsDef('content/ar', ' · عربي'),

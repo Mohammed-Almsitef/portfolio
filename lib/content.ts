@@ -187,6 +187,7 @@ export async function getSkillGroups(locale: Locale = 'en') {
     title: g.title,
     tone: g.tone as Tone,
     items: [...g.items],
+    projects: (g.projects ?? []).filter((x): x is string => Boolean(x)),
   }))
 }
 
@@ -242,6 +243,7 @@ export async function getOpenSource(locale: Locale = 'en') {
 export type Project = {
   slug: string
   title: string
+  shortTitle: string
   year: string
   featured: boolean
   tone: Tone
@@ -277,6 +279,7 @@ export async function getProjects(locale: Locale = 'en'): Promise<Project[]> {
     .map(({ slug, entry }) => ({
       slug,
       title: entry.title,
+      shortTitle: entry.shortTitle || entry.title,
       year: entry.year,
       featured: entry.featured,
       tone: entry.tone as Tone,
