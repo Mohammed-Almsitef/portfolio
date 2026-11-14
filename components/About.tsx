@@ -1,4 +1,4 @@
-import { getAbout, getEducation, getExperience, getSite } from '@/lib/content'
+import { getAbout, getContact, getSite } from '@/lib/content'
 import AboutPhoto from './AboutPhoto'
 import Section from './Section'
 import { t, type Locale } from '@/lib/locale'
@@ -11,25 +11,14 @@ export default async function About({
   title: string
   locale?: Locale
 }) {
-  const [about, site, jobs, education] = await Promise.all([
-    getAbout(locale),
-    getSite(locale),
-    getExperience(locale),
-    getEducation(locale),
-  ])
-  const job = jobs[0]
-  const degree = education[0]
+  const [about, site, contact] = await Promise.all([getAbout(locale), getSite(locale), getContact(locale)])
 
-  // The headline figures live in the hero now; this section carries the story
-  // and a short factual summary a recruiter can scan in five seconds.
+  // Only facts that appear nowhere else on the page: role, education and
+  // figures already have their own homes.
   const facts = [
-    job && { k: t(locale, 'factRole'), v: `${job.role} · ${job.company}` },
     { k: t(locale, 'factLocation'), v: site.location },
-    degree && {
-      k: t(locale, 'factEducation'),
-      v: `${degree.degree.split(' · ')[0]} · ${degree.school.split(' · ')[0]}`,
-    },
-    site.domains.length > 0 && { k: t(locale, 'factFocus'), v: site.domains.slice(0, 4).join(' · ') },
+    contact.timezone && { k: t(locale, 'timezone'), v: contact.timezone },
+    about.languages && { k: t(locale, 'languages'), v: about.languages },
   ].filter(Boolean) as { k: string; v: string }[]
 
   return (
@@ -79,7 +68,7 @@ export default async function About({
                   href={site.resumeUrl}
                   className="mt-6 flex items-center justify-center gap-2 rounded-lg border border-border-strong px-4 py-2 text-sm font-medium transition-colors hover:border-accent hover:text-accent"
                 >
-                  {t(locale, 'downloadResume')}
+                  {t(locale, 'downloadCv')}
                 </a>
               )}
             </aside>

@@ -25,7 +25,7 @@ You can add, delete, hide and reorder everything from there:
 | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | **Sections**                                       | Page order (drag), visibility, and the heading text. Numbering follows the list.                               |
 | **Site & contact**                                 | Name, role, tagline, email, location, URL, résumé path, availability badge, expertise chips, name spellings    |
-| **Appearance**                                     | Default colour mode, accent colour, and contact links as icons or cards                                       |
+| **Appearance**                                     | Default colour mode and accent colour                                                                         |
 | **About**                                          | Photo, its background, whether it shows on phones, bio paragraphs, headline figures                           |
 | **Projects**                                       | One entry per case study — add, delete, reorder, hide                                                          |
 | **Open source**                                    | Contributions, with the intro paragraph                                                                       |

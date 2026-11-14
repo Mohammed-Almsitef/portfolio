@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono, Noto_Sans_Arabic } from 'next/font/google'
 import { getAppearance, getSite } from '@/lib/content'
 import { alternatesFor } from '@/lib/metadata'
@@ -17,13 +17,27 @@ const arabic = Noto_Sans_Arabic({
   subsets: ['arabic'],
   variable: '--font-arabic',
   display: 'swap',
+  // 166 KB: preloading it made every English visitor download it before the
+  // first paint. Not preloaded, the browser fetches it only when Arabic text
+  // is actually on the page.
+  preload: false,
 })
 
 const mono = Geist_Mono({
   subsets: ['latin'],
   variable: '--font-geist-mono',
   display: 'swap',
+  // Only small labels use it; it should not compete with the headline font.
+  preload: false,
 })
+
+/** Browser chrome (address bar on phones) matches the page ground. */
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#06070b' },
+    { media: '(prefers-color-scheme: light)', color: '#eef1f6' },
+  ],
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const [site, alternates] = await Promise.all([getSite(), alternatesFor('en')])

@@ -109,10 +109,10 @@ function Body({
         {p.summary}
       </p>
 
-      <TagList tags={lead ? p.tags : p.tags.slice(0, 6)} locale={locale} className="mt-6" litByCardHover />
+      <TagList tags={p.tags.slice(0, lead ? 6 : 4)} locale={locale} className="mt-6" litByCardHover />
 
       <div className="relative mt-6 flex flex-wrap items-center gap-5 border-t border-border pt-5">
-        <span className="mono-label pointer-events-none inline-flex items-center gap-1.5 font-mono text-xs text-[rgb(var(--tone))]">
+        <span className="pointer-events-none inline-flex items-center gap-1.5 text-[0.9375rem] font-medium text-accent">
           {t(locale, 'caseStudy')}
           <span
             aria-hidden="true"
@@ -144,19 +144,21 @@ function Card({
     <Spotlight
       style={
         {
-          '--tone': `var(--tone-${p.tone})`,
-          // Spotlight already reads --card-glow; re-point it rather than
-          // teaching the component about tones.
-          '--card-glow': 'rgb(var(--tone) / 0.16)',
+          // One accent for everything interactive, so the grid reads as one
+          // brand; each project keeps its own colour only inside its cover.
+          '--tone': 'var(--accent-tone)',
+          '--card-glow': 'rgb(var(--tone) / 0.14)',
         } as React.CSSProperties
       }
       className={`glow-border group h-full overflow-hidden ${CARD_SURFACE} transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[rgb(var(--tone)/0.45)]`}
       innerClassName={`flex h-full flex-col ${lead ? 'md:flex-row' : ''}`}
     >
-      <Cover
-        p={p}
-        className={lead ? 'h-56 shrink-0 md:h-auto md:w-[46%]' : 'h-44 shrink-0'}
-      />
+      <div
+        style={{ '--tone': `var(--tone-${p.tone})` } as React.CSSProperties}
+        className={lead ? 'h-60 shrink-0 md:h-auto md:w-[46%]' : 'h-56 shrink-0'}
+      >
+        <Cover p={p} className="size-full" />
+      </div>
       <Body p={p} index={i} locale={locale} lead={lead} />
     </Spotlight>
   )

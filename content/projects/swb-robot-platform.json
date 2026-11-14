@@ -27,8 +27,8 @@
   ],
   "role": "Lead developer of the package: architecture, configuration system, setup tooling, release pipeline and most of the field debugging.",
   "tags": [
-    "ROS 2 Humble",
-    "C++17",
+    "ROS 2",
+    "C++",
     "Python",
     "Nav2",
     "ros2_control",

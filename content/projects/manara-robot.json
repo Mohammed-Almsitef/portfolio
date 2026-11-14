@@ -2,7 +2,7 @@
   "title": "Manara Robot",
   "year": "2025 — Present",
   "tone": "amber",
-  "visual": "occupancy",
+  "visual": "dock",
   "summary": "The ROS 2 platform behind a service robot deployed to help pilgrims at the Two Holy Mosques in Mecca and Medina — autonomous navigation, self-docking and charging, and the sensor pipeline that a 25-language on-screen AI assistant rides on top of.",
   "problem": "A service robot for pilgrims at Al-Masjid al-Haram and Al-Masjid an-Nabawi needs to move around a busy, changing space on its own, find its way back to charge without help, and stay reliable through long unattended shifts — while an on-screen assistant handles the actual conversations with pilgrims in real time. None of that works if the robotics underneath it isn't solid.",
   "solution": "At SWB I own the ROS 2 side of the robot: autonomous navigation and mapping, a from-scratch motor driver, a self-docking and charging system I rewrote from the ground up, and the sensor and dashboard infrastructure everything else runs on. The on-screen AI assistant — voice interaction in around 25 languages, with a fallback to a live scholar for questions that need more nuance — is a separate application that sits on top of this platform; my part is the robot underneath it.",
@@ -31,7 +31,7 @@
     "SLAM Toolbox",
     "C++",
     "Modbus / RS-485",
-    "Point Cloud (PCL)",
+    "Point clouds (PCL)",
     "REST / WebSocket",
     "systemd"
   ],

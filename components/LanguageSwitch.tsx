@@ -23,11 +23,13 @@ export default function LanguageSwitch({
       lang={targetLocale}
       dir={LABEL[targetLocale].dir}
       title={LABEL[targetLocale].name}
-      className={CONTROL_BUTTON}
-      aria-label={`Switch to ${LABEL[targetLocale].name}`}
+      className={`${CONTROL_BUTTON} w-auto min-w-9 px-2.5 text-sm font-medium`}
+      // The accessible name starts with the visible text (WCAG 2.5.3), so a
+      // voice-control user who says what they see still hits the link.
+      aria-label={`${LABEL[targetLocale].text} · ${LABEL[targetLocale].name}`}
       data-print-hide
     >
-      {LABEL[targetLocale].code}
+      {LABEL[targetLocale].text}
     </Link>
   )
 }

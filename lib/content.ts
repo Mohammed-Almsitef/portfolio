@@ -72,17 +72,13 @@ const TREE = {
   },
 } as const
 
-export type ContactLinkStyle = 'icons' | 'tiles'
-
 export type Appearance = {
   defaultTheme: 'light' | 'dark'
   accent: Tone
-  contactLinks: ContactLinkStyle
 }
 
 /**
- * Site chrome: the colour mode a first-time visitor gets, the accent and the
- * contact-link style. Shared by both languages, and every field falls back so
+ * Site chrome: the colour mode a first-time visitor gets and the accent. Shared by both languages, and every field falls back so
  * a missing or partial file still renders the site.
  */
 export async function getAppearance(): Promise<Appearance> {
@@ -92,7 +88,6 @@ export async function getAppearance(): Promise<Appearance> {
     // Validated against the known set rather than cast: the value reaches a CSS
     // variable name, so an unrecognised one would silently blank the accent.
     accent: isTone(a?.accent) ? a.accent : 'blue',
-    contactLinks: a?.contactLinks === 'tiles' ? 'tiles' : 'icons',
   }
 }
 
@@ -165,6 +160,7 @@ export async function getAbout(locale: Locale = 'en') {
       ? (about.photoBackdrop as PhotoBackdrop)
       : ('grid' as PhotoBackdrop),
     paragraphs: [...about.paragraphs],
+    languages: about.languages || '',
     stats: about.stats.map((s) => ({ value: s.value, label: s.label })),
   }
   return base
@@ -181,6 +177,7 @@ export async function getContact(locale: Locale = 'en') {
     headline: c?.headline || 'Let’s work together.',
     blurb: c?.blurb || '',
     responseTime: c?.responseTime || '',
+    timezone: c?.timezone || '',
   }
 }
 

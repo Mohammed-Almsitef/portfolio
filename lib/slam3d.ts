@@ -280,8 +280,11 @@ export function createScene3D(
 
   const applyPalette = (p: Palette3D) => {
     const ink = col(p.ink)
-    // Walls take the ink tone, cooled toward the accent so they sit in the theme.
-    wallMat.color.copy(ink).lerp(col(p.accent), 0.12)
+    // Walls: light slabs on the dark theme; on the light theme a mid grey,
+    // since near-black slabs read as heavy against the pale page.
+    const lightTheme = ink.r + ink.g + ink.b < 1.2
+    wallMat.color.copy(lightTheme ? new THREE.Color(0x9aa3b2) : ink).lerp(col(p.accent), 0.12)
+    fanMat.opacity = lightTheme ? 0.06 : 0.1
     fanMat.color = col(p.scan)
     hitMat.color = col(p.scan)
     planMat.color = col(p.plan)

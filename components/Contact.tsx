@@ -1,18 +1,15 @@
-import { getAppearance, getContact, getSite, getSocials } from '@/lib/content'
+import { getContact, getSite, getSocials } from '@/lib/content'
 import CopyEmail from './CopyEmail'
 import Section from './Section'
-import SocialLink from './SocialLink'
+import SocialIcon from './SocialIcon'
+import { outbound } from '@/lib/links'
 import { t, type Locale } from '@/lib/locale'
-import { CARD_SURFACE, CARD_TONE_WASH, EYEBROW } from '@/lib/styles'
-import Icon from './Icon'
-
-/** The marks beside the labels in the detail card. */
-const GLYPH = 'size-3.5 shrink-0 text-accent'
+import { CARD_SURFACE, EYEBROW } from '@/lib/styles'
 
 /**
- * The single home for how to reach me. Availability and focus areas are stated
- * once in the hero and deliberately not repeated here; this section carries the
- * contact record — the links, where I am, and how fast I answer.
+ * How to reach me, in the order a recruiter acts: the pitch, email (copyable),
+ * the CV, then profiles as labelled links rather than a row of bare logos.
+ * The facts beside it are the ones people filter on: where, when, how fast.
  */
 export default async function Contact({
   title,
@@ -21,19 +18,22 @@ export default async function Contact({
   title: string
   locale?: Locale
 }) {
-  const [site, socials, contact, appearance] = await Promise.all([
+  const [site, socials, contact] = await Promise.all([
     getSite(locale),
     getSocials(locale),
     getContact(locale),
-    getAppearance(),
   ])
 
-  const iconsOnly = appearance.contactLinks === 'icons'
+  const details = [
+    { k: t(locale, 'basedIn'), v: site.location },
+    contact.timezone && { k: t(locale, 'timezone'), v: contact.timezone },
+    contact.responseTime && { k: t(locale, 'responseTime'), v: contact.responseTime },
+  ].filter(Boolean) as { k: string; v: string }[]
 
   return (
     <Section id="contact" title={title}>
-      <div className="grid gap-12 md:grid-cols-[1.4fr_1fr] md:gap-16">
-        <div>
+      <div className="grid gap-12 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-16">
+        <div className="max-w-2xl">
           <p className="text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-tight tracking-tight">
             {contact.headline}
           </p>
@@ -41,68 +41,50 @@ export default async function Contact({
             <p className="mt-5 leading-relaxed text-body md:text-[1.0625rem]">{contact.blurb}</p>
           )}
 
-          <div className="mt-9">
-            <h3 className={EYEBROW}>{t(locale, 'emailMe')}</h3>
-            <div className="mt-3">
-              <CopyEmail email={site.email} locale={locale} />
-            </div>
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <CopyEmail email={site.email} locale={locale} />
+            {site.resumeUrl && (
+              <a
+                href={site.resumeUrl}
+                className="btn-ghost inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-medium"
+              >
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14" />
+                </svg>
+                {t(locale, 'downloadCv')}
+              </a>
+            )}
           </div>
+
+          {socials.length > 0 && (
+            <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-3">
+              {socials.map((s) => (
+                <li key={s.href}>
+                  <a
+                    {...outbound(s.href)}
+                    className="tap gap-2 text-sm font-medium text-body transition-colors hover:text-accent"
+                  >
+                    <SocialIcon platform={s.platform} className="size-4 text-muted" />
+                    {s.label}
+                    <span aria-hidden="true" className="text-muted">
+                      ↗
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
-        {/* Same card language as the link tiles below — rounded to the same
-            radius, washed in the accent instead of a platform tone. */}
-        <dl
-          // The accent is this card's tone, so the shared wash can be reused
-          // as-is rather than spelling the gradient out a second time.
-          style={{ '--tone': 'var(--accent-tone)' } as React.CSSProperties}
-          className={`space-y-6 self-start p-6 ${CARD_SURFACE} ${CARD_TONE_WASH}`}
-        >
-          <div>
-            <dt className={`flex items-center gap-2 ${EYEBROW}`}>
-              <Icon name="pin" className={GLYPH} />
-              {t(locale, 'basedIn')}
-            </dt>
-            <dd className="mt-1.5 text-sm">{site.location}</dd>
-          </div>
-          {contact.responseTime && (
-            <div>
-              <dt className={`flex items-center gap-2 ${EYEBROW}`}>
-                <Icon name="clock" className={GLYPH} />
-                {t(locale, 'responseTime')}
-              </dt>
-              <dd className="mt-1.5 text-sm">{contact.responseTime}</dd>
+        <dl className={`space-y-5 self-start p-6 ${CARD_SURFACE}`}>
+          {details.map((d) => (
+            <div key={d.k}>
+              <dt className={EYEBROW}>{d.k}</dt>
+              <dd className="mt-1.5 text-sm font-medium">{d.v}</dd>
             </div>
-          )}
+          ))}
         </dl>
       </div>
-
-      {/* The only place the social links appear. Full width rather than tucked
-          under the headline: they are a grid of equals, and three across leaves
-          no dead column beside the card. */}
-      {/* A short row of marks reads as a cluster, so it is centred — and the
-          label with it, since a left-aligned heading over centred icons only
-          looks like a mistake. The cards keep to the left, where they line up
-          with the headline and the rest of the column. */}
-      {socials.length > 0 && (
-        <div className={`mt-14 ${iconsOnly ? 'text-center' : ''}`}>
-          <h3 className={EYEBROW}>{t(locale, 'findMeOn')}</h3>
-          {/* Icons wrap in a row and are sized by their own content; cards need a
-              grid to line up. */}
-          <ul
-            className={
-              iconsOnly
-                ? 'mt-4 flex flex-wrap justify-center gap-3'
-                : 'mt-3 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3'
-            }
-          >
-            {socials.map((s) => (
-              <li key={s.href}>
-                <SocialLink social={s} style={appearance.contactLinks} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </Section>
   )
 }

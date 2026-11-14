@@ -3,9 +3,9 @@
   "photoBackdrop": "studio",
   "photoOnPhones": true,
   "paragraphs": [
-    "I'm a robotics and AI engineer who graduated from the University of Aleppo's Faculty of Informatics Engineering in 2025, specializing in Artificial Intelligence, with Honors (GPA 85.317/100).",
-    "Since June 2025 I've worked as a Robotics Engineer at SWB, where I build ROS 2 software for deployed robots and the applied-AI capabilities that run on them — object recognition and natural spoken interaction with people. Robotics is the part of the stack I taught myself after graduating, on top of the deep learning and NLP foundation from my degree.",
-    "My favourite problems sit at that intersection: training a model is one thing, getting it to run reliably on hardware with real constraints — weak actuators, a single sensor doing the job of several, a network link that isn't always there — is another. That's the kind of work behind my graduation project, a Coursera course-recommendation engine trained end to end on data I scraped myself, and my first ROS 2 project, two Lego EV3 robots mapping a space together over an MQTT bridge."
+    "I'm a robotics and AI engineer at SWB, where I own the ROS 2 platform behind Manara — an in-production service robot helping pilgrims at the Two Holy Mosques — and the software that runs our fleet of four robots.",
+    "My background is AI: I graduated with honors in Informatics Engineering (Artificial Intelligence) from the University of Aleppo in 2025, then taught myself robotics on the job. The problems I like most sit between the two — making autonomy work on real hardware, with weak actuators, limited sensors and networks that drop out.",
+    "I also design ROS 2 course material — the BurgerBot driving around the top of this page comes from it — and build open tools like ps4_teleop."
   ],
   "stats": [
     {
@@ -17,8 +17,9 @@
       "label": "Robot models on one codebase"
     },
     {
-      "value": "700+",
-      "label": "Commits to production robot repos in 2026"
+      "value": "2",
+      "label": "Holy Mosques where Manara serves pilgrims"
     }
-  ]
+  ],
+  "languages": "Arabic (native) · English (professional)"
 }

@@ -18,6 +18,8 @@ export type VisualKind =
   | 'layers'
   | 'fleet'
   | 'gamepad'
+  | 'dock'
+  | 'pipeline'
 
 function seeded(seed: number) {
   let a = seed
@@ -280,15 +282,15 @@ function Layers() {
 /** One release, layered config, fanned out to robots of different models. */
 function Fleet() {
   const stack = [
-    { y: 70, label: 'robot', o: 0.85 },
-    { y: 98, label: 'model', o: 0.55 },
-    { y: 126, label: 'defaults', o: 0.3 },
+    { y: 78, label: 'robot', o: 0.85 },
+    { y: 104, label: 'model', o: 0.55 },
+    { y: 130, label: 'defaults', o: 0.3 },
   ]
   const robots = [
-    { x: 300, y: 48, shape: 'circle' },
-    { x: 330, y: 112, shape: 'square' },
-    { x: 300, y: 176, shape: 'circle' },
-    { x: 250, y: 112, shape: 'hex' },
+    { x: 300, y: 64, shape: 'circle' },
+    { x: 330, y: 114, shape: 'square' },
+    { x: 300, y: 164, shape: 'circle' },
+    { x: 250, y: 114, shape: 'hex' },
   ]
   return (
     <g>
@@ -301,13 +303,13 @@ function Fleet() {
           </text>
         </g>
       ))}
-      <text x={60} y={60} fontSize="9" fontFamily="ui-monospace, monospace" fill="currentColor" opacity={0.6}>
+      <text x={60} y={70} fontSize="9" fontFamily="ui-monospace, monospace" fill="currentColor" opacity={0.6}>
         swb_robot v2.x · apt
       </text>
       {robots.map((r, i) => (
         <g key={i}>
           <path
-            d={`M170 ${92 + i * 3} C 210 ${92 + i * 3}, ${r.x - 40} ${r.y}, ${r.x - 14} ${r.y}`}
+            d={`M170 ${100 + i * 3} C 210 ${100 + i * 3}, ${r.x - 40} ${r.y}, ${r.x - 14} ${r.y}`}
             fill="none"
             stroke="currentColor"
             strokeWidth="1.2"
@@ -375,6 +377,87 @@ function Gamepad() {
   )
 }
 
+/** Self-docking: a room corner, a charging dock with IR beams, and the
+ *  robot's approach path from the open floor. */
+function Dock() {
+  return (
+    <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+      {/* Walls */}
+      <path d="M40 40 H360 V185" strokeWidth="3" opacity="0.8" />
+      {/* Dock on the right wall, with contacts */}
+      <rect x={344} y={92} width={16} height={42} rx={3} fill="currentColor" fillOpacity="0.25" strokeWidth="2" />
+      <path d="M344 104 h-6 M344 122 h-6" strokeWidth="2.5" />
+      {/* IR beams fanning from the dock */}
+      {[-22, -11, 0, 11, 22].map((a, i) => {
+        const r = (a * Math.PI) / 180
+        return (
+          <line
+            key={i}
+            x1={344}
+            y1={113}
+            x2={344 - Math.cos(r) * 120}
+            y2={113 + Math.sin(r) * 120}
+            strokeWidth="1"
+            strokeDasharray="2 5"
+            opacity={0.5 - Math.abs(a) / 80}
+          />
+        )
+      })}
+      {/* Approach path: arc in, then a straight final alignment */}
+      <path d="M90 165 C 150 165, 190 113, 250 113 L 318 113" strokeWidth="2" strokeDasharray="5 5" opacity="0.85" />
+      {/* Robot mid-approach, heading toward the dock */}
+      <circle cx={250} cy={113} r={15} strokeWidth="2.5" fill="currentColor" fillOpacity="0.15" />
+      <path d="M250 113 L 266 113" strokeWidth="2.5" />
+      <circle cx={250} cy={113} r={4} fill="currentColor" stroke="none" />
+      {/* Start pose */}
+      <circle cx={90} cy={165} r={4} fill="currentColor" stroke="none" opacity="0.6" />
+      <text x={60} y={62} fontSize="9" fontFamily="ui-monospace, monospace" fill="currentColor" stroke="none" opacity="0.6">
+        fig. docking approach
+      </text>
+    </g>
+  )
+}
+
+/** Free text in, a learned embedding, a ranked list of courses out. */
+function Pipeline() {
+  const bars = [14, 26, 9, 31, 20, 12, 28, 17, 23, 10]
+  return (
+    <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+      {/* Query box */}
+      <rect x={40} y={86} width={92} height={54} rx={8} strokeWidth="2" />
+      <path d="M52 104 h64 M52 116 h48 M52 128 h56" strokeWidth="2" opacity="0.55" />
+      {/* Arrow */}
+      <path d="M140 113 h24 m-6 -6 l6 6 l-6 6" strokeWidth="2" opacity="0.7" />
+      {/* Embedding vector */}
+      {bars.map((h, i) => (
+        <rect
+          key={i}
+          x={174 + i * 8}
+          y={113 - h / 2}
+          width={5}
+          height={h}
+          rx={1.5}
+          fill="currentColor"
+          stroke="none"
+          opacity={0.35 + (h / 31) * 0.55}
+        />
+      ))}
+      {/* Arrow */}
+      <path d="M262 113 h24 m-6 -6 l6 6 l-6 6" strokeWidth="2" opacity="0.7" />
+      {/* Ranked results */}
+      {[0, 1, 2].map((i) => (
+        <g key={i} opacity={1 - i * 0.28}>
+          <rect x={296} y={80 + i * 24} width={70} height={18} rx={4} strokeWidth="1.6" />
+          <path d={`M304 ${89 + i * 24} h${40 - i * 8}`} strokeWidth="2" />
+        </g>
+      ))}
+      <text x={40} y={70} fontSize="9" fontFamily="ui-monospace, monospace" fill="currentColor" stroke="none" opacity="0.6">
+        text → word2vec → LSTM → courses
+      </text>
+    </g>
+  )
+}
+
 const SHAPES: Record<VisualKind, () => React.ReactNode> = {
   graph: Graph,
   occupancy: Occupancy,
@@ -384,6 +467,8 @@ const SHAPES: Record<VisualKind, () => React.ReactNode> = {
   layers: Layers,
   fleet: Fleet,
   gamepad: Gamepad,
+  dock: Dock,
+  pipeline: Pipeline,
 }
 
 export default function ProjectVisual({

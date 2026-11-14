@@ -1,32 +1,15 @@
 {
   "groups": [
     {
-      "title": "ROS 2 والروبوتات",
+      "title": "ROS 2 والملاحة",
       "tone": "blue",
       "items": [
-        "ROS 2 (Humble, Jazzy, Rolling)",
-        "rclcpp / rclpy",
-        "Lifecycle nodes",
-        "ros2_control",
-        "TF2, URDF, xacro",
-        "DDS & QoS tuning",
-        "Custom msgs, srvs, actions",
-        "ROS 1"
-      ],
-      "visible": true
-    },
-    {
-      "title": "الملاحة وSLAM",
-      "tone": "emerald",
-      "items": [
-        "Nav2",
-        "MPPI controller tuning",
-        "خرائط الكلفة ومناطق الحظر",
-        "AMCL",
+        "ROS 2 (rclcpp, rclpy)",
+        "Nav2 & MPPI tuning",
+        "SLAM Toolbox & AMCL",
         "robot_localization (EKF)",
-        "SLAM Toolbox",
-        "twist_mux",
-        "الشحن والتوثيق الذاتي"
+        "ros2_control",
+        "Lifecycle nodes, TF2, URDF"
       ],
       "visible": true
     },
@@ -35,9 +18,8 @@
       "tone": "cyan",
       "items": [
         "LiDAR filtering & scan merging",
-        "Depth cameras (Orbbec)",
-        "PCL point clouds",
-        "ترشيح الأرضية وجسم الروبوت",
+        "Point clouds (PCL)",
+        "كاميرات العمق",
         "IMU / gyro heading fusion",
         "معايرة الكاميرات الخارجية"
       ],
@@ -49,11 +31,9 @@
       "items": [
         "BLDC motor drivers",
         "Modbus / RS-485",
-        "Serial / UART",
-        "GPIO (libgpiod)",
-        "إدارة البطارية والطاقة",
-        "Orange Pi / Raspberry Pi",
-        "udev rules"
+        "Serial, GPIO, udev",
+        "أنظمة البطارية والشحن الذاتي",
+        "Orange Pi / Raspberry Pi"
       ],
       "visible": true
     },
@@ -64,40 +44,21 @@
         "Python",
         "TensorFlow / Keras",
         "LSTM & Transformer models",
-        "Word2Vec (Gensim)",
-        "NLTK",
-        "Keras-Tuner",
+        "Word2Vec, NLTK",
         "تطبيقات النماذج اللغوية والوكلاء"
       ],
       "visible": true
     },
     {
-      "title": "الهندسة البرمجية وDevOps",
-      "tone": "rose",
+      "title": "الهندسة والتسليم",
+      "tone": "emerald",
       "items": [
         "C++17",
-        "Python",
-        "Bash",
-        "CMake & colcon",
         "GoogleTest & pytest",
         "Docker",
         "GitHub Actions CI/CD",
         "حزم Debian ومستودعات apt",
-        "systemd"
-      ],
-      "visible": true
-    },
-    {
-      "title": "الويب والبيانات",
-      "tone": "teal",
-      "items": [
-        "WebSocket & REST bridges",
-        "لوحات تحكم الروبوت",
-        "MQTT",
-        "Django",
-        "MySQL & SQLAlchemy",
-        "TypeScript / Next.js",
-        "Kotlin (Android)"
+        "systemd & Linux"
       ],
       "visible": true
     }

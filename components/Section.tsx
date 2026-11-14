@@ -19,21 +19,20 @@ export default function Section({
       aria-labelledby={`${id}-heading`}
       className="section relative"
     >
-      <div className="relative mx-auto max-w-page px-6 py-16 md:py-24">
+      <div className="relative mx-auto max-w-page px-6 py-10 md:py-16">
         <Reveal>
-          <header className="mb-12 md:mb-14">
+          <header className="mb-10 md:mb-12">
             <div>
               {/* The number comes from a CSS counter on <main>, so it follows
                   the order set in the manager without any prop plumbing. */}
-              <p aria-hidden="true" className="section-index glass inline-flex rounded-full px-3 py-1 font-mono text-xs text-accent" />
+              <p aria-hidden="true" className="section-index font-mono text-sm text-accent" />
               <h2
                 id={`${id}-heading`}
-                className="text-gradient mt-2 w-fit text-[clamp(2rem,4.4vw,3rem)] font-semibold leading-tight tracking-[-0.035em]"
+                className="mt-2 text-[clamp(2rem,4.4vw,3rem)] font-semibold leading-tight tracking-[-0.035em]"
               >
                 {title}
               </h2>
               {intro && <p className="mt-3 max-w-2xl text-body">{intro}</p>}
-              <div aria-hidden="true" className="hairline mt-6 max-w-md" />
             </div>
           </header>
         </Reveal>

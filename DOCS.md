@@ -145,7 +145,7 @@ beats the generated `visual`.
 | `publications.json` | Publications | `title`, `venue`, `year`, `url`, `visible` |
 | `open-source.json` | Open source | `intro` + items: `project`, `projectUrl`, `what`, `detail`, `status`, `prUrl`, `tone`, `tags[]`, `visible` |
 | `contact.json` | Contact | `headline`, `blurb`, `responseTime` |
-| `appearance.json` | Appearance | `defaultTheme`, `accent`, `contactLinks` |
+| `appearance.json` | Appearance | `defaultTheme`, `accent` |
 | `ar/settings.json` | العربية — نشر الموقع | `enabled` — the one switch that publishes the Arabic site |
 
 `appearance.json` and `ar/settings.json` are shared by both languages. Everything

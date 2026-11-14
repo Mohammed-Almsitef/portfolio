@@ -166,7 +166,7 @@ export default function AboutPhoto({
 
   return (
     <div
-      className={`relative isolate w-52 shrink-0 sm:w-64 lg:w-80 ${
+      className={`relative isolate w-52 shrink-0 sm:w-60 lg:w-64 ${
         onPhones ? '' : 'hidden sm:block'
       }`}
     >

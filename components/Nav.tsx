@@ -22,14 +22,15 @@ export default function Nav({
   sections,
   locale = 'en',
   languageHrefs,
-  availableForWork,
+  resumeUrl,
 }: {
   siteName: string
   sections: { key: string; label: string }[]
   locale?: Locale
   /** Omitted until the Arabic site is published, which hides the switch. */
   languageHrefs?: Record<Locale, string>
-  availableForWork: boolean
+  /** The CV, linked from the bar on wider screens. */
+  resumeUrl?: string
 }) {
   // Only the sections that are actually on the page get a nav link, so hiding
   // a section in the manager never leaves a link pointing at nothing.
@@ -97,13 +98,16 @@ export default function Nav({
             floating glass pill, inset from the edges. */}
         <div
           className={`flex items-center justify-between gap-4 rounded-2xl px-3 transition-all duration-300 ${
-            scrolled && !open ? 'glass mt-3 py-2' : 'mt-1 border border-transparent py-3'
+            scrolled && !open ? 'glass nav-solid mt-3 py-2' : 'mt-1 border border-transparent py-3'
           }`}
         >
           <div className="flex min-w-0 items-center gap-3">
             <a
               href="#top"
-              className="mono-label tap min-w-0 items-center gap-2.5 font-mono text-sm font-medium tracking-tight transition-colors hover:text-accent"
+              // On phones the name beside the mark is hidden, so the link
+              // carries it itself.
+              aria-label={siteName}
+              className="tap min-w-0 items-center gap-2.5 text-[0.9375rem] font-semibold tracking-tight transition-colors hover:text-accent"
             >
               {/* The name is right beside it, so the mark is decoration to a
                   screen reader rather than a second copy of the same words. */}
@@ -115,17 +119,6 @@ export default function Nav({
               <span className="hidden truncate sm:inline">{siteName}</span>
             </a>
 
-            {availableForWork && (
-              <p title={t(locale, 'availableForWork')} className="mono-label inline-flex w-fit shrink-0 cursor-help items-center gap-1.5 rounded-full border border-[rgb(var(--tone-status)/0.35)] bg-[rgb(var(--tone-status)/0.12)] px-1 py-1 font-mono text-[0.6875rem] font-medium text-[rgb(var(--tone-status))] shadow-[0_0_12px_rgb(var(--tone-status)/0.25)] sm:px-2">
-                <span className="relative flex size-1.5 shrink-0">
-                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-[rgb(var(--tone-status))] opacity-75" />
-                  <span className="relative inline-flex size-1.5 rounded-full bg-[rgb(var(--tone-status))]" />
-                </span>
-                {/* The dot alone reads fine on a phone-width bar; the label only
-                    earns its space once there's room next to the name and links. */}
-                <span className="hidden sm:inline">{t(locale, 'availableForWork')}</span>
-              </p>
-            )}
           </div>
 
           <div className="flex items-center gap-5">
@@ -147,18 +140,19 @@ export default function Nav({
               ))}
             </ul>
 
-            <button
-              type="button"
-              onClick={() => window.dispatchEvent(new Event('command-palette:open'))}
-              aria-label={t(locale, 'openCommandMenu')}
-              className="hidden h-9 items-center gap-2 rounded-lg border border-border bg-surface/70 px-3 text-xs text-muted backdrop-blur-sm transition-colors hover:border-border-strong hover:text-text sm:flex"
-            >
-              <svg aria-hidden="true" viewBox="0 0 24 24" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <circle cx="11" cy="11" r="7" />
-                <path d="m20 20-3.5-3.5" />
-              </svg>
-              <kbd dir="ltr" className="font-mono text-[0.68rem]">⌘K</kbd>
-            </button>
+            {/* Search stays on ⌘K / Ctrl+K; a five-section page does not need
+                a visible search button competing with the CV. */}
+            {resumeUrl && (
+              <a
+                href={resumeUrl}
+                className="btn-ghost hidden h-9 items-center gap-1.5 rounded-lg px-3 text-sm font-medium sm:inline-flex"
+              >
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14" />
+                </svg>
+                {t(locale, 'cv')}
+              </a>
+            )}
             {languageHrefs && <LanguageSwitch locale={locale} hrefs={languageHrefs} />}
             <ThemeToggle />
 

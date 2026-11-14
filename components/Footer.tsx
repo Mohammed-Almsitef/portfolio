@@ -26,7 +26,7 @@ export default async function Footer({ locale = 'en' }: { locale?: Locale }) {
     <footer data-print-hide className="border-t border-border bg-surface/40">
       <div className="mx-auto grid max-w-page gap-10 px-6 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
-          <a href={home} className="mono-label inline-flex items-center gap-2.5 font-mono text-sm font-medium">
+          <a href={home} className="inline-flex items-center gap-2.5 text-[0.9375rem] font-semibold tracking-tight">
             <Logo id="footer-logo" weight="small" className="h-8 w-auto shrink-0" />
             {site.name}
           </a>

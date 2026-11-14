@@ -1,4 +1,4 @@
-import { getEducation, getExperience, getPublications, getSite } from '@/lib/content'
+import { getEducation, getExperience, getPublications } from '@/lib/content'
 import Section from './Section'
 import { outbound } from '@/lib/links'
 import { t, type Locale } from '@/lib/locale'
@@ -33,26 +33,17 @@ export default async function Experience({
   title: string
   locale?: Locale
 }) {
-  const [experience, education, publications, site] = await Promise.all([
+  const [experience, education, publications] = await Promise.all([
     getExperience(locale),
     getEducation(locale),
     getPublications(locale),
-    getSite(locale),
   ])
 
   return (
     <Section id="experience" title={title}>
-      <ol className="relative space-y-10 border-s border-border ps-8 md:ps-10">
-        {experience.map((job, ji) => (
+      <ol className="space-y-14">
+        {experience.map((job) => (
           <li key={`${job.company}-${job.period}`} className="relative">
-            <span
-              aria-hidden="true"
-              className={`absolute top-2 size-3 rounded-full border-2 -start-[2.45rem] md:-start-[2.95rem] ${
-                ji === 0
-                  ? 'border-accent bg-bg shadow-[0_0_0_4px_rgb(var(--accent-tone)/0.15)]'
-                  : 'border-border-strong bg-bg'
-              }`}
-            />
 
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
               <h3 className="text-xl font-semibold tracking-tight">
@@ -73,9 +64,9 @@ export default async function Experience({
               </span>
             </div>
 
-            <p className="mt-3 max-w-3xl text-body">{job.description}</p>
+            <p className="mt-3 max-w-3xl text-lg text-body">{job.description}</p>
 
-            <ul className="mt-5 grid gap-x-10 gap-y-3 lg:grid-cols-2">
+            <ul className="mt-6 max-w-3xl space-y-3.5">
               {job.highlights.map((h, i) => (
                 <li key={i} className="flex gap-3 text-[0.9375rem] leading-relaxed text-body">
                   <span
@@ -132,13 +123,6 @@ export default async function Experience({
         </div>
       )}
 
-      <a
-        href={site.resumeUrl}
-        data-print-hide
-        className="mt-12 inline-block rounded-md border border-border-strong px-5 py-2.5 text-sm font-medium transition-colors hover:border-accent hover:text-accent"
-      >
-        {t(locale, 'downloadResume')}
-      </a>
     </Section>
   )
 }

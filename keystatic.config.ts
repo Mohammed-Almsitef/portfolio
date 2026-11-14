@@ -23,6 +23,8 @@ const VISUALS = [
   { label: 'Retrieved chunks (RAG)', value: 'layers' },
   { label: 'Fleet release (one codebase, many robots)', value: 'fleet' },
   { label: 'Gamepad teleoperation', value: 'gamepad' },
+  { label: 'Docking approach (navigation / charging)', value: 'dock' },
+  { label: 'Text → embedding → ranked list (ML pipeline)', value: 'pipeline' },
 ] as const
 
 /**
@@ -329,6 +331,10 @@ const aboutDef = (dir: string, tag: string) =>
           'scrolling before the bio. It still shows on tablets and desktops.',
         defaultValue: true,
       }),
+      languages: fields.text({
+        label: 'Languages',
+        description: 'Shown in the About facts card, e.g. Arabic (native) · English (professional).',
+      }),
       paragraphs: fields.array(fields.text({ label: 'Paragraph', multiline: true }), {
         label: 'Bio paragraphs',
         itemLabel: (props) => props.value.slice(0, 60) || 'Paragraph',
@@ -369,6 +375,10 @@ const contactDef = (dir: string, tag: string) =>
       responseTime: fields.text({
         label: 'Typical response time',
         description: 'e.g. Within a couple of days. Leave empty to hide the row.',
+      }),
+      timezone: fields.text({
+        label: 'Timezone',
+        description: 'e.g. UTC+3 (Aleppo). Recruiters filter on it. Leave empty to hide the row.',
       }),
     },
   })
@@ -610,18 +620,6 @@ export default config({
             'The site-wide highlight — links, buttons, headings and the robot in the hero simulation. Same palette the skill groups use.',
           options: [...TONES],
           defaultValue: 'blue',
-        }),
-        contactLinks: fields.select({
-          label: 'Contact links',
-          description:
-            'How the links in the contact section are drawn. Icons only is compact and lets the ' +
-            'marks do the work; cards also print the platform and your handle. The links ' +
-            'themselves are edited under Contact links.',
-          options: [
-            { label: 'Icons only', value: 'icons' },
-            { label: 'Cards with name and handle', value: 'tiles' },
-          ],
-          defaultValue: 'icons',
         }),
       },
     }),

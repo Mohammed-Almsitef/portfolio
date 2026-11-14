@@ -11,7 +11,9 @@ import ProjectClip from '@/components/ProjectClip'
 import ProjectVisual from '@/components/ProjectVisual'
 import ScrollProgress from '@/components/ScrollProgress'
 import Aurora from '@/components/Aurora'
-import TagList from '@/components/TagList'
+import CaseToc from '@/components/CaseToc'
+import CopyEmail from '@/components/CopyEmail'
+import ThemeToggle from '@/components/ThemeToggle'
 import ExternalGlyph from '@/components/ExternalGlyph'
 import VideoEmbed from '@/components/VideoEmbed'
 import { BLOCK_HEADING } from '@/lib/styles'
@@ -91,7 +93,8 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
           <Link
             href={localePath(locale)}
-            className="mono-label tap items-center gap-2.5 font-mono text-sm font-medium tracking-tight transition-colors hover:text-accent"
+            aria-label={site.name}
+            className="tap items-center gap-2.5 text-[0.9375rem] font-semibold tracking-tight transition-colors hover:text-accent"
           >
             <Logo id="case-study-logo" weight="medium" className="h-9 w-auto shrink-0" />
             {/* Same trade as the site nav: on a phone the mark stands alone
@@ -101,17 +104,26 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
           {/* The case study has its own header rather than the site nav, so the
               switch has to be repeated here — otherwise a reader who lands on a
               project from search has no way to change language. */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <Link
               href={localePath(locale, '/#projects')}
-              className="mono-label tap whitespace-nowrap font-mono text-xs text-muted transition-colors hover:text-accent"
+              className="tap gap-1.5 whitespace-nowrap text-sm text-muted transition-colors hover:text-accent"
             >
-              <span aria-hidden="true" className="rtl:-scale-x-100 inline-block">
+              <span aria-hidden="true" className="inline-block rtl:-scale-x-100">
                 ←
-              </span>{' '}
+              </span>
               {t(locale, 'allProjects')}
             </Link>
+            {site.resumeUrl && (
+              <a
+                href={site.resumeUrl}
+                className="btn-ghost hidden h-9 items-center rounded-lg px-3 text-sm font-medium sm:inline-flex"
+              >
+                {t(locale, 'cv')}
+              </a>
+            )}
             {hasArabic && <LanguageSwitch locale={locale} hrefs={languageHrefs} />}
+            <ThemeToggle />
           </div>
         </div>
       </header>
@@ -129,6 +141,39 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
           </h1>
 
           <p className="mt-6 text-lg leading-relaxed text-body">{project.summary}</p>
+
+          {/* Role first: on a team project the reader needs to know which
+              part was mine before reading anything else. */}
+          <dl className="mt-7 grid gap-x-8 gap-y-4 border-t border-border pt-6 text-sm sm:grid-cols-[auto_1fr]">
+            {project.role && (
+              <div className="sm:col-span-2">
+                <dt className="text-xs text-muted">{t(locale, 'myRole')}</dt>
+                <dd className="mt-1 leading-relaxed">{project.role}</dd>
+              </div>
+            )}
+            <div>
+              <dt className="text-xs text-muted">{t(locale, 'factYear')}</dt>
+              <dd className="mt-1 whitespace-nowrap">{project.year}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-muted">{t(locale, 'factStack')}</dt>
+              <dd className="mt-1">{project.tags.slice(0, 5).join(' · ')}</dd>
+            </div>
+          </dl>
+          {(project.repoUrl || project.liveUrl) && (
+            <div className="mt-5 flex flex-wrap gap-5">
+              {project.repoUrl && (
+                <a {...outbound(project.repoUrl)} className={TONE_LINK}>
+                  {t(locale, 'source')} <ExternalGlyph />
+                </a>
+              )}
+              {project.liveUrl && (
+                <a {...outbound(project.liveUrl)} className={TONE_LINK}>
+                  {t(locale, 'liveDemo')} <ExternalGlyph />
+                </a>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Proof it runs, before any of the prose. A self-hosted clip is the
@@ -168,7 +213,7 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
         {project.results.length > 0 && (
           <section aria-labelledby="key-results" className="mt-14">
             <h2 id="key-results" className={`${BLOCK_HEADING} text-[rgb(var(--tone))]`}>
-              {t(locale, 'keyResults')}
+              {t(locale, 'highlights')}
             </h2>
             <ul className="grid gap-4 md:grid-cols-[repeat(auto-fit,minmax(16rem,1fr))]">
               {project.results.map((r, i) => (
@@ -208,95 +253,51 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
             </Block>
           </article>
 
-          <aside className="lg:sticky lg:top-24 lg:self-start">
-            <div className="glass rounded-2xl p-6">
-              <h2 className={`${BLOCK_HEADING} mb-5 text-muted`}>{t(locale, 'projectFacts')}</h2>
-              <dl className="space-y-5 text-sm">
-                {project.role && (
-                  <div>
-                    <dt className="text-xs text-muted">{t(locale, 'myRole')}</dt>
-                    <dd className="mt-1 leading-relaxed">{project.role}</dd>
-                  </div>
-                )}
-                <div>
-                  <dt className="text-xs text-muted">{t(locale, 'factYear')}</dt>
-                  <dd className="mt-1">{project.year}</dd>
-                </div>
-                {project.tags.length > 0 && (
-                  <div>
-                    <dt className="text-xs text-muted">{t(locale, 'factStack')}</dt>
-                    <dd className="mt-2">
-                      <TagList tags={project.tags} locale={locale} />
-                    </dd>
-                  </div>
-                )}
-                {(project.repoUrl || project.liveUrl) && (
-                  <div>
-                    <dt className="text-xs text-muted">{t(locale, 'links')}</dt>
-                    <dd className="mt-1.5 flex flex-wrap gap-4">
-                      {project.repoUrl && (
-                        <a {...outbound(project.repoUrl)} className={TONE_LINK}>
-                          {t(locale, 'source')} <ExternalGlyph />
-                        </a>
-                      )}
-                      {project.liveUrl && (
-                        <a {...outbound(project.liveUrl)} className={TONE_LINK}>
-                          {t(locale, 'liveDemo')} <ExternalGlyph />
-                        </a>
-                      )}
-                    </dd>
-                  </div>
-                )}
-              </dl>
-            </div>
-
-            <nav aria-label={t(locale, 'projectNavigation')} data-print-hide className="mt-6 hidden px-1 lg:block">
-              <ul className="space-y-2 border-s border-border text-sm">
-                {[
-                  ['problem', t(locale, 'theProblem')],
-                  ['solution', t(locale, 'whatIBuilt')],
-                  ['how', t(locale, 'howItWorks')],
-                  ...(project.testing ? [['testing', t(locale, 'howItWasTested')]] : []),
-                  ['lessons', t(locale, 'whatILearned')],
-                ].map(([id, label]) => (
-                  <li key={id}>
-                    <a
-                      href={`#${id}`}
-                      className="-ms-px block border-s border-transparent ps-4 text-muted transition-colors hover:border-[rgb(var(--tone))] hover:text-text"
-                    >
-                      {label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+          <aside className="hidden lg:sticky lg:top-24 lg:block lg:self-start">
+            <CaseToc
+              title={t(locale, 'onThisPage')}
+              items={[
+                { id: 'problem', label: t(locale, 'theProblem') },
+                { id: 'solution', label: t(locale, 'whatIBuilt') },
+                { id: 'how', label: t(locale, 'howItWorks') },
+                ...(project.testing ? [{ id: 'testing', label: t(locale, 'howItWasTested') }] : []),
+                { id: 'lessons', label: t(locale, 'whatILearned') },
+              ]}
+            />
           </aside>
         </div>
 
-        <nav
-          data-print-hide
-          aria-label={t(locale, 'projectNavigation')}
-          className="mt-20 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-8"
-        >
-          <Link
-            href={localePath(locale, '/#projects')}
-            className="mono-label tap font-mono text-xs text-muted transition-colors hover:text-accent"
-          >
-            <span aria-hidden="true" className="rtl:-scale-x-100 inline-block">
-              ←
-            </span>{' '}
-            {t(locale, 'allProjects')}
-          </Link>
+        <div data-print-hide className="mt-20 grid gap-5 md:grid-cols-2">
           <Link
             href={localePath(locale, `/projects/${next.slug}`)}
-            className="mono-label tap text-end font-mono text-xs text-muted transition-colors hover:text-accent"
+            style={{ '--tone': `var(--tone-${next.tone})` } as React.CSSProperties}
+            className="glass glow-border group flex flex-col overflow-hidden rounded-2xl"
           >
-            {t(locale, 'next')}: {next.title}{' '}
-            <span aria-hidden="true" className="rtl:-scale-x-100 inline-block">
-              →
-            </span>
+            <ProjectVisual kind={next.visual} className="h-48" />
+            <div className="p-6">
+              <p className="text-xs text-muted">{t(locale, 'nextProject')}</p>
+              <p className="mt-1.5 text-lg font-semibold tracking-tight transition-colors group-hover:text-accent">
+                {next.title}{' '}
+                <span aria-hidden="true" className="inline-block transition-transform group-hover:translate-x-1 rtl:-scale-x-100">
+                  →
+                </span>
+              </p>
+            </div>
           </Link>
-        </nav>
+
+          <div className="glass flex flex-col justify-center rounded-2xl p-6 md:p-8">
+            <p className="text-xl font-semibold tracking-tight">{t(locale, 'ctaTitle')}</p>
+            <p className="mt-2 text-sm leading-relaxed text-body">{t(locale, 'ctaBody')}</p>
+            <div className="mt-5 flex flex-wrap items-center gap-3">
+              <CopyEmail email={site.email} locale={locale} />
+              {site.resumeUrl && (
+                <a href={site.resumeUrl} className="btn-ghost rounded-xl px-5 py-3 text-sm font-medium">
+                  {t(locale, 'downloadCv')}
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
       </main>
 
       <Footer locale={locale} />

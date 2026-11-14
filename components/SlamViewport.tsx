@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   LIDAR_BEAMS,
   OCC,
@@ -77,6 +77,8 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
   const covRef = useRef<HTMLElement>(null)
   const simRef = useRef<Sim | null>(null)
   const resetRef = useRef<() => void>(() => {})
+  const want3dRef = useRef<() => void>(() => {})
+  const [is3d, setIs3d] = useState(false)
   const labelsRef = useRef(labels)
   useEffect(() => {
     labelsRef.current = labels
@@ -287,7 +289,9 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
     let raf = 0
     let last = 0
     let onScreen = true
-    let animating = !reduced
+    // Nothing moves until the page has loaded and the browser is idle: the
+    // first render belongs to the text, not to the robot.
+    let animating = false
     let completeAt = -1
 
     const frame = (now: number) => {
@@ -340,6 +344,7 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
     const io = new IntersectionObserver(([e]) => {
       onScreen = e.isIntersecting
       schedule()
+      if (onScreen && window.matchMedia('(min-width: 1024px)').matches && animating) load3d()
     })
     io.observe(canvas)
 
@@ -386,23 +391,64 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
     stage.addEventListener('pointerdown', onDown)
     stage.addEventListener('pointerup', onUp)
 
-    // Load the 3D view after first paint; keep 2D if anything goes wrong.
-    import('@/lib/slam3d')
-      .then((m) => {
-        if (disposed) return
-        try {
-          r3 = m.createScene3D(gl, W, H, mapCanvas, pal3(), coarse)
-        } catch {
-          return
-        }
-        gl.dataset.ready = 'true'
-        canvas.style.visibility = 'hidden'
-        if (hintRef.current && !coarse) hintRef.current.textContent = labelsRef.current.hintDrag
-        resize()
-        sim.dirty = true
-        draw()
-      })
-      .catch(() => {})
+    // Load the 3D view only when it can't slow the page down: after the
+    // page has loaded, when the browser is idle, and once the panel is on
+    // screen. Until then, and if anything fails, the 2D view keeps drawing.
+    let requested = false
+    let want3d = false
+    const load3d = () => {
+      if (requested || disposed || document.readyState !== 'complete') return
+      if (!onScreen && !want3d) return
+      requested = true
+      const whenIdle =
+        window.requestIdleCallback?.bind(window) ??
+        ((cb: () => void) => window.setTimeout(cb, 1200) as unknown as number)
+      whenIdle(
+        () => {
+          import('@/lib/slam3d')
+            .then((m) => {
+              if (disposed) return
+              try {
+                r3 = m.createScene3D(gl, W, H, mapCanvas, pal3(), coarse)
+              } catch {
+                return
+              }
+              gl.dataset.ready = 'true'
+              canvas.style.visibility = 'hidden'
+              setIs3d(true)
+              if (hintRef.current && !coarse) hintRef.current.textContent = labelsRef.current.hintDrag
+              resize()
+              sim.dirty = true
+              draw()
+            })
+            .catch(() => {})
+        },
+        { timeout: 4000 },
+      )
+    }
+    // Laptops and up get 3D automatically; smaller screens keep the light 2D
+    // view unless the visitor asks for 3D with the button in the title bar.
+    const auto3d = window.matchMedia('(min-width: 1024px)').matches
+    const start = () => {
+      if (disposed) return
+      if (!reduced) {
+        animating = true
+        schedule()
+      }
+      if (auto3d) load3d()
+    }
+    const startWhenIdle = () => {
+      const idle =
+        window.requestIdleCallback?.bind(window) ??
+        ((cb: () => void) => window.setTimeout(cb, 800) as unknown as number)
+      idle(start, { timeout: 2500 })
+    }
+    if (document.readyState === 'complete') startWhenIdle()
+    else window.addEventListener('load', startWhenIdle, { once: true })
+    want3dRef.current = () => {
+      want3d = true
+      load3d()
+    }
 
     return () => {
       cancelAnimationFrame(raf)
@@ -412,6 +458,7 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
       document.removeEventListener('visibilitychange', onVis)
       stage.removeEventListener('pointerdown', onDown)
       stage.removeEventListener('pointerup', onUp)
+      window.removeEventListener('load', startWhenIdle)
       disposed = true
       r3?.dispose()
     }
@@ -430,6 +477,16 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
             {labels.title}
           </span>
         </span>
+        <span className="flex shrink-0 items-center gap-2">
+        {!is3d && (
+          <button
+            type="button"
+            onClick={() => want3dRef.current()}
+            className="mono-label tap shrink-0 rounded-md border border-accent/50 px-2 py-0.5 text-accent transition-colors hover:bg-accent/10 lg:hidden"
+          >
+            3D
+          </button>
+        )}
         <button
           type="button"
           onClick={() => resetRef.current()}
@@ -437,6 +494,7 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
         >
           {labels.newMap}
         </button>
+        </span>
       </figcaption>
 
       <div ref={stageRef} className="relative">

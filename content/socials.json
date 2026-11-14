@@ -22,25 +22,25 @@
       "label": "Facebook",
       "href": "https://www.facebook.com/mohammed.omar.almsitef/",
       "icon": "auto",
-      "visible": true
+      "visible": false
     },
     {
       "label": "Instagram",
       "href": "https://www.instagram.com/mohammed_almsitef",
       "icon": "auto",
-      "visible": true
+      "visible": false
     },
     {
       "label": "WhatsApp",
       "href": "https://wa.me/qr/PIZVM3QFY3WYH1",
       "icon": "auto",
-      "visible": true
+      "visible": false
     },
     {
       "label": "Telegram",
       "href": "t.me/Mohammed_Almsitef",
       "icon": "auto",
-      "visible": true
+      "visible": false
     }
   ]
 }

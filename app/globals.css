@@ -230,7 +230,7 @@
 html {
   scroll-behavior: smooth;
   /* Keeps anchored section headings clear of the fixed header. */
-  scroll-padding-top: 6rem;
+  scroll-padding-top: 7.5rem;
   color-scheme: light;
 }
 
@@ -486,7 +486,7 @@ main > .section {
   counter-increment: section;
 }
 .section-index::before {
-  content: counter(section, decimal-leading-zero);
+  content: counter(section, decimal-leading-zero) ' /';
 }
 
 /* The simulation's mode badge takes the colour of what the robot is doing. */
@@ -502,8 +502,22 @@ main > .section {
 }
 
 
-/* A last skill group alone on its row spans the row instead of leaving a gap. */
+/*
+ * Skill groups on a six-column track: three per row, and whatever is left in
+ * the last row widens to fill it (two cards share it, one takes it all), so
+ * any number of groups ends flush.
+ */
 @media (min-width: 1024px) {
+  .skills-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .skills-grid > li {
+    grid-column: span 2;
+  }
+  .skills-grid > li:nth-last-child(2):nth-child(3n + 1),
+  .skills-grid > li:last-child:nth-child(3n + 2) {
+    grid-column: span 3;
+  }
   .skills-grid > li:last-child:nth-child(3n + 1) {
     grid-column: 1 / -1;
   }
@@ -739,28 +753,6 @@ footer {
   );
 }
 
-/* Tech ticker: two identical tracks scrolling as one, edges faded out. */
-.marquee {
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-}
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee 48s linear infinite;
-}
-.marquee:hover .marquee-track {
-  animation-play-state: paused;
-}
-[dir='rtl'] .marquee-track {
-  animation-direction: reverse;
-}
-@keyframes marquee {
-  to {
-    transform: translateX(-50%);
-  }
-}
-
 /* The simulation panel sits on a soft gradient halo. */
 .panel-halo {
   position: relative;
@@ -798,8 +790,7 @@ footer {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .aurora span,
-  .marquee-track {
+  .aurora span {
     animation: none !important;
   }
   .js [data-reveal] {
@@ -808,8 +799,47 @@ footer {
 }
 
 @media print {
-  .aurora,
-  .marquee {
+  .aurora {
     display: none !important;
+  }
+}
+
+/*
+ * Hero entrance: transform only, never opacity, so the text counts as painted
+ * on the first frame (Largest Contentful Paint) while still settling in.
+ */
+.hero-in {
+  animation: hero-in 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes hero-in {
+  from {
+    transform: translateY(14px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-in {
+    animation: none;
+  }
+}
+
+/* Hero grid areas: see components/Hero.tsx. */
+.hero-layout {
+  grid-template-areas: 'copy' 'sim' 'stats';
+}
+@media (min-width: 1024px) {
+  .hero-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    grid-template-areas: 'copy sim' 'stats sim';
+    grid-template-rows: auto auto;
+    align-content: center;
+  }
+}
+
+/* The floating nav needs more body than a card: headings must not read
+   through it while they scroll underneath. */
+@layer components {
+  .glass.nav-solid {
+    background-color: color-mix(in srgb, var(--color-bg) 82%, transparent);
   }
 }
