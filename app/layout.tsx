@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, JetBrains_Mono, Noto_Sans_Arabic } from 'next/font/google'
-import { arabicEnabled, getAppearance, getSite } from '@/lib/content'
+import { getAppearance, getSite } from '@/lib/content'
+import { alternatesFor } from '@/lib/metadata'
 import './globals.css'
 
 const inter = Inter({
@@ -25,15 +26,13 @@ const mono = JetBrains_Mono({
 })
 
 export async function generateMetadata(): Promise<Metadata> {
-  const [site, hasArabic] = await Promise.all([getSite(), arabicEnabled()])
+  const [site, alternates] = await Promise.all([getSite(), alternatesFor('en')])
 
   return {
     metadataBase: new URL(site.url),
     // Only advertise the Arabic page once it exists — pointing a crawler at a
     // 404 is worse than not mentioning the translation at all.
-    alternates: hasArabic
-      ? { canonical: '/', languages: { en: '/', ar: '/ar' } }
-      : { canonical: '/' },
+    alternates,
     title: {
       default: `${site.name} — ${site.role}`,
       template: `%s — ${site.name}`,

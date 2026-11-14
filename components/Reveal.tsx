@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useInView } from '@/lib/hooks'
 
 /**
  * Scroll-reveal wrapper.
@@ -19,31 +19,10 @@ export default function Reveal({
   delay?: number
   className?: string
 }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [shown, setShown] = useState(false)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setShown(true)
-      return
-    }
-
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShown(true)
-          io.disconnect()
-        }
-      },
-      { threshold: 0.05, rootMargin: '0px 0px -6% 0px' },
-    )
-
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
+  const { ref, inView: shown } = useInView<HTMLDivElement>({
+    threshold: 0.05,
+    rootMargin: '0px 0px -6% 0px',
+  })
 
   return (
     <div

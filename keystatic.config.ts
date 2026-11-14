@@ -1,5 +1,6 @@
 import { collection, config, fields, singleton } from '@keystatic/core'
 import { PLATFORM_IDS, platformName } from '@/lib/socials'
+import { TONE_OPTIONS } from '@/lib/tones'
 import BrandMark from '@/components/manager/BrandMark'
 
 /**
@@ -10,17 +11,8 @@ import BrandMark from '@/components/manager/BrandMark'
  * either way — only where Save lands differs.
  */
 
-const TONES = [
-  { label: 'Blue', value: 'blue' },
-  { label: 'Violet', value: 'violet' },
-  { label: 'Purple', value: 'purple' },
-  { label: 'Cyan', value: 'cyan' },
-  { label: 'Rose', value: 'rose' },
-  { label: 'Emerald', value: 'emerald' },
-  { label: 'Amber', value: 'amber' },
-  { label: 'Teal', value: 'teal' },
-  { label: 'Lime', value: 'lime' },
-] as const
+/** The nine supporting tones, defined once in lib/tones. */
+const TONES = TONE_OPTIONS
 
 const VISUALS = [
   { label: 'Node graph (language / LLM)', value: 'graph' },

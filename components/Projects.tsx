@@ -8,6 +8,8 @@ import ProjectVisual from './ProjectVisual'
 import Reveal from './Reveal'
 import Section from './Section'
 import Spotlight from './Spotlight'
+import TagList from './TagList'
+import { CARD_SURFACE } from '@/lib/styles'
 
 function ProjectLink({
   href,
@@ -89,16 +91,7 @@ function Body({ p, index, locale }: { p: Project; index: number; locale: Locale 
 
       <p className="mt-4 flex-1 leading-relaxed text-body">{p.summary}</p>
 
-      <ul className="mt-6 flex flex-wrap gap-2" aria-label={t(locale, 'technologiesUsed')}>
-        {p.tags.map((t) => (
-          <li
-            key={t}
-            className="rounded-md border border-[rgb(var(--tone)/0.25)] bg-bg/50 px-2 py-1 font-mono text-xs text-muted transition-colors group-hover:border-[rgb(var(--tone)/0.55)]"
-          >
-            {t}
-          </li>
-        ))}
-      </ul>
+      <TagList tags={p.tags} locale={locale} className="mt-6" litByCardHover />
 
       {/* `relative` lifts these clear of the title's stretched ::after, which
           would otherwise swallow their clicks. Hidden entirely when a project
@@ -140,7 +133,7 @@ export default async function Projects({
                     '--card-glow': 'rgb(var(--tone) / 0.16)',
                   } as React.CSSProperties
                 }
-                className="group h-full overflow-hidden rounded-2xl border border-border bg-surface shadow-[var(--card-shadow)] transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[rgb(var(--tone)/0.45)]"
+                className={`group h-full overflow-hidden ${CARD_SURFACE} transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[rgb(var(--tone)/0.45)]`}
                 innerClassName="flex h-full flex-col"
               >
                 {/* The side-by-side cover was sized for a full-width card; in

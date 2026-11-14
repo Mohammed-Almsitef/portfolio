@@ -1,4 +1,5 @@
 import Nav from '@/components/Nav'
+import CommandPalette from '@/components/CommandPalette'
 import Hero from '@/components/Hero'
 import About from '@/components/About'
 import Projects from '@/components/Projects'
@@ -10,7 +11,14 @@ import Footer from '@/components/Footer'
 import BackToTop from '@/components/BackToTop'
 import ScrollProgress from '@/components/ScrollProgress'
 import StructuredData from '@/components/StructuredData'
-import { arabicEnabled, getSections, getSite, type SectionEntry } from '@/lib/content'
+import {
+  arabicEnabled,
+  getProjects,
+  getSections,
+  getSite,
+  getSocials,
+  type SectionEntry,
+} from '@/lib/content'
 import { dir, t, type Locale } from '@/lib/locale'
 
 /**
@@ -36,10 +44,12 @@ const SECTIONS = {
  * inside the element it is set on either way.
  */
 export default async function HomePage({ locale }: { locale: Locale }) {
-  const [sections, site, hasArabic] = await Promise.all([
+  const [sections, site, hasArabic, projects, socials] = await Promise.all([
     getSections(locale),
     getSite(locale),
     arabicEnabled(),
+    getProjects(locale),
+    getSocials(locale),
   ])
 
   return (
@@ -80,6 +90,14 @@ export default async function HomePage({ locale }: { locale: Locale }) {
 
       <Footer locale={locale} />
       <BackToTop label={t(locale, 'backToTop')} />
+      <CommandPalette
+        locale={locale}
+        sections={sections}
+        projects={projects.map((p) => ({ slug: p.slug, title: p.title, year: p.year }))}
+        email={site.email}
+        resumeUrl={site.resumeUrl}
+        socials={socials.map((s) => ({ label: s.label, href: s.href }))}
+      />
     </div>
   )
 }

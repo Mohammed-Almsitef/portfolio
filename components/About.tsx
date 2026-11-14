@@ -3,6 +3,7 @@ import AboutPhoto from './AboutPhoto'
 import CountUp from './CountUp'
 import Section from './Section'
 import type { Locale } from '@/lib/locale'
+import { EYEBROW } from '@/lib/styles'
 
 export default async function About({
   title,
@@ -48,7 +49,7 @@ export default async function About({
               <dd className="text-3xl font-semibold tracking-tight tabular-nums md:text-4xl">
                 <CountUp value={s.value} />
               </dd>
-              <dt className="mono-label mt-2 font-mono text-[0.6875rem] uppercase tracking-wider text-muted">
+              <dt className={`mt-2 ${EYEBROW}`}>
                 {s.label}
               </dt>
             </div>

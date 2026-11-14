@@ -1,8 +1,8 @@
 {
-  "name": "محمد المسيطف",
+  "name": "محمد المصيطف",
   "role": "مهندس روبوتات وذكاء اصطناعي",
-  "tagline": "أبني أنظمة روبوتية ترى وتخطط وتتحرك.",
-  "location": "Aleppo, Syria",
+  "tagline": "أبني أنظمة تُدرك وتُفكّر وتتصرّف، بدءًا من نماذج التعلم العميق للرؤية واللغة، وصولًا إلى منظومات الاستقلالية اللحظية التي تُشغّلها على روبوتات فعلية.",
+  "location": "حلب, سوريا",
   "email": "almositefmohammed@gmail.com",
   "url": "https://mohammedalmsitef.me",
   "resumeUrl": "/resume.pdf",
@@ -12,11 +12,11 @@
     "Mohammed Almositef"
   ],
   "domains": [
-    "Robotics",
-    "Artificial Intelligence",
-    "Machine Learning",
-    "Deep Learning",
-    "Computer Vision",
-    "NLP"
+    "الروبوتات",
+    "الذكاء الاصطناعي",
+    "تعلم الآلة",
+    "التعلم العميق",
+    "الرؤية الحاسوبية",
+    "معالجة اللغة الطبيعية"
   ]
 }

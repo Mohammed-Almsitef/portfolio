@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 
-import { gateStatus } from '@/lib/manager/auth'
+import { gateStatus, SESSION_COOKIE } from '@/lib/manager/auth'
 import { verifySession } from '@/lib/manager/crypto'
 
 /**
@@ -13,8 +13,6 @@ import { verifySession } from '@/lib/manager/crypto'
  * Only the manager routes are matched, so nothing here touches the portfolio
  * itself — the public site keeps rendering statically.
  */
-
-const SESSION_COOKIE = 'manager_session'
 
 export async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl

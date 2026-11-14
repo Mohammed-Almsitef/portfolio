@@ -14,25 +14,31 @@
     },
     {
       "label": "X",
-      "href": null,
+      "href": "https://x.com/almositef34981",
       "icon": "auto",
       "visible": true
     },
     {
       "label": "Facebook",
-      "href": null,
+      "href": "https://www.facebook.com/mohammed.omar.almsitef/",
       "icon": "auto",
       "visible": true
     },
     {
       "label": "Instagram",
-      "href": null,
+      "href": "https://www.instagram.com/mohammed_almsitef",
       "icon": "auto",
       "visible": true
     },
     {
       "label": "WhatsApp",
-      "href": null,
+      "href": "https://wa.me/qr/PIZVM3QFY3WYH1",
+      "icon": "auto",
+      "visible": true
+    },
+    {
+      "label": "Telegram",
+      "href": "t.me/Mohammed_Almsitef",
       "icon": "auto",
       "visible": true
     }

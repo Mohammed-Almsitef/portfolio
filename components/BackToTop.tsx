@@ -1,16 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useScrollValue } from '@/lib/hooks'
 
 export default function BackToTop({ label = 'Back to top' }: { label?: string }) {
-  const [show, setShow] = useState(false)
-
-  useEffect(() => {
-    const onScroll = () => setShow(window.scrollY > window.innerHeight)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  const show = useScrollValue(() => window.scrollY > window.innerHeight, false)
 
   return (
     <a

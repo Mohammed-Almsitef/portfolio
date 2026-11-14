@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { CORNER_SIGNS } from '@/lib/geometry'
 
 /** A wall footprint on the ground plane, extruded to `h`. */
 type Seg = { x1: number; z1: number; x2: number; z2: number; h: number }
@@ -297,13 +298,7 @@ export default function LidarBackdrop() {
       y0: number,
       y1: number,
     ) => {
-      const signs: [number, number][] = [
-        [1, 1],
-        [1, -1],
-        [-1, -1],
-        [-1, 1],
-      ]
-      const pts = signs.map(([f, s]) => [
+      const pts = CORNER_SIGNS.map(([f, s]) => [
         cx + fwd[0] * halfL * f + side[0] * halfW * s,
         cz + fwd[1] * halfL * f + side[1] * halfW * s,
       ])
@@ -714,6 +709,7 @@ export default function LidarBackdrop() {
       // genuinely empty ground to the right of the text for it to own.
       className="lidar-mask pointer-events-none absolute inset-y-0 end-0 w-full overflow-hidden opacity-20 md:w-[56%] md:opacity-45 lg:opacity-70 xl:opacity-100"
       aria-hidden="true"
+      data-print-hide
     >
       <div ref={parallaxRef} className="size-full">
         <canvas ref={canvasRef} className="size-full" />

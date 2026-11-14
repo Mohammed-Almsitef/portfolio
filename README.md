@@ -134,12 +134,13 @@ Type is Inter (sans) and JetBrains Mono (mono), self-hosted at build time via `n
 
 ### Theming
 
-Light, dark, and system, switched by the control in the nav ([`components/ThemeToggle.tsx`](components/ThemeToggle.tsx)). The mechanics, in [`app/globals.css`](app/globals.css) and [`app/layout.tsx`](app/layout.tsx):
+Light and dark, flipped by the control in the nav ([`components/ThemeToggle.tsx`](components/ThemeToggle.tsx)) or from the command palette. The default a first-time visitor gets is set in the manager; the OS preference is the fallback when the pre-paint script never ran. The mechanics, in [`app/globals.css`](app/globals.css), [`app/layout.tsx`](app/layout.tsx) and [`lib/theme.ts`](lib/theme.ts):
 
 - **Light is the `@theme` default**, so a document with no `data-theme` — no JS, a crawler, a printer — still renders legibly.
 - **An inline script in `<head>` resolves the theme before first paint** and stamps `data-theme` on `<html>`. It must stay in `<head>`, ahead of `<body>`: moved to the end of the body, the page would paint light and then snap to dark.
 - **The server never renders `data-theme`.** Baking it into the HTML would serve a cached page with the wrong theme to the next visitor.
 - **Dark colour literals live once** in `:root` as `--d-*` and are only _aliased_ by the two dark selectors (explicit choice, and the `prefers-color-scheme` fallback for when the script never ran), so those two can't drift apart.
+- **`lib/theme.ts` is the only writer after first paint**, and it notifies subscribers. Two controls can now change the theme; when each kept a private `useState` copy instead, flipping from one left the other's icon showing the wrong next state.
 
 Three text tones, in both themes:
 
@@ -239,7 +240,8 @@ The footer deliberately does **not** restate role, location or the social links,
 | [`components/Nav.tsx`](components/Nav.tsx)                       | Scroll-spy nav, animated hamburger, Escape-to-close.                                                                                                            |
 | [`components/ScrollProgress.tsx`](components/ScrollProgress.tsx) | Reading-progress bar.                                                                                                                                           |
 | [`components/BackToTop.tsx`](components/BackToTop.tsx)           | Appears past one viewport; leaves the tab order while hidden.                                                                                                   |
-| [`components/ThemeToggle.tsx`](components/ThemeToggle.tsx)       | Light / system / dark. Persists to `localStorage`, and keeps following the OS while on system.                                                                  |
+| [`components/ThemeToggle.tsx`](components/ThemeToggle.tsx)       | Flips light ↔ dark and persists to `localStorage`. Reads and writes the mode through [`lib/theme.ts`](lib/theme.ts), so the command palette's copy stays in step. |
+| [`components/CommandPalette.tsx`](components/CommandPalette.tsx) | ⌘K / Ctrl-K quick-open: sections, case studies, copy email, résumé, socials, theme.                                                                             |
 | [`components/ProjectVisual.tsx`](components/ProjectVisual.tsx)   | Generated cover art per project — six shapes echoing what each one does.                                                                                        |
 | [`components/Spotlight.tsx`](components/Spotlight.tsx)           | Card highlight that tracks the pointer, written to CSS vars and coalesced to one rAF.                                                                           |
 | [`components/CountUp.tsx`](components/CountUp.tsx)               | Stat counter that animates when scrolled into view.                                                                                                             |

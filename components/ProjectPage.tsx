@@ -10,14 +10,19 @@ import LanguageSwitch from '@/components/LanguageSwitch'
 import ProjectClip from '@/components/ProjectClip'
 import ProjectVisual from '@/components/ProjectVisual'
 import ScrollProgress from '@/components/ScrollProgress'
+import TagList from '@/components/TagList'
+import ExternalGlyph from '@/components/ExternalGlyph'
 import VideoEmbed from '@/components/VideoEmbed'
+import { BLOCK_HEADING } from '@/lib/styles'
+
+/** The two source/demo links under the title, which share one treatment. */
+const TONE_LINK =
+  'mono-label tap gap-1 font-mono text-xs text-[rgb(var(--tone))] underline-offset-4 hover:underline'
 
 function Block({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mt-14">
-      <h2 className="mono-label mb-5 font-mono text-xs uppercase tracking-[0.2em] text-[rgb(var(--tone))]">
-        {title}
-      </h2>
+      <h2 className={`${BLOCK_HEADING} text-[rgb(var(--tone))]`}>{title}</h2>
       {children}
     </section>
   )
@@ -121,32 +126,17 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
 
         <p className="mt-5 text-lg leading-relaxed text-body">{project.summary}</p>
 
-        <ul className="mt-7 flex flex-wrap gap-2" aria-label={t(locale, 'technologiesUsed')}>
-          {project.tags.map((tag) => (
-            <li
-              key={tag}
-              className="rounded-md border border-[rgb(var(--tone)/0.3)] bg-surface px-2 py-1 font-mono text-xs text-muted"
-            >
-              {tag}
-            </li>
-          ))}
-        </ul>
+        <TagList tags={project.tags} locale={locale} className="mt-7" />
 
         <div className="mt-7 flex flex-wrap gap-5">
           {project.repoUrl && (
-            <a
-              {...outbound(project.repoUrl)}
-              className="mono-label tap gap-1 font-mono text-xs text-[rgb(var(--tone))] underline-offset-4 hover:underline"
-            >
-              {t(locale, 'source')} <span aria-hidden="true">↗</span>
+            <a {...outbound(project.repoUrl)} className={TONE_LINK}>
+              {t(locale, 'source')} <ExternalGlyph />
             </a>
           )}
           {project.liveUrl && (
-            <a
-              {...outbound(project.liveUrl)}
-              className="mono-label tap gap-1 font-mono text-xs text-[rgb(var(--tone))] underline-offset-4 hover:underline"
-            >
-              {t(locale, 'liveDemo')} <span aria-hidden="true">↗</span>
+            <a {...outbound(project.liveUrl)} className={TONE_LINK}>
+              {t(locale, 'liveDemo')} <ExternalGlyph />
             </a>
           )}
         </div>

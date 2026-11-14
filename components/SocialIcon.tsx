@@ -1,4 +1,5 @@
 import type { PlatformId } from '@/lib/socials'
+import { MAIL_PATH } from './Icon'
 
 /**
  * Brand marks for the contact links.
@@ -42,7 +43,7 @@ const MARKS: Record<PlatformId, { path: string; stroke?: boolean }> = {
   },
   email: {
     stroke: true,
-    path: 'M3.75 5.25h16.5A1.5 1.5 0 0 1 21.75 6.75v10.5a1.5 1.5 0 0 1-1.5 1.5H3.75a1.5 1.5 0 0 1-1.5-1.5V6.75a1.5 1.5 0 0 1 1.5-1.5ZM2.6 6.1 12 12.9l9.4-6.8',
+    path: MAIL_PATH,
   },
   scholar: {
     path: 'M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14z',

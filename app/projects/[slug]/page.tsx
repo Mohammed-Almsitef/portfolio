@@ -1,10 +1,9 @@
 import type { Metadata } from 'next'
 import ProjectPage from '@/components/ProjectPage'
-import { getProjects, getSite } from '@/lib/content'
+import { projectMetadata, projectParams } from '@/lib/metadata'
 
 export async function generateStaticParams() {
-  const projects = await getProjects()
-  return projects.map((p) => ({ slug: p.slug }))
+  return projectParams('en')
 }
 
 export async function generateMetadata({
@@ -13,19 +12,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const [projects, site] = await Promise.all([getProjects(), getSite()])
-  const project = projects.find((p) => p.slug === slug)
-  if (!project) return {}
-
-  return {
-    title: project.title,
-    description: project.summary,
-    openGraph: {
-      title: `${project.title} — ${site.name}`,
-      description: project.summary,
-      type: 'article',
-    },
-  }
+  return projectMetadata('en', slug)
 }
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {

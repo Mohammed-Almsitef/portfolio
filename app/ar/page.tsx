@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import HomePage from '@/components/HomePage'
 import { arabicEnabled, getSite } from '@/lib/content'
+import { alternatesFor } from '@/lib/metadata'
 
 /**
  * The Arabic page only exists once it has been switched on in the manager.
@@ -13,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `${site.name} — ${site.role}`,
     description: site.tagline,
-    alternates: { canonical: '/ar', languages: { en: '/', ar: '/ar' } },
+    alternates: await alternatesFor('ar'),
   }
 }
 

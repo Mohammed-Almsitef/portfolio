@@ -3,31 +3,11 @@ import CopyEmail from './CopyEmail'
 import Section from './Section'
 import SocialLink from './SocialLink'
 import { t, type Locale } from '@/lib/locale'
+import { CARD_SURFACE, CARD_TONE_WASH, EYEBROW } from '@/lib/styles'
+import Icon from './Icon'
 
-/**
- * The eyebrow over each block, so the section reads as a record, not a list.
- *
- * `mono-label` is what keeps this readable in Arabic — see globals.css.
- */
-const EYEBROW = 'mono-label font-mono text-[0.6875rem] uppercase tracking-wider text-muted'
-
-/** A small outline mark beside a label in the detail card. */
-function Glyph({ d }: { d: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="size-3.5 shrink-0 text-accent"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.6}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d={d} />
-    </svg>
-  )
-}
+/** The marks beside the labels in the detail card. */
+const GLYPH = 'size-3.5 shrink-0 text-accent'
 
 /**
  * The single home for how to reach me. Availability and focus areas are stated
@@ -71,10 +51,15 @@ export default async function Contact({
 
         {/* Same card language as the link tiles below — rounded to the same
             radius, washed in the accent instead of a platform tone. */}
-        <dl className="space-y-6 self-start rounded-2xl border border-border bg-surface bg-[linear-gradient(135deg,rgb(var(--accent-tone)/0.07),transparent_62%)] p-6 shadow-[var(--card-shadow)]">
+        <dl
+          // The accent is this card's tone, so the shared wash can be reused
+          // as-is rather than spelling the gradient out a second time.
+          style={{ '--tone': 'var(--accent-tone)' } as React.CSSProperties}
+          className={`space-y-6 self-start p-6 ${CARD_SURFACE} ${CARD_TONE_WASH}`}
+        >
           <div>
             <dt className={`flex items-center gap-2 ${EYEBROW}`}>
-              <Glyph d="M12 21.5s7-5.8 7-11a7 7 0 1 0-14 0c0 5.2 7 11 7 11Z M12 12.5a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z" />
+              <Icon name="pin" className={GLYPH} />
               {t(locale, 'basedIn')}
             </dt>
             <dd className="mt-1.5 text-sm">{site.location}</dd>
@@ -82,7 +67,7 @@ export default async function Contact({
           {contact.responseTime && (
             <div>
               <dt className={`flex items-center gap-2 ${EYEBROW}`}>
-                <Glyph d="M12 3.75a8.25 8.25 0 1 0 0 16.5 8.25 8.25 0 0 0 0-16.5Z M12 7.75V12l3 1.75" />
+                <Icon name="clock" className={GLYPH} />
                 {t(locale, 'responseTime')}
               </dt>
               <dd className="mt-1.5 text-sm">{contact.responseTime}</dd>

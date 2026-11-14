@@ -9,6 +9,8 @@
  * instead of a broken player — an obviously-empty frame is better than an
  * iframe error, and it says exactly what to do about it.
  */
+import { EYEBROW } from '@/lib/styles'
+
 function youTubeId(url: string): string | null {
   const m = url.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([A-Za-z0-9_-]{6,})/)
   const id = m?.[1]
@@ -22,7 +24,7 @@ export default function VideoEmbed({ url, title }: { url: string; title: string 
   if (!id) {
     return (
       <div className="flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-border-strong bg-surface text-center">
-        <p className="mono-label font-mono text-xs uppercase tracking-wider text-muted">Demo video</p>
+        <p className={EYEBROW}>Demo video</p>
         <p className="max-w-sm px-6 text-sm text-body">
           Add a 30–60 second clip of this running in the manager, under this project’s{' '}
           <code className="font-mono">Demo video URL</code>.

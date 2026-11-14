@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useInView } from '@/lib/hooks'
 
 /**
  * The line between two sections.
@@ -14,31 +14,7 @@ import { useEffect, useRef, useState } from 'react'
  * JavaScript the rule is simply drawn, never stuck at scaleX(0).
  */
 export default function SectionRule() {
-  const ref = useRef<HTMLDivElement>(null)
-  const [drawn, setDrawn] = useState(false)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setDrawn(true)
-      return
-    }
-
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setDrawn(true)
-          io.disconnect()
-        }
-      },
-      { rootMargin: '0px 0px -8% 0px' },
-    )
-
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
+  const { ref, inView: drawn } = useInView<HTMLDivElement>({ rootMargin: '0px 0px -8% 0px' })
 
   return (
     <div ref={ref} aria-hidden="true" data-rule={drawn ? 'drawn' : 'idle'} className="section-rule">

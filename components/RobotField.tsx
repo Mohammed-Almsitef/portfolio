@@ -1,4 +1,5 @@
 import { getAppearance } from '@/lib/content'
+import { CORNER_SIGNS } from '@/lib/geometry'
 
 /**
  * A field of isometric robots, sitting in the margins beside a section.
@@ -161,14 +162,8 @@ function beam(a: V3, b: V3, w: number): Face[] {
     p[1] + r[1] * w * sr + u[1] * w * su,
     p[2] + r[2] * w * sr + u[2] * w * su,
   ]
-  const signs: [number, number][] = [
-    [1, 1],
-    [1, -1],
-    [-1, -1],
-    [-1, 1],
-  ]
-  const capA = signs.map(([s1, s2]) => corner(a, s1, s2))
-  const capB = signs.map(([s1, s2]) => corner(b, s1, s2))
+  const capA = CORNER_SIGNS.map(([s1, s2]) => corner(a, s1, s2))
+  const capB = CORNER_SIGNS.map(([s1, s2]) => corner(b, s1, s2))
   return [
     { pts: capA },
     { pts: capB },
@@ -183,13 +178,6 @@ function shadow(cx: number, cz: number, r: number): Face {
   return { ...disc([cx, 0, cz], r, [1, 0, 0], [0, 0, 1], 18), ground: true }
 }
 
-const CORNERS: [number, number][] = [
-  [1, 1],
-  [1, -1],
-  [-1, -1],
-  [-1, 1],
-]
-
 /** Left and right, for the things that come in pairs rather than fours. */
 const SIDES = [1, -1]
 
@@ -198,7 +186,7 @@ const DRONE: Face[] = [
   shadow(0, 0, 9),
   ...box([0, 6.5, 0], [9, 4, 9]),
   ...box([0, 9, 0], [5.5, 1.6, 5.5]),
-  ...CORNERS.flatMap(([sx, sz]) => [
+  ...CORNER_SIGNS.flatMap(([sx, sz]) => [
     // Booms leave from the body's corner rather than from inside it.
     ...beam([sx * 4.4, 6.5, sz * 4.4], [sx * 8, 7.6, sz * 8], 0.6),
     ...cylinder([sx * 8, 8.4, sz * 8], 1.1, [0, 1, 0], 1.4, 10),
@@ -233,7 +221,7 @@ const QUADRUPED: Face[] = [
   // Hips ride outboard of the body, as a real quadruped's do — and, less
   // romantically, a joint buried inside a parent volume is one that centroid
   // depth sorting cannot resolve, so it ghosts through the panel above it.
-  ...CORNERS.flatMap(([sx, sz]) => [
+  ...CORNER_SIGNS.flatMap(([sx, sz]) => [
     ...cylinder([sx * 5.5, 6.4, sz * 5.4], 1.3, [0, 0, 1], 2, 10),
     ...beam([sx * 5.5, 6.2, sz * 5.4], [sx * 7, 3, sz * 5.4], 0.65),
     ...cylinder([sx * 7, 3, sz * 5.4], 0.95, [0, 0, 1], 1.5, 10),
@@ -271,7 +259,7 @@ const ROVER: Face[] = [
   ...box([-2, 8, 0], [7, 1.4, 7]),
   ...beam([4.5, 7.5, 0], [4.5, 12.5, 0], 0.8),
   ...cylinder([4.5, 13.8, 0], 2.6, [0, 1, 0], 2.6, 16),
-  ...CORNERS.flatMap(([sx, sz]) => [
+  ...CORNER_SIGNS.flatMap(([sx, sz]) => [
     ...cylinder([sx * 5.5, 3, sz * 5.6], 3, [0, 0, 1], 2.2, 14),
     ...cylinder([sx * 5.5, 3, sz * 5.6], 1.1, [0, 0, 1], 2.6, 8),
   ]),

@@ -1,5 +1,7 @@
 import { getOpenSource } from '@/lib/content'
 import Section from './Section'
+import TagList from './TagList'
+import ExternalGlyph from './ExternalGlyph'
 import { outbound } from '@/lib/links'
 import { t, type Locale } from '@/lib/locale'
 
@@ -41,22 +43,13 @@ export default async function OpenSource({
             <p className="mt-3 leading-relaxed text-body">{c.detail}</p>
 
             <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
-              <ul className="flex flex-wrap gap-2" aria-label={t(locale, 'technologiesUsed')}>
-                {c.tags.map((t) => (
-                  <li
-                    key={t}
-                    className="rounded-md border border-[rgb(var(--tone)/0.25)] bg-bg/50 px-2 py-1 font-mono text-xs text-muted"
-                  >
-                    {t}
-                  </li>
-                ))}
-              </ul>
+              <TagList tags={c.tags} locale={locale} />
               {c.prUrl && (
                 <a
                   {...outbound(c.prUrl)}
                   className="mono-label tap gap-1 font-mono text-xs text-muted underline-offset-4 transition-colors hover:text-text hover:underline"
                 >
-                  {t(locale, 'viewPullRequest')} <span aria-hidden="true">↗</span>
+                  {t(locale, 'viewPullRequest')} <ExternalGlyph />
                 </a>
               )}
             </div>

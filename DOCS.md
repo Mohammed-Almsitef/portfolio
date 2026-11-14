@@ -36,9 +36,15 @@ components/          every piece of the page; one file per section
   manager/           the manager's brand mark
 lib/
   content.ts         the only place that reads content — one loader per screen
-  links.ts           what an outbound link's anchor gets
+  metadata.ts        canonical + hreflang, and the case-study metadata
+  links.ts           what an outbound link's anchor gets, and URL parsing
   locale.ts          the two locales, and the interface strings
   socials.ts         platform detection for contact links
+  tones.ts           the nine supporting colours — type, list, picker options
+  theme.ts           the shared colour mode: read it, set it, subscribe to it
+  hooks.ts           client behaviour used by more than one component
+  styles.ts          class recipes shared by more than one component
+  geometry.ts        the corner table both isometric drawings walk
   manager/           auth.ts, crypto.ts, store.ts — the password gate
 content/             the English tree (JSON, edited by the manager)
 content/ar/          the Arabic tree, same schema, independent contents
@@ -205,6 +211,23 @@ background *image* over that colour, `--card-shadow`, and on hover a lift plus a
 pointer-tracking glow from `Spotlight`. Project cards, contact links and the
 About backdrop are all the same object with a different tone.
 
+The ground and the wash are `CARD_SURFACE` and `CARD_TONE_WASH` in
+`lib/styles.ts`; the hover behaviour stays at the call site, because that is
+where cards legitimately differ — the project grid lifts, a contribution row
+only warms its border.
+
+### What belongs in `lib/styles.ts`
+
+Only a recipe that would be a **bug** if it drifted. The 36px controls in the
+nav have to be one size or the bar goes ragged; the technology chips have to
+match between a project card and the case study that card links to. A class
+string used once stays inline, where it is easier to read than an indirection.
+
+The same test governs `lib/hooks.ts`. Each hook there had two to four copies
+before it moved, and the copies had already drifted: some scroll listeners were
+`{ passive: true }` and some were not, and only some observers honoured
+`prefers-reduced-motion`.
+
 ### `mono-label` — the rule worth knowing
 
 Mono display type (section titles, eyebrows, kickers, the site name) is marked
@@ -282,8 +305,17 @@ In the code:
 - `generateMetadata` in `app/layout.tsx` — title template, description, canonical,
   `hreflang`, OpenGraph, Twitter card, keywords, and a Search Console token read
   from `GOOGLE_SITE_VERIFICATION` so it can be set without a code change
+- `lib/metadata.ts` — `alternatesFor(locale, path)` builds the canonical and the
+  `hreflang` pair; `projectMetadata` builds a case study's whole metadata block.
+  **Every page that is not the home page must set its own `alternates`.** Next
+  inherits the parent's otherwise, and the parent's canonical is `/` — so a case
+  study that stays quiet does not merely lack a canonical, it actively declares
+  itself a duplicate of the home page and drops out of the index. That is what
+  the English case studies were doing before this was centralised.
 - `app/sitemap.ts` — every visible page in both languages, with alternates, so the
-  two are treated as one page in two languages rather than duplicate content
+  two are treated as one page in two languages rather than duplicate content. A
+  self-referencing alternate has to match its own `<loc>` character for
+  character, which is why the root's trailing slash is trimmed.
 - `app/robots.ts` — the sitemap pointer, and the manager disallowed
 - `components/StructuredData.tsx` — a `Person`, a `WebSite` and a `ProfilePage` as
   JSON-LD, built from the CMS so the graph cannot contradict the page. The

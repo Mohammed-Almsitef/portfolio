@@ -2,11 +2,11 @@ import { getEducation, getExperience, getPublications, getSite } from '@/lib/con
 import Section from './Section'
 import { outbound } from '@/lib/links'
 import { t, type Locale } from '@/lib/locale'
+import { BLOCK_HEADING } from '@/lib/styles'
+import ExternalGlyph from './ExternalGlyph'
 
 function SubHeading({ children }: { children: React.ReactNode }) {
-  return (
-    <h3 className="mono-label mb-5 font-mono text-xs uppercase tracking-[0.2em] text-accent">{children}</h3>
-  )
+  return <h3 className={`${BLOCK_HEADING} text-accent`}>{children}</h3>
 }
 
 /**
@@ -120,7 +120,7 @@ export default async function Experience({
                     {...outbound(p.url)}
                     className="tap font-medium underline-offset-4 transition-colors hover:text-accent hover:underline"
                   >
-                    {p.title} <span aria-hidden="true">↗</span>
+                    {p.title} <ExternalGlyph />
                   </a>
                   <span className="block text-sm text-muted">{p.venue}</span>
                 </span>

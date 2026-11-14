@@ -4,10 +4,11 @@ import { useEffect, useMemo, useState } from 'react'
 import Logo from './Logo'
 import ThemeToggle from './ThemeToggle'
 import { t, type Locale } from '@/lib/locale'
+import { useScrollValue } from '@/lib/hooks'
 import LanguageSwitch from './LanguageSwitch'
 
 /** Section keys map to the DOM ids the components render. */
-const SECTION_IDS: Record<string, string> = {
+export const SECTION_IDS: Record<string, string> = {
   about: 'about',
   projects: 'projects',
   openSource: 'open-source',
@@ -40,16 +41,9 @@ export default function Nav({
     [sections],
   )
 
-  const [scrolled, setScrolled] = useState(false)
+  const scrolled = useScrollValue(() => window.scrollY > 8, false)
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState('')
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
 
   useEffect(() => {
     const sectionEls = links

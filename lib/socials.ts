@@ -7,6 +7,9 @@
  * icon — though the manager keeps an override for the cases where the host
  * doesn't give it away (a personal domain, a self-hosted Mastodon).
  */
+import { parseUrl } from './links'
+import type { Tone } from './tones'
+
 export type PlatformId =
   | 'github'
   | 'linkedin'
@@ -46,17 +49,6 @@ type HandleStyle = 'at' | 'plain' | 'host' | 'email'
  * *near* each brand — emerald for WhatsApp, rose for Instagram — so the grid
  * still reads at a glance while staying one family with the rest of the page.
  */
-type Tone =
-  | 'blue'
-  | 'violet'
-  | 'purple'
-  | 'cyan'
-  | 'rose'
-  | 'emerald'
-  | 'amber'
-  | 'teal'
-  | 'lime'
-
 type Platform = {
   /** Name shown when the CMS label is empty. */
   name: string
@@ -122,24 +114,11 @@ function bareHost(host: string) {
 }
 
 /**
- * Platform detection needs the parsed URL, not just a normalised string, so it
- * parses here as well — with the same rule as lib/links, which is the one place
- * that decides what an anchor gets.
- */
-function parse(href: string) {
-  try {
-    return new URL(/^[a-z][a-z0-9+.-]*:/i.test(href) ? href : `https://${href}`)
-  } catch {
-    return null
-  }
-}
-
-/**
  * The platform a link belongs to, from its host — falling back to the label,
  * so a link typed as a handle rather than a URL still gets its icon.
  */
 export function detectPlatform(href: string, label = ''): PlatformId {
-  const url = parse(href)
+  const url = parseUrl(href)
 
   if (url?.protocol === 'mailto:') {
     return url.pathname.toLowerCase().endsWith('@gmail.com') ? 'gmail' : 'email'
@@ -171,7 +150,7 @@ export function detectPlatform(href: string, label = ''): PlatformId {
  * "Website / website" is noise.
  */
 export function handleOf(href: string, platform: PlatformId): string | null {
-  const url = parse(href)
+  const url = parseUrl(href)
   if (!url) return null
 
   const style = PLATFORMS[platform].handle

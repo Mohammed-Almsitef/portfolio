@@ -4,6 +4,7 @@ import { createReader } from '@keystatic/core/reader'
 import keystaticConfig from '@/keystatic.config'
 import type { VisualKind } from '@/components/ProjectVisual'
 import type { Locale } from './locale'
+import { isTone, type Tone } from './tones'
 import { hrefOf } from './links'
 import {
   detectPlatform,
@@ -26,8 +27,7 @@ import {
  */
 const reader = createReader(process.cwd(), keystaticConfig)
 
-export type Tone =
-  'blue' | 'violet' | 'purple' | 'cyan' | 'rose' | 'emerald' | 'amber' | 'teal' | 'lime'
+export type { Tone } from './tones'
 
 type SectionKey = 'about' | 'projects' | 'openSource' | 'skills' | 'experience' | 'contact'
 
@@ -83,18 +83,6 @@ export type Appearance = {
   decorWeight: 'vivid' | 'soft'
 }
 
-const TONE_NAMES: readonly Tone[] = [
-  'blue',
-  'violet',
-  'purple',
-  'cyan',
-  'rose',
-  'emerald',
-  'amber',
-  'teal',
-  'lime',
-]
-
 /**
  * Site chrome: the colour mode a first-time visitor gets, and how the margin
  * decorations behave. Shared by both languages, and every field falls back so
@@ -106,7 +94,7 @@ export async function getAppearance(): Promise<Appearance> {
     defaultTheme: a?.defaultTheme === 'dark' ? 'dark' : 'light',
     // Validated against the known set rather than cast: the value reaches a CSS
     // variable name, so an unrecognised one would silently blank the accent.
-    accent: TONE_NAMES.includes(a?.accent as Tone) ? (a!.accent as Tone) : 'blue',
+    accent: isTone(a?.accent) ? a.accent : 'blue',
     contactLinks: a?.contactLinks === 'tiles' ? 'tiles' : 'icons',
     decorShow: a?.decorShow !== false,
     decorArrangement: a?.decorArrangement ?? 'auto',
@@ -325,8 +313,9 @@ export type SectionEntry = { key: SectionKey; label: string }
 export async function getSections(locale: Locale = 'en'): Promise<SectionEntry[]> {
   const { order } = await TREE[locale].sections.readOrThrow()
 
-  return order
-    .filter((s) => s.visible)
+  // `shown`, not a truthy test: everywhere else an absent `visible` means
+  // shown, and a section was the one place that read it as hidden.
+  return shown(order)
     .map((s) => ({
       key: s.key as SectionKey,
       label: s.label || s.key,

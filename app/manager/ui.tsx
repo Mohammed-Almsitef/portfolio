@@ -53,15 +53,44 @@ export function Field({
   )
 }
 
-export function Submit({ pending, children }: { pending: boolean; children: React.ReactNode }) {
+/**
+ * The submit button for every manager form.
+ *
+ * `destructive` exists so the "remove password" button is a variant rather
+ * than a fork: it had copied the whole button — the pending ternary included —
+ * only to change the colours.
+ */
+export function Submit({
+  pending,
+  destructive = false,
+  children,
+}: {
+  pending: boolean
+  destructive?: boolean
+  children: React.ReactNode
+}) {
+  const tone = destructive
+    ? 'border border-rose-500/60 bg-rose-500/10 text-sm text-text hover:bg-rose-500/20'
+    : 'bg-accent text-white hover:bg-accent-alt'
+
   return (
     <button
       type="submit"
       disabled={pending}
-      className="tap w-full rounded-lg bg-accent px-4 py-2.5 font-medium text-white transition hover:bg-accent-alt disabled:opacity-60"
+      className={`tap w-full rounded-lg px-4 py-2.5 font-medium transition disabled:opacity-60 ${tone}`}
     >
       {pending ? 'Working…' : children}
     </button>
+  )
+}
+
+/** The error / success pair every form ends with. */
+export function FormResult({ state }: { state?: { error?: string; notice?: string } }) {
+  return (
+    <>
+      {state?.error && <Message tone="error">{state.error}</Message>}
+      {state?.notice && <Message tone="ok">{state.notice}</Message>}
+    </>
   )
 }
 

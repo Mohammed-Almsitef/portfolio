@@ -20,8 +20,12 @@
 /**
  * A URL is only parseable once it has a scheme, and the manager's URL field
  * does not insist on one.
+ *
+ * Exported because lib/socials needs the parsed URL — the host, the protocol —
+ * rather than just the normalised string, and it has to apply the same
+ * scheme rule to get the same answer.
  */
-function parse(href: string): URL | null {
+export function parseUrl(href: string): URL | null {
   try {
     return new URL(/^[a-z][a-z0-9+.-]*:/i.test(href) ? href : `https://${href}`)
   } catch {
@@ -31,7 +35,7 @@ function parse(href: string): URL | null {
 
 /** The href to put in the anchor: schemeless input gets `https://`. */
 export function hrefOf(href: string): string {
-  return parse(href)?.href ?? href
+  return parseUrl(href)?.href ?? href
 }
 
 /** Whether following this link leaves the browser, and so earns a new tab. */

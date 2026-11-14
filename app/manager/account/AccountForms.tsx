@@ -3,7 +3,7 @@
 import { useActionState } from 'react'
 
 import { changePasswordAction, removePasswordAction, type FormState } from '../actions'
-import { Field, Message, Submit } from '../ui'
+import { Field, FormResult, Message, Submit } from '../ui'
 
 export function ChangePasswordForm({ needsCurrent }: { needsCurrent: boolean }) {
   const [state, action, pending] = useActionState<FormState, FormData>(
@@ -19,8 +19,7 @@ export function ChangePasswordForm({ needsCurrent }: { needsCurrent: boolean }) 
       <Field label="New password" name="next" autoComplete="new-password" />
       <Field label="Confirm new password" name="confirm" autoComplete="new-password" />
 
-      {state?.error && <Message tone="error">{state.error}</Message>}
-      {state?.notice && <Message tone="ok">{state.notice}</Message>}
+      <FormResult state={state} />
 
       <Submit pending={pending}>Save password</Submit>
     </form>
@@ -61,16 +60,11 @@ export function RemovePasswordForm({ needsCurrent }: { needsCurrent: boolean }) 
           placeholder="REMOVE"
         />
 
-        {state?.error && <Message tone="error">{state.error}</Message>}
-        {state?.notice && <Message tone="ok">{state.notice}</Message>}
+        <FormResult state={state} />
 
-        <button
-          type="submit"
-          disabled={pending}
-          className="tap w-full rounded-lg border border-rose-500/60 bg-rose-500/10 px-4 py-2.5 text-sm font-medium text-text transition hover:bg-rose-500/20 disabled:opacity-60"
-        >
-          {pending ? 'Working…' : 'Remove password'}
-        </button>
+        <Submit pending={pending} destructive>
+          Remove password
+        </Submit>
       </form>
     </details>
   )
