@@ -67,6 +67,7 @@ const STRINGS = {
     themeToLight: 'Switch to light theme',
     simTitle: 'rviz2 · slam_toolbox + nav2 · live',
     simHint: 'Click anywhere to send the robot a navigation goal',
+    simHintDrag: 'Click to send a goal · drag to rotate the view',
     simAria:
       'Live simulation: a robot explores an unknown floor plan with a lidar, builds a map as it goes, and plans paths around obstacles. Click to send it a goal.',
     newMap: 'New map',
@@ -144,6 +145,7 @@ const STRINGS = {
     themeToLight: 'التبديل إلى المظهر الفاتح',
     simTitle: 'rviz2 · slam_toolbox + nav2 · live',
     simHint: 'انقر في أي مكان لإرسال هدف ملاحة إلى الروبوت',
+    simHintDrag: 'انقر لإرسال هدف · اسحب لتدوير المشهد',
     simAria:
       'محاكاة حية: روبوت يستكشف مخططاً مجهولاً باستخدام الليدار، ويبني الخريطة أثناء حركته، ويخطط مساره حول العوائق. انقر لإرسال هدف إليه.',
     newMap: 'خريطة جديدة',

@@ -13,6 +13,7 @@ import {
   type Mode,
   type Sim,
 } from '@/lib/slam'
+import type { Palette3D, Scene3D } from '@/lib/slam3d'
 
 /** Grid size in cells (10 cm each): a 7.2 m × 4.5 m floor, sized so the
  *  robot is large enough to show its parts. */
@@ -25,6 +26,8 @@ export type SlamLabels = {
   aria: string
   newMap: string
   map: string
+  /** Shown instead of `hint` once the 3D view is up on a mouse device. */
+  hintDrag: string
   modes: Record<Mode, string>
 }
 
@@ -66,6 +69,9 @@ function hexTriplet(hex: string) {
  */
 export default function SlamViewport({ labels }: { labels: SlamLabels }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const glRef = useRef<HTMLCanvasElement>(null)
+  const stageRef = useRef<HTMLDivElement>(null)
+  const hintRef = useRef<HTMLSpanElement>(null)
   const modeRef = useRef<HTMLSpanElement>(null)
   const poseRef = useRef<HTMLSpanElement>(null)
   const covRef = useRef<HTMLElement>(null)
@@ -78,9 +84,16 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
 
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas) return
+    const gl = glRef.current
+    const stage = stageRef.current
+    if (!canvas || !gl || !stage) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
+    const coarse = window.matchMedia('(pointer: coarse)').matches
+    // The 3D scene, once loaded. Until then (or if WebGL is unavailable) the
+    // 2D renderer below draws the same simulation.
+    let r3: Scene3D | null = null
+    let disposed = false
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     let seed = 1 + Math.floor(Math.random() * 1e6)
@@ -139,9 +152,20 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
       canvas.width = Math.round(r.width * dpr)
       canvas.height = Math.round(r.height * dpr)
       cell = canvas.width / W
+      r3?.resize(r.width, r.height, dpr)
     }
 
+    const pal3 = (): Palette3D => ({ accent: pal.accent, scan: pal.scan, plan: pal.plan, ink })
+
     const draw = () => {
+      if (r3) {
+        const changed = sim.dirty
+        if (changed) paintMap()
+        r3.render(sim, changed)
+      } else draw2d()
+    }
+
+    const draw2d = () => {
       const c = cell
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
@@ -270,9 +294,13 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
       raf = 0
       const dt = Math.min(0.05, last ? (now - last) / 1000 : 0.016)
       last = now
-      // Two half-steps keep the controller stable on slow frames.
-      step(sim, dt / 2)
-      step(sim, dt / 2)
+      // Two half-steps keep the controller stable on slow frames. Under
+      // reduced motion the robot only moves on a visitor's goal; frames that
+      // exist only because the view is being orbited leave it still.
+      if (!reduced || sim.mode === 'navigating') {
+        step(sim, dt / 2)
+        step(sim, dt / 2)
+      }
       if (sim.mode === 'complete') {
         if (completeAt < 0) completeAt = sim.time
         else if (sim.time - completeAt > 3.5) {
@@ -280,7 +308,7 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
           reset()
         }
       } else completeAt = -1
-      if (reduced && sim.mode !== 'navigating') animating = false
+      if (reduced && sim.mode !== 'navigating' && !r3?.interacting()) animating = false
       draw()
       hud()
       schedule()
@@ -322,21 +350,59 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
     const mo = new MutationObserver(() => {
       pal = readPalette()
       ink = hexTriplet(pal.text)
+      r3?.setPalette(pal3())
       sim.dirty = true
       draw()
     })
     mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-accent'] })
 
-    const onClick = (ev: PointerEvent) => {
-      const r = canvas.getBoundingClientRect()
-      const x = ((ev.clientX - r.left) / r.width) * W
-      const y = ((ev.clientY - r.top) / r.height) * H
-      sendGoal(sim, { x, y })
+    // A click (press and release without moving) sends a goal; a drag in 3D
+    // orbits the camera instead.
+    let down: { x: number; y: number } | null = null
+    const onDown = (ev: PointerEvent) => {
+      down = { x: ev.clientX, y: ev.clientY }
+      if (r3) {
+        animating = true
+        schedule()
+      }
+    }
+    const onUp = (ev: PointerEvent) => {
+      if (!down) return
+      const moved = Math.hypot(ev.clientX - down.x, ev.clientY - down.y)
+      down = null
+      if (moved > 6) return
+      let target: { x: number; y: number } | null
+      if (r3) target = r3.pick(ev.clientX, ev.clientY)
+      else {
+        const r = canvas.getBoundingClientRect()
+        target = { x: ((ev.clientX - r.left) / r.width) * W, y: ((ev.clientY - r.top) / r.height) * H }
+      }
+      if (!target) return
+      sendGoal(sim, target)
       animating = true
       hud(true)
       schedule()
     }
-    canvas.addEventListener('pointerdown', onClick)
+    stage.addEventListener('pointerdown', onDown)
+    stage.addEventListener('pointerup', onUp)
+
+    // Load the 3D view after first paint; keep 2D if anything goes wrong.
+    import('@/lib/slam3d')
+      .then((m) => {
+        if (disposed) return
+        try {
+          r3 = m.createScene3D(gl, W, H, mapCanvas, pal3(), coarse)
+        } catch {
+          return
+        }
+        gl.dataset.ready = 'true'
+        canvas.style.visibility = 'hidden'
+        if (hintRef.current && !coarse) hintRef.current.textContent = labelsRef.current.hintDrag
+        resize()
+        sim.dirty = true
+        draw()
+      })
+      .catch(() => {})
 
     return () => {
       cancelAnimationFrame(raf)
@@ -344,7 +410,10 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
       io.disconnect()
       mo.disconnect()
       document.removeEventListener('visibilitychange', onVis)
-      canvas.removeEventListener('pointerdown', onClick)
+      stage.removeEventListener('pointerdown', onDown)
+      stage.removeEventListener('pointerup', onUp)
+      disposed = true
+      r3?.dispose()
     }
   }, [])
 
@@ -370,12 +439,19 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
         </button>
       </figcaption>
 
-      <div className="relative">
+      <div ref={stageRef} className="relative">
         <canvas
           ref={canvasRef}
           role="img"
           aria-label={labels.aria}
           className="block aspect-[72/45] w-full cursor-crosshair touch-manipulation"
+        />
+        {/* The 3D view takes over this space once WebGL is confirmed. */}
+        <canvas
+          ref={glRef}
+          aria-hidden="true"
+          className="absolute inset-0 size-full cursor-crosshair opacity-0 transition-opacity duration-700 data-[ready=true]:opacity-100 active:cursor-grabbing"
+          style={{ touchAction: 'pan-y' }}
         />
 
         {/* Live readouts, written straight to the DOM at ~8 Hz. */}
@@ -406,7 +482,9 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-border px-4 py-2.5 font-mono text-[0.68rem] text-muted">
-        <span className="mono-label">{labels.hint}</span>
+        <span ref={hintRef} className="mono-label">
+          {labels.hint}
+        </span>
         <span aria-hidden="true" dir="ltr" className="flex items-center gap-3">
           <Legend swatch="bg-text" label="/map" />
           <Legend swatch="bg-[rgb(var(--tone-rose))]" label="/scan" />

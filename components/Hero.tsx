@@ -20,6 +20,7 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
   const labels: SlamLabels = {
     title: t(locale, 'simTitle'),
     hint: t(locale, 'simHint'),
+    hintDrag: t(locale, 'simHintDrag'),
     aria: t(locale, 'simAria'),
     newMap: t(locale, 'newMap'),
     map: t(locale, 'mapLabel'),
