@@ -41,7 +41,7 @@ export default async function Experience({
   ])
 
   return (
-    <Section id="experience" title={title} tone="raised">
+    <Section id="experience" title={title}>
       <ol className="relative space-y-10 border-s border-border ps-8 md:ps-10">
         {experience.map((job, ji) => (
           <li key={`${job.company}-${job.period}`} className="relative">
@@ -97,7 +97,7 @@ export default async function Experience({
             {education.map((e) => {
               const [institution, ...rest] = e.school.split(' · ')
               return (
-                <li key={e.degree} className={`ticks p-6 ${CARD_SURFACE}`}>
+                <li key={e.degree} className={`glow-border p-6 ${CARD_SURFACE}`}>
                   <p className="font-mono text-xs text-muted">{e.period}</p>
                   <p className="mt-2 font-semibold tracking-tight">{e.degree}</p>
                   <p className="mt-1.5 text-sm text-body">

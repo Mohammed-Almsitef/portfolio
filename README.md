@@ -130,7 +130,7 @@ Eight wrong passwords from one IP lock sign-in for 15 minutes.
 
 ## Design system
 
-Type is Inter (sans) and JetBrains Mono (mono), self-hosted at build time via `next/font/google` — no runtime request to Google.
+Type is Geist (sans) and Geist Mono (mono), with Noto Sans Arabic on the Arabic site, self-hosted at build time via `next/font/google` — no runtime request to Google.
 
 ### Theming
 
@@ -207,7 +207,7 @@ Constraints that are easy to break:
 
 Standalone links carry `.tap` (min 24px hit area, WCAG 2.5.8). Links sitting inline inside a heading carry `.tap-inline`, which adds vertical padding — on an inline element that grows the hit box without changing the line box, so the text does not shift.
 
-`next/font` downloads Inter and JetBrains Mono at **build** time. If that download fails (offline, proxy, or a transient outage) Next silently falls back to system fonts — check the build log for `Failed to download`.
+`next/font` downloads Geist and Geist Mono at **build** time. If that download fails (offline, proxy, or a transient outage) Next silently falls back to system fonts — check the build log for `Failed to download`.
 
 The Open Graph route supplies its fonts explicitly from `assets/fonts/` rather than relying on the renderer's default, so the card always renders in Inter and never depends on a network fetch.
 

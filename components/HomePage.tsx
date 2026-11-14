@@ -1,6 +1,8 @@
 import Nav from '@/components/Nav'
 import CommandPalette from '@/components/CommandPalette'
 import Hero from '@/components/Hero'
+import Aurora from '@/components/Aurora'
+import TechMarquee from '@/components/TechMarquee'
 import About from '@/components/About'
 import Projects from '@/components/Projects'
 import OpenSource from '@/components/OpenSource'
@@ -65,6 +67,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
       {/* Machine-readable identity, for the name query. */}
       <StructuredData locale={locale} />
 
+      <Aurora />
       <ScrollProgress />
       <Nav
         siteName={site.name}
@@ -76,6 +79,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
 
       <main id="main">
         <Hero locale={locale} />
+        <TechMarquee locale={locale} />
         {sections.map((section: SectionEntry) => {
           const Section = SECTIONS[section.key]
           return Section ? (

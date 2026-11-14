@@ -35,7 +35,7 @@ export default function SocialLink({
     // The tone wash is a background *image* layered over bg-surface's colour, so
     // it needs no element of its own and still sits under the hover glow.
     className:
-      'group rounded-2xl border border-border bg-surface bg-[linear-gradient(135deg,rgb(var(--tone)/0.07),transparent_62%)] shadow-[var(--card-shadow)] transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[rgb(var(--tone)/0.45)]',
+      'glass group rounded-2xl transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[rgb(var(--tone)/0.45)]',
   }
 
   const chip =
@@ -47,7 +47,7 @@ export default function SocialLink({
       // tile's chip inside the tile's border left every icon in a double box.
       <Spotlight
         style={frame.style}
-        className="group size-12 rounded-xl border border-border bg-surface shadow-[var(--card-shadow)] transition-[transform,border-color,background-color] duration-300 hover:-translate-y-0.5 hover:border-[rgb(var(--tone)/0.5)] hover:bg-[rgb(var(--tone)/0.08)]"
+        className="glass group size-12 rounded-xl transition-[transform,border-color] duration-300 hover:-translate-y-0.5 hover:border-[rgb(var(--tone)/0.5)]"
         // Spotlight wraps its children in a div of its own. Without a height on
         // that div the link's `size-full` resolved against an auto-height
         // parent and collapsed to the icon, which then sat at the top of the

@@ -21,7 +21,7 @@ export default async function Skills({
             // The tone is resolved per theme by globals.css; only the variable
             // reference is dynamic, so no Tailwind class is built at runtime.
             style={{ '--tone': `var(--tone-${g.tone})` } as React.CSSProperties}
-            className={`ticks group p-6 ${CARD_SURFACE} ${CARD_TONE_WASH} transition-colors duration-300 hover:border-[rgb(var(--tone)/0.45)]`}
+            className={`glow-border group p-6 ${CARD_SURFACE} ${CARD_TONE_WASH} transition-colors duration-300 hover:border-[rgb(var(--tone)/0.45)]`}
           >
             <h3 className="flex items-center gap-2.5 font-semibold tracking-tight">
               <span

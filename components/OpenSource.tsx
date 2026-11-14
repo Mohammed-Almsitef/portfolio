@@ -15,7 +15,7 @@ export default async function OpenSource({
   const { intro, items } = await getOpenSource(locale)
 
   return (
-    <Section id="open-source" title={title} tone="raised">
+    <Section id="open-source" title={title}>
       {intro && <p className="mb-10 max-w-2xl leading-relaxed text-body">{intro}</p>}
 
       <ul className="space-y-4">

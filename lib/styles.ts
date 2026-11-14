@@ -12,7 +12,7 @@
 
 /** The 36px square controls in the nav bar: theme toggle, language switch. */
 export const CONTROL_BUTTON =
-  'flex size-9 items-center justify-center rounded-lg border border-border bg-surface/70 backdrop-blur-sm transition-colors hover:bg-border/60 hover:text-text'
+  'btn-ghost flex size-9 items-center justify-center rounded-lg hover:text-text'
 
 /**
  * The small uppercase label over a block. `mono-label` is what keeps this
@@ -36,8 +36,7 @@ export const TAG_CHIP =
 export const BLOCK_HEADING = 'mono-label mb-5 font-mono text-xs uppercase tracking-[0.2em]'
 
 /** The card ground shared by project cards, contribution cards and link tiles. */
-export const CARD_SURFACE =
-  'rounded-2xl border border-border bg-surface shadow-[var(--card-shadow)]'
+export const CARD_SURFACE = 'glass rounded-2xl'
 
 /** The accent wash laid over a card, keyed to whatever `--tone` is in scope. */
 export const CARD_TONE_WASH = 'bg-[linear-gradient(135deg,rgb(var(--tone)/0.07),transparent_62%)]'

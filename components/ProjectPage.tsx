@@ -10,6 +10,7 @@ import LanguageSwitch from '@/components/LanguageSwitch'
 import ProjectClip from '@/components/ProjectClip'
 import ProjectVisual from '@/components/ProjectVisual'
 import ScrollProgress from '@/components/ScrollProgress'
+import Aurora from '@/components/Aurora'
 import TagList from '@/components/TagList'
 import ExternalGlyph from '@/components/ExternalGlyph'
 import VideoEmbed from '@/components/VideoEmbed'
@@ -83,9 +84,10 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
       lang={locale}
       style={{ '--tone': `var(--tone-${project.tone})` } as React.CSSProperties}
     >
+      <Aurora />
       <ScrollProgress />
 
-      <header data-print-hide className="border-b border-border">
+      <header data-print-hide className="sticky top-0 z-40 border-b border-border bg-bg/60 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
           <Link
             href={localePath(locale)}
@@ -122,7 +124,7 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
             {project.year}
           </p>
 
-          <h1 className="mt-4 text-[clamp(2.1rem,4.4vw,3.25rem)] font-semibold leading-[1.05] tracking-[-0.035em]">
+          <h1 className="text-gradient mt-4 text-[clamp(2.1rem,4.4vw,3.25rem)] font-semibold leading-[1.05] tracking-[-0.035em]">
             {project.title}
           </h1>
 
@@ -172,7 +174,7 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
               {project.results.map((r, i) => (
                 <li
                   key={i}
-                  className="rounded-2xl border border-border bg-surface p-5 text-[0.9375rem] leading-relaxed text-body shadow-[var(--card-shadow)] [border-top:2px_solid_rgb(var(--tone))]"
+                  className="glass glow-border rounded-2xl p-5 text-[0.9375rem] leading-relaxed text-body [border-top:2px_solid_rgb(var(--tone))]"
                 >
                   {r}
                 </li>
@@ -207,7 +209,7 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
           </article>
 
           <aside className="lg:sticky lg:top-24 lg:self-start">
-            <div className="rounded-2xl border border-border bg-surface p-6 shadow-[var(--card-shadow)]">
+            <div className="glass rounded-2xl p-6">
               <h2 className={`${BLOCK_HEADING} mb-5 text-muted`}>{t(locale, 'projectFacts')}</h2>
               <dl className="space-y-5 text-sm">
                 {project.role && (

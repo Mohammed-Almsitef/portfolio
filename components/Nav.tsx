@@ -85,19 +85,21 @@ export default function Nav({
   return (
     <header
       data-print-hide
-      className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color] duration-300 ${
+      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
         // The open mobile panel needs a solid ground — at 80% opacity the hero
         // headline reads straight through the menu items.
-        open
-          ? 'border-b border-border bg-bg'
-          : scrolled
-            ? 'border-b border-border bg-bg/80 backdrop-blur-md'
-            : 'border-b border-transparent'
+        open ? 'bg-bg' : ''
       }`}
     >
 
-      <nav aria-label="Main" className="mx-auto max-w-page px-6">
-        <div className="flex items-center justify-between gap-4 py-4">
+      <nav aria-label="Main" className="mx-auto max-w-page px-3 sm:px-4">
+        {/* At the top the bar is bare; once the page scrolls it becomes a
+            floating glass pill, inset from the edges. */}
+        <div
+          className={`flex items-center justify-between gap-4 rounded-2xl px-3 transition-all duration-300 ${
+            scrolled && !open ? 'glass mt-3 py-2' : 'mt-1 border border-transparent py-3'
+          }`}
+        >
           <div className="flex min-w-0 items-center gap-3">
             <a
               href="#top"

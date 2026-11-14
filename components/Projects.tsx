@@ -150,7 +150,7 @@ function Card({
           '--card-glow': 'rgb(var(--tone) / 0.16)',
         } as React.CSSProperties
       }
-      className={`ticks group h-full overflow-hidden ${CARD_SURFACE} transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[rgb(var(--tone)/0.45)]`}
+      className={`glow-border group h-full overflow-hidden ${CARD_SURFACE} transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[rgb(var(--tone)/0.45)]`}
       innerClassName={`flex h-full flex-col ${lead ? 'md:flex-row' : ''}`}
     >
       <Cover
@@ -173,7 +173,7 @@ export default async function Projects({
   const [lead, ...rest] = projects
 
   return (
-    <Section id="projects" title={title} tone="raised">
+    <Section id="projects" title={title}>
       {lead && (
         <Reveal className="mb-5">
           <Card p={lead} i={0} locale={locale} lead />

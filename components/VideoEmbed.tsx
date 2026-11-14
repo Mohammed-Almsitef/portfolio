@@ -34,7 +34,7 @@ export default function VideoEmbed({ url, title }: { url: string; title: string 
   }
 
   return (
-    <div className="aspect-video w-full overflow-hidden rounded-xl border border-border bg-surface">
+    <div className="glass aspect-video w-full overflow-hidden rounded-2xl">
       <iframe
         src={`https://www.youtube-nocookie.com/embed/${id}`}
         title={`${title} — demo video`}

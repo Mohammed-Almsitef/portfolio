@@ -11,7 +11,7 @@ export default function CopyEmail({ email, locale = 'en' }: { email: string; loc
     <span className="flex flex-wrap items-center gap-2">
       <a
         href={`mailto:${email}`}
-        className="inline-flex min-w-0 items-center gap-2 rounded-md bg-accent px-4 py-2.5 sm:gap-2.5 sm:px-5 text-sm font-medium text-bg shadow-[0_6px_20px_-10px_var(--btn-glow)] transition-opacity hover:opacity-90"
+        className="btn-primary inline-flex min-w-0 items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium sm:gap-2.5 sm:px-5"
       >
         {/* The address is the label, so the mark is decoration — and the first
             thing to go on a narrow screen, where dropping it is what keeps the
@@ -24,7 +24,7 @@ export default function CopyEmail({ email, locale = 'en' }: { email: string; loc
       <button
         type="button"
         onClick={() => copy(email)}
-        className="rounded-md border border-border px-3 py-2.5 font-mono text-xs text-muted transition-colors hover:border-muted hover:text-text"
+        className="btn-ghost rounded-xl px-3.5 py-3 font-mono text-xs text-muted hover:text-text"
       >
         {copied ? `${t(locale, 'copied')} ✓` : t(locale, 'copy')}
       </button>

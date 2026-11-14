@@ -49,8 +49,8 @@
   --color-accent-alt: #4f46e5;
 
   --font-sans:
-    var(--font-inter), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    var(--font-geist), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 :root {
@@ -96,7 +96,7 @@
   --btn-glow: rgb(var(--accent-tone) / 0.3);
   --card-shadow: 0 1px 2px rgb(11 18 32 / 0.04), 0 10px 26px -14px rgb(11 18 32 / 0.14);
   --grain: 0.02;
-  --headline-gradient: linear-gradient(115deg, #0b1220 12%, #22314a 50%, var(--color-accent) 98%);
+  --headline-gradient: linear-gradient(110deg, #0b1220 20%, #1e2b4a 45%, rgb(var(--accent-tone)) 78%, rgb(var(--tone-violet)) 100%);
 
   /*
    * Dark-theme literals, declared once here and only *aliased* by the two
@@ -114,14 +114,14 @@
   --d-tone-teal: 45 212 191;
   --d-tone-lime: 163 230 53;
 
-  --d-bg: #0b0e14;
-  --d-surface: #11151d;
-  --d-elevated: #171c26;
-  --d-border: #222937;
-  --d-border-strong: #333c4d;
-  --d-text: #eaeef6;
-  --d-body: #b6bdcd;
-  --d-muted: #868fa0;
+  --d-bg: #06070b;
+  --d-surface: #0d1017;
+  --d-elevated: #141822;
+  --d-border: #1c2230;
+  --d-border-strong: #2b3344;
+  --d-text: #f2f4f8;
+  --d-body: #b4bccb;
+  --d-muted: #7f899b;
   --d-accent-tone: 96 165 250;
   --d-accent-dim: #6b98d6;
   --d-accent-alt: #818cf8;
@@ -131,7 +131,7 @@
   --d-btn-glow: rgb(var(--accent-tone) / 0.5);
   --d-card-shadow: none;
   --d-grain: 0.022;
-  --d-headline-gradient: linear-gradient(115deg, #ffffff 14%, #dce6f5 50%, var(--color-accent) 98%);
+  --d-headline-gradient: linear-gradient(110deg, #ffffff 20%, #dbe4ff 45%, rgb(var(--accent-tone)) 75%, rgb(var(--tone-violet)) 100%);
   --d-logo-ink: #f3f2f2;
   --d-logo-accent: #60a5fa;
 }
@@ -239,7 +239,6 @@ body {
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   /* Theme switches should feel like a dip, not a hard cut. */
   transition:
     background-color 220ms ease,
@@ -433,7 +432,7 @@ body::before {
  * size, so it gets a little more line height to stay readable.
  */
 [lang='ar'] {
-  font-family: var(--font-arabic), var(--font-inter), system-ui, sans-serif;
+  font-family: var(--font-arabic), var(--font-geist), system-ui, sans-serif;
   line-height: 1.85;
 }
 
@@ -459,7 +458,7 @@ body::before {
  * the `.font-mono` rule: same specificity, so source order decides.
  */
 [lang='ar'] .mono-label {
-  font-family: var(--font-arabic), var(--font-inter), system-ui, sans-serif;
+  font-family: var(--font-arabic), var(--font-geist), system-ui, sans-serif;
   direction: inherit;
   unicode-bidi: normal;
   letter-spacing: normal;
@@ -487,7 +486,7 @@ main > .section {
   counter-increment: section;
 }
 .section-index::before {
-  content: counter(section, decimal-leading-zero) ' —';
+  content: counter(section, decimal-leading-zero);
 }
 
 /* The simulation's mode badge takes the colour of what the robot is doing. */
@@ -502,37 +501,6 @@ main > .section {
   color: rgb(var(--tone-rose));
 }
 
-/*
- * Corner ticks: the registration marks of a technical drawing, on cards that
- * opt in with `.ticks`. Pure decoration, drawn with two gradients per corner.
- */
-.ticks {
-  position: relative;
-}
-.ticks::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-  border-radius: inherit;
-  --tk: rgb(var(--tone, var(--accent-tone)) / 0.7);
-  background:
-    linear-gradient(var(--tk), var(--tk)) top left / 12px 1px no-repeat,
-    linear-gradient(var(--tk), var(--tk)) top left / 1px 12px no-repeat,
-    linear-gradient(var(--tk), var(--tk)) top right / 12px 1px no-repeat,
-    linear-gradient(var(--tk), var(--tk)) top right / 1px 12px no-repeat,
-    linear-gradient(var(--tk), var(--tk)) bottom left / 12px 1px no-repeat,
-    linear-gradient(var(--tk), var(--tk)) bottom left / 1px 12px no-repeat,
-    linear-gradient(var(--tk), var(--tk)) bottom right / 12px 1px no-repeat,
-    linear-gradient(var(--tk), var(--tk)) bottom right / 1px 12px no-repeat;
-  opacity: 0;
-  transition: opacity 300ms ease;
-}
-.ticks:hover::after,
-.ticks:focus-within::after {
-  opacity: 1;
-}
 
 /* A last skill group alone on its row spans the row instead of leaving a gap. */
 @media (min-width: 1024px) {
@@ -543,5 +511,305 @@ main > .section {
 @media (min-width: 640px) and (max-width: 1023px) {
   .skills-grid > li:last-child:nth-child(2n + 1) {
     grid-column: 1 / -1;
+  }
+}
+
+/* ======================================================================
+ * Premium dark theme layer
+ * ==================================================================== */
+
+/*
+ * Aurora: three blurred light sources drifting slowly behind the page.
+ * Transform-only animation, so it stays on the compositor. Fixed, so the
+ * glow follows the reader down the page instead of living only in the hero.
+ */
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  --aurora-o: 0.16;
+}
+:root[data-theme='dark'] .aurora {
+  --aurora-o: 0.26;
+}
+.aurora span {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(100px);
+  opacity: var(--aurora-o);
+  will-change: transform;
+}
+.aurora span:nth-child(1) {
+  width: 46vw;
+  height: 46vw;
+  top: -18vw;
+  left: -6vw;
+  background: rgb(var(--accent-tone));
+  animation: aurora-a 26s ease-in-out infinite alternate;
+}
+.aurora span:nth-child(2) {
+  width: 38vw;
+  height: 38vw;
+  top: 8vh;
+  right: -10vw;
+  background: rgb(var(--tone-violet));
+  animation: aurora-b 32s ease-in-out infinite alternate;
+}
+.aurora span:nth-child(3) {
+  width: 34vw;
+  height: 34vw;
+  bottom: -16vw;
+  left: 30vw;
+  background: rgb(var(--tone-cyan));
+  opacity: calc(var(--aurora-o) * 0.7);
+  animation: aurora-c 38s ease-in-out infinite alternate;
+}
+@keyframes aurora-a {
+  to {
+    transform: translate3d(18vw, 12vh, 0) scale(1.15);
+  }
+}
+@keyframes aurora-b {
+  to {
+    transform: translate3d(-16vw, 18vh, 0) scale(0.9);
+  }
+}
+@keyframes aurora-c {
+  to {
+    transform: translate3d(-12vw, -14vh, 0) scale(1.2);
+  }
+}
+
+/* A faint dot lattice over the aurora, fading toward the bottom of the screen. */
+.aurora::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgb(var(--accent-tone) / 0.12) 1px, transparent 1px);
+  background-size: 28px 28px;
+  -webkit-mask-image: linear-gradient(to bottom, #000, transparent 70%);
+  mask-image: linear-gradient(to bottom, #000, transparent 70%);
+}
+
+/*
+ * Everything that is not the aurora paints above it. Only elements with no
+ * Tailwind position class are listed: plain CSS sits outside Tailwind's
+ * layers and would override a `fixed` utility (the nav) if it named it.
+ */
+#main,
+footer {
+  position: relative;
+  z-index: 1;
+}
+
+/*
+ * Component classes live in Tailwind's components layer, so a utility on the
+ * same element (a tone border, a hover colour) still wins over them.
+ */
+@layer components {
+/*
+ * Glass: translucent surface, backdrop blur, a hairline border and a light
+ * catch on the top edge. The one card ground for the whole site.
+ */
+.glass {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.01)),
+    color-mix(in srgb, var(--color-surface) 62%, transparent);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgb(255 255 255 / 0.08);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.06),
+    0 24px 60px -30px rgb(0 0 0 / 0.65);
+}
+:root:not([data-theme='dark']) .glass {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.9), rgb(255 255 255 / 0.65));
+  border-color: rgb(15 23 42 / 0.08);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    0 20px 50px -30px rgb(15 23 42 / 0.25);
+}
+
+/*
+ * Glow border: a gradient ring (accent → violet, or the card's own tone)
+ * drawn with a masked pseudo-element, revealed on hover and focus.
+ */
+.glow-border {
+  position: relative;
+}
+.glow-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgb(var(--tone, var(--accent-tone)) / 0.9),
+    rgb(var(--tone-violet) / 0.5) 45%,
+    transparent 70%,
+    rgb(var(--tone, var(--accent-tone)) / 0.6)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+.glow-border:hover::before,
+.glow-border:focus-within::before {
+  opacity: 1;
+}
+
+/* Primary action: accent-to-violet gradient, soft glow, a light sweep on hover. */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: linear-gradient(135deg, rgb(var(--accent-tone)), rgb(var(--tone-violet)));
+  color: #fff;
+  box-shadow:
+    0 10px 30px -10px rgb(var(--accent-tone) / 0.7),
+    inset 0 1px 0 rgb(255 255 255 / 0.25);
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.35) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 700ms ease;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 16px 40px -12px rgb(var(--accent-tone) / 0.85),
+    inset 0 1px 0 rgb(255 255 255 / 0.25);
+}
+.btn-primary:hover::after {
+  transform: translateX(120%);
+}
+:root:not([data-theme='dark']) .btn-primary {
+  color: #fff;
+}
+
+/* Secondary action: a glass pill. */
+.btn-ghost {
+  background: rgb(255 255 255 / 0.04);
+  border: 1px solid rgb(255 255 255 / 0.12);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition:
+    border-color 200ms ease,
+    background-color 200ms ease,
+    transform 200ms ease;
+}
+.btn-ghost:hover {
+  border-color: rgb(var(--accent-tone) / 0.6);
+  background: rgb(var(--accent-tone) / 0.08);
+  transform: translateY(-2px);
+}
+:root:not([data-theme='dark']) .btn-ghost {
+  background: rgb(255 255 255 / 0.7);
+  border-color: rgb(15 23 42 / 0.12);
+}
+
+/* A glowing hairline that fades in from both ends. */
+.hairline {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(var(--accent-tone) / 0.5),
+    rgb(var(--tone-violet) / 0.4),
+    transparent
+  );
+}
+
+/* Tech ticker: two identical tracks scrolling as one, edges faded out. */
+.marquee {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 48s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+[dir='rtl'] .marquee-track {
+  animation-direction: reverse;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* The simulation panel sits on a soft gradient halo. */
+.panel-halo {
+  position: relative;
+}
+.panel-halo::before {
+  content: '';
+  position: absolute;
+  inset: -18px;
+  z-index: -1;
+  border-radius: 2rem;
+  background: conic-gradient(
+    from 180deg,
+    rgb(var(--accent-tone) / 0.35),
+    rgb(var(--tone-violet) / 0.3),
+    rgb(var(--tone-cyan) / 0.25),
+    rgb(var(--accent-tone) / 0.35)
+  );
+  filter: blur(40px);
+  opacity: 0.55;
+}
+
+}
+
+/* Reveal also brings content into focus, not only into place. */
+.js [data-reveal] {
+  filter: blur(6px);
+  transition:
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.js [data-reveal='shown'] {
+  filter: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora span,
+  .marquee-track {
+    animation: none !important;
+  }
+  .js [data-reveal] {
+    filter: none;
+  }
+}
+
+@media print {
+  .aurora,
+  .marquee {
+    display: none !important;
   }
 }

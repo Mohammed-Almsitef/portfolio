@@ -36,17 +36,12 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
     <section id="top" className="hero relative overflow-hidden">
       {/* Blueprint grid fading out from the top, and one soft accent glow. */}
       <div aria-hidden="true" data-print-hide className="hero-grid pointer-events-none absolute inset-0" />
-      <div
-        aria-hidden="true"
-        data-print-hide
-        className="pointer-events-none absolute -end-40 top-10 size-[44rem] rounded-full bg-[radial-gradient(circle,var(--glow),transparent_65%)] blur-2xl"
-      />
 
       <div className="relative z-2 mx-auto grid max-w-page items-center gap-12 px-6 pb-20 pt-28 md:pt-36 lg:min-h-[92svh] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-14 lg:pb-24">
         <div>
           {current && (
             <Reveal>
-              <p className="mono-label inline-flex flex-wrap items-center gap-x-2 gap-y-1 rounded-full border border-border bg-surface/70 px-3 py-1 font-mono text-[0.7rem] text-muted backdrop-blur-sm">
+              <p className="glass mono-label inline-flex flex-wrap items-center gap-x-2 gap-y-1 rounded-full px-3.5 py-1.5 font-mono text-[0.7rem] text-muted">
                 <span className="text-accent">{t(locale, 'currently')}</span>
                 <span aria-hidden="true">·</span>
                 <span className="text-text">
@@ -71,13 +66,13 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
             <div className="mt-9 flex flex-wrap gap-3">
               <a
                 href="#projects"
-                className="rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-bg shadow-[0_8px_28px_-10px_var(--btn-glow)] transition-transform duration-200 hover:-translate-y-0.5"
+                className="btn-primary rounded-xl px-6 py-3 text-sm font-semibold"
               >
                 {t(locale, 'viewMyWork')}
               </a>
               <a
                 href="#contact"
-                className="rounded-lg border border-border-strong bg-bg/40 px-5 py-2.5 text-sm font-medium backdrop-blur-sm transition-colors duration-200 hover:border-accent hover:text-accent"
+                className="btn-ghost rounded-xl px-6 py-3 text-sm font-medium"
               >
                 {t(locale, 'getInTouch')}
               </a>
@@ -99,10 +94,10 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
               claim. Edited in the manager under About → Headline figures. */}
           {about.stats.length > 0 && (
             <Reveal delay={320}>
-              <dl className="mt-12 grid max-w-xl grid-cols-3 divide-x divide-border border-y border-border rtl:divide-x-reverse">
+              <dl className="glass mt-12 grid max-w-xl grid-cols-3 divide-x divide-border rounded-2xl rtl:divide-x-reverse">
                 {about.stats.map((st) => (
-                  <div key={st.label} className="px-4 py-4 first:ps-0">
-                    <dd className="text-2xl font-semibold tracking-tight tabular-nums md:text-3xl">
+                  <div key={st.label} className="px-5 py-4">
+                    <dd dir="ltr" className="text-gradient w-fit text-2xl font-semibold tracking-tight tabular-nums md:text-3xl">
                       <CountUp value={st.value} />
                     </dd>
                     <dt className="mt-1 text-xs leading-snug text-muted">{st.label}</dt>
@@ -114,7 +109,7 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
         </div>
 
         <Reveal delay={180} className="min-w-0">
-          <div data-print-hide>
+          <div data-print-hide className="panel-halo">
             <SlamViewport labels={labels} />
           </div>
         </Reveal>

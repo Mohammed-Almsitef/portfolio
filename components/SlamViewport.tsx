@@ -363,7 +363,7 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
   }, [])
 
   return (
-    <figure className="slam-panel relative overflow-hidden rounded-2xl border border-border bg-surface/80 shadow-[0_30px_80px_-40px_rgb(var(--accent-tone)/0.45)] backdrop-blur-sm">
+    <figure className="slam-panel glass relative overflow-hidden rounded-2xl">
       {/* Title bar, in the manner of an RViz window. */}
       <figcaption className="flex items-center justify-between gap-3 border-b border-border px-4 py-2.5 font-mono text-[0.7rem] text-muted">
         <span className="flex min-w-0 items-center gap-2">

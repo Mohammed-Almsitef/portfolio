@@ -1,15 +1,15 @@
 import type { Metadata } from 'next'
-import { Inter, JetBrains_Mono, Noto_Sans_Arabic } from 'next/font/google'
+import { Geist, Geist_Mono, Noto_Sans_Arabic } from 'next/font/google'
 import { getAppearance, getSite } from '@/lib/content'
 import { alternatesFor } from '@/lib/metadata'
 import './globals.css'
 
-const inter = Inter({
+const geist = Geist({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-geist',
   display: 'swap',
 })
-// Inter carries no Arabic glyphs, so Arabic would fall back to whatever the
+// Geist carries no Arabic glyphs, so Arabic would fall back to whatever the
 // device happens to have — usually something that clashes badly with the rest
 // of the page. Subsetted to Arabic only, and applied via [lang='ar'], so
 // English visitors never download it.
@@ -19,9 +19,9 @@ const arabic = Noto_Sans_Arabic({
   display: 'swap',
 })
 
-const mono = JetBrains_Mono({
+const mono = Geist_Mono({
   subsets: ['latin'],
-  variable: '--font-jetbrains',
+  variable: '--font-geist-mono',
   display: 'swap',
 })
 
@@ -90,7 +90,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       // Server-rendered, so the accent is right in the first paint — no flash
       // of blue before a client effect could correct it.
       data-accent={accent}
-      className={`${inter.variable} ${mono.variable} ${arabic.variable}`}
+      className={`${geist.variable} ${mono.variable} ${arabic.variable}`}
     >
       <head>
         {/*
