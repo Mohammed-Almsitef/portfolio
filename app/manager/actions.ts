@@ -23,7 +23,7 @@ async function clientIp(): Promise<string> {
 /** Only same-origin manager paths, so `?from=` can't bounce you off-site. */
 function safeRedirect(target: FormDataEntryValue | null): string {
   const value = typeof target === 'string' ? target : ''
-  return value.startsWith('/') && !value.startsWith('//') ? value : '/keystatic'
+  return value.startsWith('/') && !value.startsWith('//') ? value : '/manager'
 }
 
 /** "3 attempts left." — only once it's worth warning about. */

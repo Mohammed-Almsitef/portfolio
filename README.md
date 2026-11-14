@@ -17,7 +17,7 @@ Open http://localhost:3000
 
 ## Editing your content
 
-Run `npm run dev` and open **http://localhost:3000/keystatic**. No login, no database — it writes JSON files under `content/`, which you commit like any other change.
+Run `npm run dev` and open **http://localhost:3000/manager** for the Overview (site status, what needs attention, quick links), or **/keystatic** to edit content directly. No login, no database — it writes JSON files under `content/`, which you commit like any other change.
 
 You can add, delete, hide and reorder everything from there:
 

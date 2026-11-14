@@ -41,7 +41,7 @@
   --kui-color-scale-slate8: #9aa5b6;
   --kui-color-scale-slate9: #5d6675; /* --color-muted */
   --kui-color-scale-slate10: #36404f; /* --color-body */
-  --kui-color-scale-slate11: #0b1220; /* --color-text */
+  --kui-color-scale-slate11: #0f172a; /* --color-text */
 
   /* The site's light accent, #1d4ed8. The two themes cannot share one blue: one
      light enough to sit on a dark ground is unreadable on white. */
@@ -63,17 +63,17 @@
 .kui-theme.kui-scheme--dark {
   /* Canvas darkest, panels lighter — Keystar's convention, and the site's
      --d-bg / --d-surface / --d-elevated ladder already follows it. */
-  --kui-color-scale-slate1: #131720;
-  --kui-color-scale-slate2: #1a1f2b;
-  --kui-color-scale-slate3: #212836;
-  --kui-color-scale-slate4: #273040;
-  --kui-color-scale-slate5: #2a3140;
-  --kui-color-scale-slate6: #333c4d;
-  --kui-color-scale-slate7: #3a4355;
-  --kui-color-scale-slate8: #4b566b;
-  --kui-color-scale-slate9: #868fa0;
-  --kui-color-scale-slate10: #b6bdcd;
-  --kui-color-scale-slate11: #eaeef6;
+  --kui-color-scale-slate1: #090b10; /* canvas — the site's --d-bg family */
+  --kui-color-scale-slate2: #0d1017; /* sidebar, cards (--d-surface) */
+  --kui-color-scale-slate3: #141822; /* inputs (--d-elevated) */
+  --kui-color-scale-slate4: #1a1f2b; /* hovered rows */
+  --kui-color-scale-slate5: #1f2532;
+  --kui-color-scale-slate6: #1c2230; /* --d-border */
+  --kui-color-scale-slate7: #2b3344; /* --d-border-strong */
+  --kui-color-scale-slate8: #3f4a5e;
+  --kui-color-scale-slate9: #7f899b; /* --d-muted */
+  --kui-color-scale-slate10: #b4bccb; /* --d-body */
+  --kui-color-scale-slate11: #f2f4f8; /* --d-text */
 
   /* The site's dark accent, #60a5fa, across the ramp. */
   --kui-color-scale-indigo1: #131a26;
@@ -98,17 +98,17 @@
 
 @media (prefers-color-scheme: dark) {
   .kui-theme.kui-scheme--auto {
-    --kui-color-scale-slate1: #131720;
-    --kui-color-scale-slate2: #1a1f2b;
-    --kui-color-scale-slate3: #212836;
-    --kui-color-scale-slate4: #273040;
-    --kui-color-scale-slate5: #2a3140;
-    --kui-color-scale-slate6: #333c4d;
-    --kui-color-scale-slate7: #3a4355;
-    --kui-color-scale-slate8: #4b566b;
-    --kui-color-scale-slate9: #868fa0;
-    --kui-color-scale-slate10: #b6bdcd;
-    --kui-color-scale-slate11: #eaeef6;
+    --kui-color-scale-slate1: #090b10; /* canvas — the site's --d-bg family */
+    --kui-color-scale-slate2: #0d1017; /* sidebar, cards (--d-surface) */
+    --kui-color-scale-slate3: #141822; /* inputs (--d-elevated) */
+    --kui-color-scale-slate4: #1a1f2b; /* hovered rows */
+    --kui-color-scale-slate5: #1f2532;
+    --kui-color-scale-slate6: #1c2230; /* --d-border */
+    --kui-color-scale-slate7: #2b3344; /* --d-border-strong */
+    --kui-color-scale-slate8: #3f4a5e;
+    --kui-color-scale-slate9: #7f899b; /* --d-muted */
+    --kui-color-scale-slate10: #b4bccb; /* --d-body */
+    --kui-color-scale-slate11: #f2f4f8; /* --d-text */
 
     --kui-color-scale-indigo1: #131a26;
     --kui-color-scale-indigo2: #16202f;

@@ -2,8 +2,8 @@
 
 import { useActionState } from 'react'
 
-import { changePasswordAction, removePasswordAction, type FormState } from '../actions'
-import { Field, FormResult, Message, Submit } from '../ui'
+import { changePasswordAction, removePasswordAction, type FormState } from '../../actions'
+import { Field, FormResult, Message, Submit } from '../../ui'
 
 export function ChangePasswordForm({ needsCurrent }: { needsCurrent: boolean }) {
   const [state, action, pending] = useActionState<FormState, FormData>(

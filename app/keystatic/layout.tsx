@@ -34,6 +34,12 @@ export default async function KeystaticLayout({ children }: { children: React.Re
           </span>
         )}
 
+        <Link href="/manager" className="kst-chip-action">
+          Overview
+        </Link>
+        <a href="/" target="_blank" rel="noopener" className="kst-chip-action">
+          View site ↗
+        </a>
         <Link href="/manager/account" className="kst-chip-action">
           Account
         </Link>

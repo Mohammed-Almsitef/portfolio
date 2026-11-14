@@ -633,15 +633,12 @@ export default config({
   ui: {
     brand: { name: 'Mohammed Almsitef', mark: BrandMark },
     navigation: {
-      'Page setup': ['sections', 'site', 'appearance'],
-      // `socials` sits beside `contact` because that is the only section it
-      // appears in — a link list two groups away is a link list you forget.
-      Content: ['about', 'projects', 'posts', 'teaching', 'openSource', 'skills', 'experience', 'contact', 'socials'],
-      Credentials: ['education', 'publications'],
-      'العربية · إعداد الصفحة': ['sectionsAr', 'siteAr'],
-      'العربية · المحتوى': ['aboutAr', 'projectsAr', 'teachingAr', 'openSourceAr', 'skillsAr', 'experienceAr', 'contactAr', 'socialsAr'],
-      'العربية · الروابط': ['educationAr', 'publicationsAr'],
-      'العربية · النشر': ['arabicSettings'],
+      // Ordered by how often each is edited: content first, setup last.
+      Content: ['projects', 'posts', 'about', 'experience', 'skills', 'teaching', 'openSource'],
+      Profile: ['site', 'contact', 'socials', 'education', 'publications'],
+      'Page setup': ['sections', 'appearance'],
+      'العربية · المحتوى': ['projectsAr', 'aboutAr', 'experienceAr', 'skillsAr', 'teachingAr', 'openSourceAr', 'educationAr', 'publicationsAr'],
+      'العربية · الإعداد': ['siteAr', 'contactAr', 'socialsAr', 'sectionsAr', 'arabicSettings'],
     },
   },
 

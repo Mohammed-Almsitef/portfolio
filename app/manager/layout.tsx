@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 /**
- * Shell for the manager's own screens (sign in, account).
+ * The manager's screens (sign in, overview, account).
  *
  * Kept out of search results — these pages are a door, not content, and a
  * password prompt indexed under the site's name helps nobody.
@@ -12,9 +12,5 @@ export const metadata: Metadata = {
 }
 
 export default function ManagerLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <main className="flex min-h-dvh items-center justify-center px-5 py-16">
-      <div className="w-full">{children}</div>
-    </main>
-  )
+  return <div className="min-h-dvh bg-bg text-text">{children}</div>
 }

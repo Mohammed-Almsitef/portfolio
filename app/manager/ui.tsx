@@ -15,8 +15,8 @@ export function Card({
   children: React.ReactNode
 }) {
   return (
-    <section className="rounded-2xl border border-border bg-surface p-6 shadow-sm sm:p-8">
-      <h1 className="text-xl font-semibold tracking-tight text-text">{title}</h1>
+    <section className="rounded-2xl border border-border bg-surface p-6 sm:p-8">
+      <h2 className="text-lg font-semibold tracking-tight text-text">{title}</h2>
       {description && <p className="mt-2 text-sm leading-relaxed text-body">{description}</p>}
       <div className="mt-6">{children}</div>
     </section>

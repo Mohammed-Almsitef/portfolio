@@ -1,10 +1,8 @@
-import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 import { gateStatus, isSignedIn } from '@/lib/manager/auth'
 import { storeConfigured } from '@/lib/manager/store'
-import { signOutAction } from '../actions'
-import { Card, Message } from '../ui'
+import { Card, Message } from '../../ui'
 import { ChangePasswordForm, RemovePasswordForm } from './AccountForms'
 
 /**
@@ -31,10 +29,14 @@ export default async function AccountPage() {
   const protectionOn = status.protection === 'required'
 
   return (
-    <div className="space-y-5">
+    <div className="max-w-2xl space-y-5">
+      <div className="mb-8">
+        <h1 className="text-3xl font-semibold tracking-[-0.03em]">Account</h1>
+        <p className="mt-2 text-body">Password protection for the manager and editor.</p>
+      </div>
       <Card
-        title="Manager account"
-        description="Controls the password on /keystatic. Content itself is edited in the manager."
+        title="Password"
+        description="Protects the Overview, the account page and the content editor at /keystatic."
       >
         {/* Four states, and the difference between them is what to do next. The
             no-store cases used to share one message that said the manager was
@@ -82,16 +84,6 @@ export default async function AccountPage() {
         </Card>
       )}
 
-      <div className="flex items-center justify-between text-sm">
-        <Link href="/keystatic" className="tap-inline underline underline-offset-4 hover:text-text">
-          ← Back to the manager
-        </Link>
-        <form action={signOutAction}>
-          <button type="submit" className="tap-inline underline underline-offset-4 hover:text-text">
-            Sign out
-          </button>
-        </form>
-      </div>
     </div>
   )
 }
