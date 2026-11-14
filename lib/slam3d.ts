@@ -278,8 +278,24 @@ export function createScene3D(
   goal.visible = false
   world.add(goal)
 
+  // Charging dock: a glowing pad where the robot started and returns to.
+  const dockMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.55 })
+  const dock = new THREE.Group()
+  const pad = new THREE.Mesh(new THREE.CylinderGeometry(R * 1.25, R * 1.25, 0.12, 40), dockMat)
+  pad.position.y = 0.06
+  dock.add(pad)
+  const padRing = new THREE.Mesh(
+    new THREE.RingGeometry(R * 1.25, R * 1.45, 40),
+    new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.35, side: THREE.DoubleSide }),
+  )
+  padRing.rotation.x = -Math.PI / 2
+  padRing.position.y = 0.14
+  dock.add(padRing)
+  world.add(dock)
+
   const applyPalette = (p: Palette3D) => {
     const ink = col(p.ink)
+    dockMat.color = col(p.plan)
     // Walls: light slabs on the dark theme; on the light theme a mid grey,
     // since near-black slabs read as heavy against the pale page.
     const lightTheme = ink.r + ink.g + ink.b < 1.2
@@ -415,6 +431,9 @@ export function createScene3D(
         setLine(trailGeo, null, sim.trail, 0, 0.08)
         trail.visible = true
       } else trail.visible = false
+
+      dock.position.set(sim.dock.x, 0, sim.dock.y)
+      dockMat.opacity = sim.mode === 'docked' ? 0.55 + 0.25 * Math.sin(sim.time * 4) : 0.3
 
       if (sim.goal) {
         goal.visible = true

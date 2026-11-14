@@ -33,6 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const pages: MetadataRoute.Sitemap = [
     { url: site.url, lastModified: now, priority: 1, alternates: alternates('') },
+    { url: `${site.url}/demo`, lastModified: now, priority: 0.7, alternates: alternates('/demo') },
     // Each visible case study is its own indexable page.
     ...projects.map((p) => ({
       url: `${site.url}/projects/${p.slug}`,

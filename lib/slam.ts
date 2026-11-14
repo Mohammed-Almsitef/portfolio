@@ -27,7 +27,17 @@ const V_MAX = 7 // cells/s  (0.7 m/s)
 const W_MAX = 2.4 // rad/s
 const LOOKAHEAD = 3.2
 
-export type Mode = 'exploring' | 'navigating' | 'reached' | 'complete' | 'unreachable'
+export type Mode =
+  | 'exploring'
+  | 'navigating'
+  | 'reached'
+  | 'complete'
+  | 'unreachable'
+  | 'returning'
+  | 'docked'
+
+/** The kinds of place the robot can be dropped into. */
+export type Layout = 'rooms' | 'maze' | 'warehouse'
 
 export type Pt = { x: number; y: number }
 
@@ -54,6 +64,9 @@ export type Sim = {
   time: number
   lastPlan: number
   /** Seconds the robot has wanted to move but could not. */
+  layout: Layout
+  /** The charging dock: where the robot started, and returns to when done. */
+  dock: Pt & { th: number }
   stuckFor: number
   /** Seconds left in a back-away recovery, and its direction. */
   recover: number
@@ -174,6 +187,112 @@ function makeTruth(w: number, h: number, seed: number) {
   return { t, leaves }
 }
 
+/**
+ * A braided maze filling the floor: a recursive-backtracker spanning tree on a
+ * coarse grid, plus a few extra openings so there are loops to choose between.
+ * Corridors are ~10 cells (1 m) wide, enough for the inflated robot.
+ */
+function makeMaze(w: number, h: number, seed: number) {
+  const r = rng(seed ^ 0x51ed)
+  const t = new Uint8Array(w * h)
+  const cols = Math.max(2, Math.round((w - 1) / 12))
+  const rows = Math.max(2, Math.round((h - 1) / 11))
+  const px = (w - 1) / cols
+  const py = (h - 1) / rows
+  // right[c][r], down[c][r]: is that wall still standing?
+  const right = Array.from({ length: cols }, () => Array(rows).fill(true))
+  const down = Array.from({ length: cols }, () => Array(rows).fill(true))
+  const seen = Array.from({ length: cols }, () => Array(rows).fill(false))
+  const stack: [number, number][] = [[0, 0]]
+  seen[0][0] = true
+  while (stack.length) {
+    const [c, rr] = stack[stack.length - 1]
+    const nbrs = (
+      [
+        [c + 1, rr],
+        [c - 1, rr],
+        [c, rr + 1],
+        [c, rr - 1],
+      ] as [number, number][]
+    ).filter(([a, b]) => a >= 0 && b >= 0 && a < cols && b < rows && !seen[a][b])
+    if (!nbrs.length) {
+      stack.pop()
+      continue
+    }
+    const [nc, nr] = nbrs[Math.floor(r() * nbrs.length)]
+    if (nc > c) right[c][rr] = false
+    else if (nc < c) right[nc][rr] = false
+    else if (nr > rr) down[c][rr] = false
+    else down[c][nr] = false
+    seen[nc][nr] = true
+    stack.push([nc, nr])
+  }
+  // Braid: knock out some extra walls.
+  for (let c = 0; c < cols; c++)
+    for (let rr = 0; rr < rows; rr++) {
+      if (c < cols - 1 && right[c][rr] && r() < 0.18) right[c][rr] = false
+      if (rr < rows - 1 && down[c][rr] && r() < 0.18) down[c][rr] = false
+    }
+  const set = (x: number, y: number) => {
+    if (x >= 0 && y >= 0 && x < w && y < h) t[y * w + x] = 1
+  }
+  for (let x = 0; x < w; x++) {
+    set(x, 0)
+    set(x, h - 1)
+  }
+  for (let y = 0; y < h; y++) {
+    set(0, y)
+    set(w - 1, y)
+  }
+  for (let c = 0; c < cols; c++)
+    for (let rr = 0; rr < rows; rr++) {
+      const x0 = Math.round(c * px)
+      const x1 = Math.round((c + 1) * px)
+      const y0 = Math.round(rr * py)
+      const y1 = Math.round((rr + 1) * py)
+      if (c < cols - 1 && right[c][rr]) for (let y = y0; y <= y1; y++) set(x1, y)
+      if (rr < rows - 1 && down[c][rr]) for (let x = x0; x <= x1; x++) set(x, y1)
+    }
+  return t
+}
+
+/**
+ * A small warehouse: rows of shelving with ~1 m aisles, a cross aisle, and a
+ * few pallets in the open loading area.
+ */
+function makeWarehouse(w: number, h: number, seed: number) {
+  const r = rng(seed ^ 0xa11e)
+  const t = new Uint8Array(w * h)
+  const set = (x: number, y: number) => {
+    if (x >= 0 && y >= 0 && x < w && y < h) t[y * w + x] = 1
+  }
+  const box = (x0: number, y0: number, x1: number, y1: number) => {
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) set(x, y)
+  }
+  for (let x = 0; x < w; x++) {
+    set(x, 0)
+    set(x, h - 1)
+  }
+  for (let y = 0; y < h; y++) {
+    set(0, y)
+    set(w - 1, y)
+  }
+  // Shelving occupies the left ~70%; the right is an open loading area.
+  const shelfEnd = Math.round(w * 0.68)
+  const cross = 18 + Math.floor(r() * Math.max(1, shelfEnd - 40))
+  for (let y = 10; y < h - 8; y += 11) {
+    box(11, y, cross - 1, y + 1)
+    box(cross + 10, y, shelfEnd, y + 1)
+  }
+  // Pallets in the loading area, kept off the walls.
+  for (let k = 0; k < 3; k++) {
+    const x = shelfEnd + 9 + Math.floor(r() * Math.max(1, w - shelfEnd - 20))
+    const y = 8 + Math.floor(r() * Math.max(1, h - 20))
+    box(x, y, x + 2 + Math.floor(r() * 2), y + 2 + Math.floor(r() * 2))
+  }
+  return t
+}
+
 function clearAround(truth: Uint8Array, w: number, x: number, y: number, rad: number) {
   for (let dy = -Math.ceil(rad); dy <= rad; dy++)
     for (let dx = -Math.ceil(rad); dx <= rad; dx++)
@@ -181,23 +300,55 @@ function clearAround(truth: Uint8Array, w: number, x: number, y: number, rad: nu
   return true
 }
 
-export function createSim(w: number, h: number, seed: number): Sim {
-  const { t, leaves } = makeTruth(w, h, seed)
+export function createSim(w: number, h: number, seed: number, layout: Layout = 'rooms'): Sim {
   const r = rng(seed ^ 0x9e3779b9)
-
-  // Start in the largest room, somewhere with clearance.
-  const room = leaves.reduce((a, b) =>
-    (b[2] - b[0]) * (b[3] - b[1]) > (a[2] - a[0]) * (a[3] - a[1]) ? b : a,
-  )
-  let sx = (room[0] + room[2]) / 2
-  let sy = (room[1] + room[3]) / 2
-  for (let i = 0; i < 60 && !clearAround(t, w, sx, sy, 4); i++) {
-    sx = room[0] + 4 + r() * (room[2] - room[0] - 8)
-    sy = room[1] + 4 + r() * (room[3] - room[1] - 8)
+  let t: Uint8Array
+  let sx: number
+  let sy: number
+  if (layout === 'rooms') {
+    const made = makeTruth(w, h, seed)
+    t = made.t
+    // Start in the largest room, somewhere with clearance.
+    const room = made.leaves.reduce((a, b) =>
+      (b[2] - b[0]) * (b[3] - b[1]) > (a[2] - a[0]) * (a[3] - a[1]) ? b : a,
+    )
+    sx = (room[0] + room[2]) / 2
+    sy = (room[1] + room[3]) / 2
+    for (let i = 0; i < 60 && !clearAround(t, w, sx, sy, 4); i++) {
+      sx = room[0] + 4 + r() * (room[2] - room[0] - 8)
+      sy = room[1] + 4 + r() * (room[3] - room[1] - 8)
+    }
+  } else {
+    t = layout === 'maze' ? makeMaze(w, h, seed) : makeWarehouse(w, h, seed)
+    // Maze: start in a corner cell. Warehouse: in the open loading area.
+    const cx = layout === 'maze' ? 6 : w - 8
+    const cy = layout === 'maze' ? 6 : h / 2
+    sx = cx
+    sy = cy
+    for (let i = 0; i < 400 && !clearAround(t, w, sx, sy, 3.5); i++) {
+      sx = Math.min(w - 5, Math.max(4, cx + (r() - 0.5) * (8 + i * 0.3)))
+      sy = Math.min(h - 5, Math.max(4, cy + (r() - 0.5) * (8 + i * 0.3)))
+    }
   }
 
+  // Coverage is measured against free space the robot can actually reach.
   let truthFree = 0
-  for (let i = 0; i < t.length; i++) if (!t[i]) truthFree++
+  {
+    const seen = new Uint8Array(w * h)
+    const q = [Math.floor(sy) * w + Math.floor(sx)]
+    seen[q[0]] = 1
+    while (q.length) {
+      const i = q.pop()!
+      truthFree++
+      const x = i % w
+      for (const j of [i - 1, i + 1, i - w, i + w]) {
+        const jx = j % w
+        if (j < 0 || j >= w * h || Math.abs(jx - x) > 1 || seen[j] || t[j]) continue
+        seen[j] = 1
+        q.push(j)
+      }
+    }
+  }
 
   const sim: Sim = {
     w,
@@ -210,6 +361,8 @@ export function createSim(w: number, h: number, seed: number): Sim {
     known: 0,
     dirty: true,
     pose: { x: sx, y: sy, th: r() * Math.PI * 2 },
+    layout,
+    dock: { x: sx, y: sy, th: 0 },
     path: [],
     pathIdx: 0,
     goal: null,
@@ -549,9 +702,18 @@ export function step(s: Sim, dt: number) {
       const f = nearestFrontier(s)
       s.lastPlan = s.time
       if (!f) {
-        s.goal = null
-        s.path = []
-        setMode(s, 'complete')
+        // Map finished: drive back to the charging dock.
+        const home = plan(s, s.pose, s.dock)
+        if (home) {
+          s.goal = { x: s.dock.x, y: s.dock.y }
+          s.path = home
+          s.pathIdx = 0
+          setMode(s, 'returning')
+        } else {
+          s.goal = null
+          s.path = []
+          setMode(s, 'complete')
+        }
       } else {
         const p = plan(s, s.pose, f)
         if (p) {
@@ -578,6 +740,7 @@ export function step(s: Sim, dt: number) {
     } else {
       s.path = []
       s.goal = null
+      if (s.mode === 'returning') setMode(s, 'complete')
     }
   }
 
@@ -585,7 +748,7 @@ export function step(s: Sim, dt: number) {
   let v = 0
   let om = 0
   const P = s.pose
-  if (s.path.length > 1 && (s.mode === 'exploring' || s.mode === 'navigating')) {
+  if (s.path.length > 1 && (s.mode === 'exploring' || s.mode === 'navigating' || s.mode === 'returning')) {
     // Advance the progress index to the closest point ahead.
     let best = s.pathIdx
     let bd = Infinity
@@ -611,6 +774,9 @@ export function step(s: Sim, dt: number) {
       if (s.mode === 'navigating') {
         s.goal = null
         setMode(s, 'reached')
+      } else if (s.mode === 'returning') {
+        s.goal = null
+        setMode(s, 'docked')
       }
     } else {
       const e = wrap(Math.atan2(tgt.y - P.y, tgt.x - P.x) - P.th)

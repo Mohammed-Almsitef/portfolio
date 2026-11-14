@@ -491,7 +491,9 @@ main > .section {
 
 /* The simulation's mode badge takes the colour of what the robot is doing. */
 .slam-mode[data-mode='navigating'],
-.slam-mode[data-mode='reached'] {
+.slam-mode[data-mode='reached'],
+.slam-mode[data-mode='returning'],
+.slam-mode[data-mode='docked'] {
   color: rgb(var(--tone-emerald));
 }
 .slam-mode[data-mode='complete'] {

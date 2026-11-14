@@ -10,6 +10,7 @@ import {
   createSim,
   sendGoal,
   step,
+  type Layout,
   type Mode,
   type Sim,
 } from '@/lib/slam'
@@ -29,6 +30,9 @@ export type SlamLabels = {
   /** Shown instead of `hint` once the 3D view is up on a mouse device. */
   hintDrag: string
   modes: Record<Mode, string>
+  layouts: Record<Layout, string>
+  /** Accessible name for the scenario picker. */
+  scenario: string
 }
 
 type Palette = {
@@ -78,6 +82,8 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
   const simRef = useRef<Sim | null>(null)
   const resetRef = useRef<() => void>(() => {})
   const want3dRef = useRef<() => void>(() => {})
+  const [layout, setLayout] = useState<Layout>('rooms')
+  const layoutRef = useRef<Layout>('rooms')
   const [is3d, setIs3d] = useState(false)
   const labelsRef = useRef(labels)
   useEffect(() => {
@@ -99,7 +105,7 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     let seed = 1 + Math.floor(Math.random() * 1e6)
-    let sim = createSim(W, H, seed)
+    let sim = createSim(W, H, seed, layoutRef.current)
     simRef.current = sim
 
     // The map lives at one pixel per cell and is scaled up when drawn.
@@ -238,8 +244,24 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
         ctx.setLineDash([])
       }
 
-      // Goal marker.
-      if (sim.goal) {
+      // Charging dock: a pad with contacts where the robot started.
+      {
+        const dx = sim.dock.x * c
+        const dy = sim.dock.y * c
+        const rr = ROBOT_RADIUS * c * 1.5
+        ctx.fillStyle = rgba(pal.plan, sim.mode === 'docked' ? 0.3 : 0.14)
+        ctx.strokeStyle = rgba(pal.plan, 0.85)
+        ctx.lineWidth = Math.max(1, c * 0.2)
+        ctx.setLineDash([c * 0.6, c * 0.4])
+        ctx.beginPath()
+        ctx.arc(dx, dy, rr, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.stroke()
+        ctx.setLineDash([])
+      }
+
+      // Goal marker (not drawn for the dock itself, which has its own pad).
+      if (sim.goal && sim.mode !== 'returning') {
         const gx = sim.goal.x * c
         const gy = sim.goal.y * c
         const pulse = 1 + 0.25 * Math.sin(sim.time * 5)
@@ -277,7 +299,7 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
 
     const reset = () => {
       seed = (seed * 48271 + 11) % 2147483647
-      sim = createSim(W, H, seed)
+      sim = createSim(W, H, seed, layoutRef.current)
       simRef.current = sim
       sim.dirty = true
       hud(true)
@@ -305,7 +327,7 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
         step(sim, dt / 2)
         step(sim, dt / 2)
       }
-      if (sim.mode === 'complete') {
+      if (sim.mode === 'complete' || sim.mode === 'docked') {
         if (completeAt < 0) completeAt = sim.time
         else if (sim.time - completeAt > 3.5) {
           completeAt = -1
@@ -496,6 +518,32 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
         </button>
         </span>
       </figcaption>
+
+      <div
+        role="radiogroup"
+        aria-label={labels.scenario}
+        className="flex gap-1 border-b border-border px-3 py-2 text-xs"
+      >
+        {(Object.keys(labels.layouts) as Layout[]).map((l) => (
+          <button
+            key={l}
+            type="button"
+            role="radio"
+            aria-checked={layout === l}
+            onClick={() => {
+              if (layoutRef.current === l) return
+              layoutRef.current = l
+              setLayout(l)
+              resetRef.current()
+            }}
+            className={`tap rounded-md px-2.5 py-1 font-medium transition-colors ${
+              layout === l ? 'bg-accent/15 text-accent' : 'text-muted hover:text-text'
+            }`}
+          >
+            {labels.layouts[l]}
+          </button>
+        ))}
+      </div>
 
       <div ref={stageRef} className="relative">
         <canvas

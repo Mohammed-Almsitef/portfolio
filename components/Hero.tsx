@@ -1,7 +1,8 @@
 import { getAbout, getExperience, getSite } from '@/lib/content'
 import CountUp from './CountUp'
-import SlamViewport, { type SlamLabels } from './SlamViewport'
-import { t, type Locale } from '@/lib/locale'
+import SlamViewport from './SlamViewport'
+import { simLabels } from '@/lib/simLabels'
+import { localePath, t, type Locale } from '@/lib/locale'
 
 /**
  * The hero does not use the scroll reveal: it is the first paint, and hiding
@@ -20,21 +21,7 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
   ])
   const current = jobs[0]
 
-  const labels: SlamLabels = {
-    title: t(locale, 'simTitle'),
-    hint: t(locale, 'simHint'),
-    hintDrag: t(locale, 'simHintDrag'),
-    aria: t(locale, 'simAria'),
-    newMap: t(locale, 'newMap'),
-    map: t(locale, 'mapLabel'),
-    modes: {
-      exploring: t(locale, 'modeExploring'),
-      navigating: t(locale, 'modeNavigating'),
-      reached: t(locale, 'modeReached'),
-      complete: t(locale, 'modeComplete'),
-      unreachable: t(locale, 'modeUnreachable'),
-    },
-  }
+  const labels = simLabels(locale)
 
   return (
     <section id="top" className="hero relative overflow-hidden">
@@ -124,7 +111,10 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
             <SlamViewport labels={labels} />
           </div>
           <p data-print-hide className="mt-4 text-center text-sm text-muted">
-            {t(locale, 'simCaption')}
+            {t(locale, 'simCaption')}{' '}
+            <a href={localePath(locale, '/demo')} className="font-medium text-accent underline-offset-4 hover:underline">
+              {t(locale, 'tryDemo')} <span aria-hidden="true" className="inline-block rtl:-scale-x-100">→</span>
+            </a>
           </p>
         </div>
       </div>
