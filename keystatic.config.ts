@@ -1,6 +1,7 @@
 import { collection, config, fields, singleton } from '@keystatic/core'
 import { PLATFORM_IDS, platformName } from '@/lib/socials'
 import { TONE_OPTIONS } from '@/lib/tones'
+import { STRINGS, UI_GROUPS, type UIKey } from '@/lib/locale'
 import BrandMark from '@/components/manager/BrandMark'
 
 /**
@@ -268,9 +269,22 @@ const siteDef = (dir: string, tag: string) =>
         label: 'Site URL',
         description: 'Used for metadata and the sitemap.',
       }),
+      resumeFile: fields.file({
+        label: 'CV (PDF)',
+        description:
+          'Upload your CV here and every "Download CV" button on the site uses it. Leave empty to keep using the path below.',
+        directory: 'public/cv',
+        publicPath: '/cv/',
+        validation: { isRequired: false },
+      }),
       resumeUrl: fields.text({
-        label: 'Résumé path',
-        description: 'Upload resume.pdf to public/ and put /resume.pdf here.',
+        label: 'CV path or link (fallback)',
+        description: 'Used when no file is uploaded above, e.g. /resume.pdf or a Google Drive link.',
+      }),
+      seoKeywords: fields.array(fields.text({ label: 'Keyword' }), {
+        label: 'Search keywords',
+        description: 'Terms search engines associate with the site, e.g. ROS 2 engineer, Nav2. Your name is always added.',
+        itemLabel: (props) => props.value || 'Keyword',
       }),
       availableForWork: fields.checkbox({
         label: 'Show the "Available for work" badge',
@@ -573,6 +587,40 @@ const teachingDef = (dir: string, tag: string) =>
     },
   })
 
+/**
+ * Every piece of interface text, grouped by area. Each field shows its
+ * built-in wording; leaving it empty keeps that default. Keys missing from
+ * UI_GROUPS collect under "Other", so nothing is ever uneditable.
+ */
+const uiTextDef = (dir: string, tag: string, locale: 'en' | 'ar') => {
+  const listed = new Set(UI_GROUPS.flatMap((g) => g.keys))
+  const other = (Object.keys(STRINGS.en) as UIKey[]).filter((k) => !listed.has(k))
+  const groups = [...UI_GROUPS, ...(other.length ? [{ id: 'other', label: 'Other', keys: other }] : [])]
+  const field = (key: UIKey) => {
+    const def = STRINGS[locale][key]
+    // Labelled by the English wording itself — "Download CV" says which text
+    // this is far better than a code key — with the default for this language.
+    const en = STRINGS.en[key]
+    const label = en.length > 56 ? `${en.slice(0, 53).replace(/\s+\S*$/, '')}…` : en
+    return fields.text({
+      label,
+      description: `Default: ${def}`,
+      multiline: def.length > 70,
+    })
+  }
+  return singleton({
+    label: `Site text${tag}`,
+    path: `${dir}/ui`,
+    format: { data: 'json' },
+    schema: Object.fromEntries(
+      groups.map((g) => [
+        g.id,
+        fields.object(Object.fromEntries(g.keys.map((k) => [k, field(k)])), { label: g.label }),
+      ]),
+    ),
+  })
+}
+
 const openSourceDef = (dir: string, tag: string) =>
   singleton({
     label: `Open source${tag}`,
@@ -636,9 +684,9 @@ export default config({
       // Ordered by how often each is edited: content first, setup last.
       Content: ['projects', 'posts', 'about', 'experience', 'skills', 'teaching', 'openSource'],
       Profile: ['site', 'contact', 'socials', 'education', 'publications'],
-      'Page setup': ['sections', 'appearance'],
+      'Page setup': ['sections', 'appearance', 'uiText'],
       'العربية · المحتوى': ['projectsAr', 'aboutAr', 'experienceAr', 'skillsAr', 'teachingAr', 'openSourceAr', 'educationAr', 'publicationsAr'],
-      'العربية · الإعداد': ['siteAr', 'contactAr', 'socialsAr', 'sectionsAr', 'arabicSettings'],
+      'العربية · الإعداد': ['siteAr', 'contactAr', 'socialsAr', 'sectionsAr', 'uiTextAr', 'arabicSettings'],
     },
   },
 
@@ -689,6 +737,7 @@ export default config({
     publications: publicationsDef('content', ''),
     openSource: openSourceDef('content', ''),
     teaching: teachingDef('content', ''),
+    uiText: uiTextDef('content', '', 'en'),
 
     sectionsAr: sectionsDef('content/ar', ' · عربي'),
     siteAr: siteDef('content/ar', ' · عربي'),
@@ -701,6 +750,7 @@ export default config({
     publicationsAr: publicationsDef('content/ar', ' · عربي'),
     openSourceAr: openSourceDef('content/ar', ' · عربي'),
     teachingAr: teachingDef('content/ar', ' · عربي'),
+    uiTextAr: uiTextDef('content/ar', ' · عربي', 'ar'),
 
     /**
      * Chrome rather than content, so it is deliberately NOT duplicated per

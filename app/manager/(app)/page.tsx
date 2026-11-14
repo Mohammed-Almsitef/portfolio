@@ -20,6 +20,7 @@ const EDIT = [
   { href: editPath('/singleton/appearance'), title: 'Appearance', detail: 'Default theme, accent' },
   { href: editPath('/singleton/aboutAr'), title: 'Arabic site', detail: 'The /ar version' },
   { href: editPath('/singleton/socials'), title: 'Contact links', detail: 'GitHub, LinkedIn, …' },
+  { href: editPath('/singleton/uiText'), title: 'Site text', detail: 'Buttons, labels, demo, 404' },
 ]
 
 const TONE: Record<Attention['tone'], { dot: string; ring: string; label: string }> = {

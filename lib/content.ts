@@ -107,6 +107,9 @@ export async function getSite(locale: Locale = 'en') {
     // a definite origin — fall back rather than emitting "null" into tags.
     url: site.url || 'https://mohammedalmsitef.me',
     domains: [...site.domains],
+    // An uploaded CV wins over the typed path.
+    resumeUrl: site.resumeFile || site.resumeUrl || '',
+    seoKeywords: [...(site.seoKeywords ?? [])],
   }
 }
 

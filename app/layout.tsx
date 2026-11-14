@@ -52,22 +52,10 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s — ${site.name}`,
     },
     description: site.tagline,
-    keywords: [
-      'robotics engineer',
-      'ROS 2 engineer',
-      'AI engineer',
-      'ROS 2',
-      'Nav2',
-      'SLAM',
-      'autonomous navigation',
-      'mobile robots',
-      'robot perception',
-      'deep learning',
-      'NLP',
-      'C++',
-      'Python',
-      site.name,
-    ],
+    // Edited in the manager under Site & contact → Search keywords.
+    keywords: site.seoKeywords.length
+      ? [...site.seoKeywords, site.name]
+      : ['robotics engineer', 'ROS 2 engineer', 'AI engineer', 'ROS 2', 'Nav2', 'SLAM', site.name],
     openGraph: {
       title: `${site.name} — ${site.role}`,
       description: site.tagline,

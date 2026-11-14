@@ -19,7 +19,23 @@ export function localePath(locale: Locale, path = '') {
  * here is the chrome around them — labels a visitor reads but the owner never
  * edits, which would only be noise in the CMS.
  */
-const STRINGS = {
+import uiEn from '../content/ui.json'
+import uiAr from '../content/ar/ui.json'
+
+/**
+ * Text edited in the manager under "Site text". Stored grouped (one object per
+ * area); flattened here so `t()` can look a key up directly. An empty field
+ * means "use the default below".
+ */
+const flatten = (groups: unknown): Record<string, string> => {
+  const out: Record<string, string> = {}
+  for (const g of Object.values((groups ?? {}) as Record<string, Record<string, unknown>>))
+    for (const [k, v] of Object.entries(g ?? {})) if (typeof v === 'string' && v.trim()) out[k] = v
+  return out
+}
+const OVERRIDES = { en: flatten(uiEn), ar: flatten(uiAr) }
+
+export const STRINGS = {
   en: {
     skipToContent: 'Skip to content',
     allProjects: 'All projects',
@@ -143,6 +159,15 @@ const STRINGS = {
     elsewhere: 'Elsewhere',
     footerLine: 'Robotics & AI engineer building autonomous robots with ROS 2.',
     allRights: 'All rights reserved.',
+    writingKicker: 'Writing',
+    writingTitle: 'Notes from the robot floor',
+    writingIntro: 'Short write-ups of problems I hit building and running ROS 2 robots, and how they were fixed.',
+    allWritingBack: 'All writing',
+    nfKicker: '404 / path not found',
+    nfTitle: 'The planner found no route to this page.',
+    nfBody: 'The link may be old, or the page may have moved. These two always resolve:',
+    nfHome: 'Back to the homepage',
+    nfProjects: 'See the projects',
   },
   ar: {
     skipToContent: 'تخطَّ إلى المحتوى',
@@ -267,14 +292,38 @@ const STRINGS = {
     elsewhere: 'تجدني على',
     footerLine: 'مهندس روبوتات وذكاء اصطناعي، أبني روبوتات ذاتية الحركة باستخدام ROS 2.',
     allRights: 'جميع الحقوق محفوظة.',
+    writingKicker: 'المقالات',
+    writingTitle: 'ملاحظات من أرض الروبوتات',
+    writingIntro: 'كتابات قصيرة عن مشكلات واجهتها أثناء بناء روبوتات ROS 2 وتشغيلها، وكيف حُلّت.',
+    allWritingBack: 'كل المقالات',
+    nfKicker: '404 / المسار غير موجود',
+    nfTitle: 'لم يجد المخطط طريقاً إلى هذه الصفحة.',
+    nfBody: 'ربما الرابط قديم أو نُقلت الصفحة. هذان الرابطان يعملان دائماً:',
+    nfHome: 'العودة إلى الصفحة الرئيسية',
+    nfProjects: 'شاهد المشاريع',
   },
 } as const
 
 export type UIKey = keyof (typeof STRINGS)['en']
 
 export function t(locale: Locale, key: UIKey): string {
-  return STRINGS[locale][key]
+  return OVERRIDES[locale][key] ?? STRINGS[locale][key]
 }
+
+/**
+ * How "Site text" is grouped in the manager. Any key not listed lands in
+ * "Other", so a new string is always editable.
+ */
+export const UI_GROUPS: { id: string; label: string; keys: UIKey[] }[] = [
+  { id: 'hero', label: 'Hero, navigation & CV', keys: ['skipToContent', 'currently', 'at', 'viewMyWork', 'getInTouch', 'availableForWork', 'downloadCv', 'cvMeta', 'cv', 'resume', 'downloadResume', 'switchLanguage', 'languageName', 'backToTop', 'home'] },
+  { id: 'projects', label: 'Projects & case studies', keys: ['caseStudy', 'featured', 'allProjects', 'source', 'video', 'liveDemo', 'next', 'nextProject', 'technologiesUsed', 'highlights', 'keyResults', 'theProblem', 'whatIBuilt', 'howItWorks', 'howItWasTested', 'results', 'whatILearned', 'myRole', 'projectFacts', 'factYear', 'factStack', 'links', 'onThisPage', 'projectNavigation', 'proprietary', 'usedIn'] },
+  { id: 'about', label: 'About, experience & skills', keys: ['quickFacts', 'factRole', 'factLocation', 'factEducation', 'factFocus', 'languages', 'education', 'publications', 'viewPullRequest'] },
+  { id: 'contact', label: 'Contact & contact form', keys: ['emailMe', 'findMeOn', 'copy', 'copied', 'basedIn', 'basedInShort', 'timezone', 'responseTime', 'ctaTitle', 'ctaBody', 'formTitle', 'formName', 'formEmail', 'formMessage', 'formSend', 'formSending', 'formSent', 'formError'] },
+  { id: 'writing', label: 'Writing', keys: ['writingKicker', 'writingTitle', 'writingIntro', 'readPost', 'allPosts', 'allWritingBack'] },
+  { id: 'demo', label: 'Robot demo', keys: ['simTitle', 'simCaption', 'tryDemo', 'simHint', 'simHintDrag', 'simAria', 'newMap', 'mapLabel', 'scenario', 'layoutRooms', 'layoutMaze', 'layoutWarehouse', 'modeExploring', 'modeNavigating', 'modeReached', 'modeComplete', 'modeUnreachable', 'modeReturning', 'modeDocked', 'demoKicker', 'demoTitle', 'demoLead', 'demoHow', 'demoStep1Title', 'demoStep1', 'demoStep2Title', 'demoStep2', 'demoStep3Title', 'demoStep3', 'demoStep4Title', 'demoStep4', 'demoStep5Title', 'demoStep5', 'demoNote', 'demoCta'] },
+  { id: 'menus', label: 'Menus & footer', keys: ['commandMenu', 'openCommandMenu', 'commandPlaceholder', 'commandEmpty', 'groupGoTo', 'groupCaseStudies', 'groupConnect', 'groupAppearance', 'copyEmailAction', 'emailCopied', 'themeToDark', 'themeToLight', 'sitemap', 'elsewhere', 'footerLine', 'allRights'] },
+  { id: 'notFound', label: 'Page not found (404)', keys: ['nfKicker', 'nfTitle', 'nfBody', 'nfHome', 'nfProjects'] },
+]
 
 /** `rtl` only for Arabic; everything else reads left to right. */
 export function dir(locale: Locale): 'rtl' | 'ltr' {

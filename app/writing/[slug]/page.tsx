@@ -9,6 +9,7 @@ import ScrollProgress from '@/components/ScrollProgress'
 import ThemeToggle from '@/components/ThemeToggle'
 import { DraftBadge, formatDate } from '@/components/Writing'
 import { getPost, getPosts, getSite } from '@/lib/content'
+import { t } from '@/lib/locale'
 
 export async function generateStaticParams() {
   return (await getPosts()).map((p) => ({ slug: p.slug }))
@@ -44,7 +45,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           </Link>
           <div className="flex items-center gap-3">
             <Link href="/writing" className="tap gap-1.5 text-sm text-muted hover:text-accent">
-              <span aria-hidden="true">←</span> All writing
+              <span aria-hidden="true">←</span> {t('en', 'allWritingBack')}
             </Link>
             <ThemeToggle />
           </div>

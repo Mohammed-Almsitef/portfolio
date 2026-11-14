@@ -6,10 +6,11 @@ import Logo from '@/components/Logo'
 import ThemeToggle from '@/components/ThemeToggle'
 import { DraftBadge, formatDate } from '@/components/Writing'
 import { getPosts, getSite } from '@/lib/content'
+import { t } from '@/lib/locale'
 
 export const metadata: Metadata = {
-  title: 'Writing',
-  description: 'Engineering notes from building and running ROS 2 robots.',
+  title: t('en', 'writingKicker'),
+  description: t('en', 'writingIntro'),
   alternates: { canonical: '/writing' },
 }
 
@@ -28,12 +29,12 @@ export default async function WritingIndex() {
         </div>
       </header>
       <main id="main" className="mx-auto max-w-3xl px-6 pb-24 pt-14 md:pt-20">
-        <p className="font-mono text-sm text-accent">Writing</p>
+        <p className="font-mono text-sm text-accent">{t('en', 'writingKicker')}</p>
         <h1 className="mt-3 text-[clamp(2.1rem,5vw,3rem)] font-semibold leading-tight tracking-[-0.035em]">
-          Notes from the robot floor
+          {t('en', 'writingTitle')}
         </h1>
         <p className="mt-4 text-lg leading-relaxed text-body">
-          Short write-ups of problems I hit building and running ROS 2 robots, and how they were fixed.
+          {t('en', 'writingIntro')}
         </p>
         <ul className="mt-12 divide-y divide-border border-y border-border">
           {posts.map((p) => (

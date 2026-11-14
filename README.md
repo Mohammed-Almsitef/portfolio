@@ -34,6 +34,7 @@ You can add, delete, hide and reorder everything from there:
 | **Contact**                                        | The headline, the intro, and the stated response time                                                          |
 | **Contact links**                                  | Your profiles. The icon and handle are read from the URL, so you only paste an address                         |
 | **Education**, **Publications**                    | Add / remove / hide                                                                                            |
+| **Site text**                                      | Every button, label and caption on the site (hero, case studies, contact form, robot demo, Writing page, 404), in English and Arabic. Each field shows its default; leave it empty to keep it |
 | **Writing**                                        | Engineering notes with a rich-text body. Untick *Published* to keep a post as a draft: drafts show locally and on preview deploys, never on the live site |
 | **العربية**                                        | The same screens again for the Arabic site, plus the one switch that publishes it                              |
 
