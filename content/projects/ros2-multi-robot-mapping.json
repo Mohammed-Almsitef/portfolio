@@ -40,5 +40,32 @@
   "image": null,
   "liveUrl": "",
   "videoUrl": "",
-  "featured": true
+  "featured": true,
+  "diagrams": [
+    {
+      "title": "From an EV3 brick to a shared map",
+      "stages": [
+        {
+          "label": "EV3 brick",
+          "detail": "ev3dev2 Python script\nOne IR sensor, two motors"
+        },
+        {
+          "label": "MQTT",
+          "detail": "Mosquitto broker\n~10 Hz round trip"
+        },
+        {
+          "label": "ROS 2 bridge (PC)",
+          "detail": "Synthetic 3-beam LaserScan\nOdometry + TF per robot"
+        },
+        {
+          "label": "SLAM Toolbox",
+          "detail": "Synchronous mode\nOne instance per robot"
+        },
+        {
+          "label": "Map merge",
+          "detail": "One merged occupancy grid\nTF to each robot's map"
+        }
+      ]
+    }
+  ]
 }

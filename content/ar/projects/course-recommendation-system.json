@@ -44,5 +44,36 @@
   "image": null,
   "liveUrl": "",
   "videoUrl": "",
-  "featured": true
+  "featured": true,
+  "diagrams": [
+    {
+      "title": "مسار البيانات والنموذج",
+      "stages": [
+        {
+          "label": "الجمع",
+          "detail": "Coursera عبر requests وBeautifulSoup"
+        },
+        {
+          "label": "التخزين",
+          "detail": "مخطط MySQL مُنظَّم\nSQLAlchemy"
+        },
+        {
+          "label": "التنظيف",
+          "detail": "الأخطاء والرموز وفلترة اللغة\n7,400 دورة بالإنجليزية"
+        },
+        {
+          "label": "التضمين",
+          "detail": "Word2Vec مدرَّب من الصفر\nتغيير حجم التسلسلات بدل الحشو"
+        },
+        {
+          "label": "النموذج",
+          "detail": "LSTM مُرمِّز–مُفكِّك\nR² بين 0.94 و0.99"
+        },
+        {
+          "label": "الخدمة",
+          "detail": "تطبيق ويب Django وMySQL"
+        }
+      ]
+    }
+  ]
 }

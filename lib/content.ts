@@ -256,6 +256,7 @@ export type Project = {
   testing?: string
   results: string[]
   lessons: string[]
+  diagrams: { title: string; stages: { label: string; detail: string[] }[]; note?: string }[]
   role?: string
   tags: string[]
   repoUrl?: string
@@ -289,6 +290,16 @@ export async function getProjects(locale: Locale = 'en'): Promise<Project[]> {
       testing: entry.testing || undefined,
       results: [...entry.results],
       lessons: [...entry.lessons],
+      diagrams: (entry.diagrams ?? [])
+        .filter((d) => d.stages.length > 1)
+        .map((d) => ({
+          title: d.title,
+          note: d.note || undefined,
+          stages: d.stages.map((st) => ({
+            label: st.label,
+            detail: st.detail.split('\n').map((l) => l.trim()).filter(Boolean),
+          })),
+        })),
       role: entry.role || undefined,
       tags: [...entry.tags],
       repoUrl: entry.repoUrl || undefined,

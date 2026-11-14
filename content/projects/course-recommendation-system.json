@@ -44,5 +44,36 @@
   "image": null,
   "liveUrl": "",
   "videoUrl": "",
-  "featured": true
+  "featured": true,
+  "diagrams": [
+    {
+      "title": "Data and model pipeline",
+      "stages": [
+        {
+          "label": "Scrape",
+          "detail": "Coursera via requests + BeautifulSoup"
+        },
+        {
+          "label": "Store",
+          "detail": "Normalized MySQL schema\nSQLAlchemy"
+        },
+        {
+          "label": "Clean",
+          "detail": "Typos, symbols, language filter\n7,400 English courses"
+        },
+        {
+          "label": "Embed",
+          "detail": "Word2Vec trained from scratch\nSequences resized, not padded"
+        },
+        {
+          "label": "Model",
+          "detail": "LSTM encoder–decoder\nR² 0.94–0.99"
+        },
+        {
+          "label": "Serve",
+          "detail": "Django + MySQL web app"
+        }
+      ]
+    }
+  ]
 }

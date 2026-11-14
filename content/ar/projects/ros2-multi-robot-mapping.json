@@ -40,5 +40,32 @@
   "image": null,
   "liveUrl": "",
   "videoUrl": "",
-  "featured": true
+  "featured": true,
+  "diagrams": [
+    {
+      "title": "من قطعة EV3 إلى خريطة مشتركة",
+      "stages": [
+        {
+          "label": "قطعة EV3",
+          "detail": "سكربت Python بـ ev3dev2\nحساس IR واحد ومحركان"
+        },
+        {
+          "label": "MQTT",
+          "detail": "وسيط Mosquitto\nتبادل بنحو 10 Hz"
+        },
+        {
+          "label": "جسر ROS 2 على الحاسوب",
+          "detail": "LaserScan اصطناعي بثلاث حزم\nعدّاد مسافة وTF لكل روبوت"
+        },
+        {
+          "label": "SLAM Toolbox",
+          "detail": "الوضع المتزامن\nنسخة لكل روبوت"
+        },
+        {
+          "label": "دمج الخرائط",
+          "detail": "شبكة إشغال مدمجة واحدة\nTF إلى خريطة كل روبوت"
+        }
+      ]
+    }
+  ]
 }

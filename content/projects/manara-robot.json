@@ -41,5 +41,54 @@
   "image": null,
   "liveUrl": "",
   "videoUrl": "",
-  "featured": true
+  "featured": true,
+  "diagrams": [
+    {
+      "title": "Sensor-to-wheel pipeline",
+      "stages": [
+        {
+          "label": "Sensors",
+          "detail": "Two lidars\nDepth camera\nWheel odometry"
+        },
+        {
+          "label": "Perception",
+          "detail": "Ground-plane detection\nRobot-body filtering\nBlind-spot filter (lower lidar)"
+        },
+        {
+          "label": "Mapping & localization",
+          "detail": "SLAM Toolbox\nLifecycle-managed"
+        },
+        {
+          "label": "Navigation",
+          "detail": "Nav2\nAutonomous goals and docking"
+        },
+        {
+          "label": "Motor driver",
+          "detail": "Modbus / RS-485 BLDC driver\nOdometry + 13-code fault recovery"
+        }
+      ],
+      "note": "The on-screen AI assistant, built by a separate team, sits above this stack and only needs to pause and resume the robot."
+    },
+    {
+      "title": "Operations",
+      "stages": [
+        {
+          "label": "Configuration",
+          "detail": "Config database\nState machine across subsystems"
+        },
+        {
+          "label": "Supervision",
+          "detail": "systemd service\nRate-limited automatic restarts"
+        },
+        {
+          "label": "Remote access",
+          "detail": "REST / WebSocket bridge\nDashboard monitoring and control"
+        },
+        {
+          "label": "Delivery",
+          "detail": "Versioned packages\nBuilt and released by CI"
+        }
+      ]
+    }
+  ]
 }

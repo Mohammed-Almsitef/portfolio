@@ -140,6 +140,36 @@ const projectsDef = (dir: string, tag: string) =>
         description: 'Be specific: languages, frameworks, sensors, infrastructure.',
         itemLabel: (props) => props.value.slice(0, 60) || 'Point',
       }),
+      diagrams: fields.array(
+        fields.object({
+          title: fields.text({ label: 'Title', description: 'e.g. Sensor-to-wheel pipeline' }),
+          stages: fields.array(
+            fields.object({
+              label: fields.text({ label: 'Stage' }),
+              detail: fields.text({
+                label: 'Detail',
+                description: 'One short line per item, e.g. the packages or sensors involved.',
+                multiline: true,
+              }),
+            }),
+            {
+              label: 'Stages, in order',
+              itemLabel: (props) => props.fields.label.value || 'Stage',
+            },
+          ),
+          note: fields.text({
+            label: 'Note under the diagram',
+            description: 'Optional one-line caption.',
+            multiline: true,
+          }),
+        }),
+        {
+          label: 'Diagrams',
+          description:
+            'Flow diagrams shown under "How it works". Each is a chain of stages read left to right (top to bottom on phones).',
+          itemLabel: (props) => props.fields.title.value || 'Diagram',
+        },
+      ),
       testing: fields.text({
         label: 'How it was tested',
         description: 'Optional. Unit tests, HIL rigs, CI — evidence the code is reliable.',

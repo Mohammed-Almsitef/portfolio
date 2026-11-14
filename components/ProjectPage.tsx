@@ -11,6 +11,7 @@ import ProjectClip from '@/components/ProjectClip'
 import ProjectVisual from '@/components/ProjectVisual'
 import ScrollProgress from '@/components/ScrollProgress'
 import Aurora from '@/components/Aurora'
+import FlowDiagram from '@/components/FlowDiagram'
 import CaseToc from '@/components/CaseToc'
 import CopyEmail from '@/components/CopyEmail'
 import ThemeToggle from '@/components/ThemeToggle'
@@ -239,6 +240,9 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
             </Block>
 
             <Block id="how" title={t(locale, 'howItWorks')}>
+              {project.diagrams.map((d) => (
+                <FlowDiagram key={d.title} title={d.title} stages={d.stages} note={d.note} />
+              ))}
               <Bullets items={project.how} />
             </Block>
 

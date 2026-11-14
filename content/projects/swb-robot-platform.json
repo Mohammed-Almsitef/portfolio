@@ -43,5 +43,70 @@
   "image": null,
   "liveUrl": "",
   "videoUrl": "",
-  "featured": true
+  "featured": true,
+  "diagrams": [
+    {
+      "title": "Layered configuration",
+      "stages": [
+        {
+          "label": "Package defaults",
+          "detail": "Shipped with swb_robot\nSame on every robot"
+        },
+        {
+          "label": "Model layer",
+          "detail": "Shared by a hardware model\nNav2 tuning, sensors, drivers"
+        },
+        {
+          "label": "Robot layer",
+          "detail": "Only what is unique\nIdentity, ROS domain, calibration"
+        },
+        {
+          "label": "Running robot",
+          "detail": "Effective config = all three\nNo hand-edited copies"
+        }
+      ]
+    },
+    {
+      "title": "Release path",
+      "stages": [
+        {
+          "label": "Merge",
+          "detail": "Per-package SemVer\nTests: GoogleTest + pytest"
+        },
+        {
+          "label": "Tag",
+          "detail": "vX.Y.Z\nMonthly fleet release"
+        },
+        {
+          "label": "CI build",
+          "detail": "GitHub Actions\nDebian packages"
+        },
+        {
+          "label": "apt repository",
+          "detail": "Stable channel"
+        },
+        {
+          "label": "Fleet",
+          "detail": "Robots update with apt\nOne robot first, then the rest"
+        }
+      ]
+    },
+    {
+      "title": "Motion safety",
+      "stages": [
+        {
+          "label": "Velocity sources",
+          "detail": "Nav2, teleop, person follower"
+        },
+        {
+          "label": "twist_mux",
+          "detail": "Single path to the wheels\nSoftware lock from the dashboard"
+        },
+        {
+          "label": "Wheel driver",
+          "detail": "BLDC over RS-485\nDirect hardware e-stop"
+        }
+      ]
+    }
+  ]
 }

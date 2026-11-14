@@ -40,5 +40,28 @@
   "image": null,
   "liveUrl": "",
   "videoUrl": "",
-  "featured": false
+  "featured": false,
+  "diagrams": [
+    {
+      "title": "موقعها في النظام",
+      "stages": [
+        {
+          "label": "DualShock 4",
+          "detail": "USB أو Bluetooth"
+        },
+        {
+          "label": "مشغّل joy",
+          "detail": "رسائل /joy"
+        },
+        {
+          "label": "ps4_teleop",
+          "detail": "زر أمان وإيقاف طوارئ مثبّت\nمراقب وحدود تسارع"
+        },
+        {
+          "label": "أمر السرعة",
+          "detail": "twist_mux أو متحكم القاعدة\nصامت عند الخمول"
+        }
+      ]
+    }
+  ]
 }

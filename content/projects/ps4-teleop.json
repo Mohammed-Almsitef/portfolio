@@ -40,5 +40,28 @@
   "image": null,
   "liveUrl": "",
   "videoUrl": "",
-  "featured": false
+  "featured": false,
+  "diagrams": [
+    {
+      "title": "Where it sits",
+      "stages": [
+        {
+          "label": "DualShock 4",
+          "detail": "USB or Bluetooth"
+        },
+        {
+          "label": "joy driver",
+          "detail": "/joy messages"
+        },
+        {
+          "label": "ps4_teleop",
+          "detail": "Deadman, latched e-stop\nWatchdog, acceleration limits"
+        },
+        {
+          "label": "Velocity output",
+          "detail": "twist_mux or base controller\nSilent when idle"
+        }
+      ]
+    }
+  ]
 }
