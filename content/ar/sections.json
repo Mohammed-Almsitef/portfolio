@@ -21,6 +21,11 @@
       "visible": true
     },
     {
+      "key": "teaching",
+      "label": "التدريس",
+      "visible": false
+    },
+    {
       "key": "contact",
       "label": "تواصل",
       "visible": true

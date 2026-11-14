@@ -1,0 +1,47 @@
+{
+  "intro": "Alongside the robots, I design ROS 2 courses for students who are new to Linux and programming, and write the guides they learn from. The BurgerBot in the demo at the top of this page is the course robot.",
+  "organisation": "",
+  "period": "",
+  "role": "",
+  "items": [
+    {
+      "title": "From Zero to ROS 2 Developer — program syllabus",
+      "detail": "Three stackable courses over about 31 weeks: Programming Foundations (Linux, Python), Robotics & ROS 2 Core, and Autonomous Robotics (simulation, Nav2, a capstone). Written in Arabic and English.",
+      "tags": [
+        "Curriculum design",
+        "ROS 2",
+        "Bilingual"
+      ],
+      "visible": true
+    },
+    {
+      "title": "Basics to an autonomous robot — two-course plan",
+      "detail": "Course one covers microcontrollers (Arduino, ESP32, STM32), sensors and motor control; course two builds an autonomous wheeled robot with ROS 2, PID control, mapping and localization.",
+      "tags": [
+        "Embedded",
+        "ROS 2",
+        "PID"
+      ],
+      "visible": true
+    },
+    {
+      "title": "Student guides",
+      "detail": "Hands-on guides for the course: building the BurgerBot URDF step by step, URDF to xacro, TurtleBot3 on ROS 2 Jazzy, running RViz and nodes manually, and setting up Ubuntu Server on a Raspberry Pi.",
+      "tags": [
+        "URDF",
+        "xacro",
+        "TurtleBot3",
+        "Raspberry Pi"
+      ],
+      "visible": true
+    },
+    {
+      "title": "Placement test",
+      "detail": "A placement test for incoming students, graded and used to place each student at the right starting course.",
+      "tags": [
+        "Assessment"
+      ],
+      "visible": true
+    }
+  ]
+}

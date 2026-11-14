@@ -9,6 +9,7 @@ import Skills from '@/components/Skills'
 import Experience from '@/components/Experience'
 import Contact from '@/components/Contact'
 import Writing from '@/components/Writing'
+import Teaching from '@/components/Teaching'
 import Footer from '@/components/Footer'
 import BackToTop from '@/components/BackToTop'
 import ScrollProgress from '@/components/ScrollProgress'
@@ -35,6 +36,7 @@ const SECTIONS = {
   skills: Skills,
   experience: Experience,
   writing: Writing,
+  teaching: Teaching,
   contact: Contact,
 } as const
 

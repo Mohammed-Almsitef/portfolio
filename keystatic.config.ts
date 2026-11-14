@@ -224,6 +224,7 @@ const sectionsDef = (dir: string, tag: string) =>
               { label: 'Skills', value: 'skills' },
               { label: 'Experience', value: 'experience' },
               { label: 'Writing', value: 'writing' },
+              { label: 'Teaching', value: 'teaching' },
               { label: 'Contact', value: 'contact' },
             ],
             defaultValue: 'about',
@@ -539,6 +540,34 @@ const publicationsDef = (dir: string, tag: string) =>
     },
   })
 
+const teachingDef = (dir: string, tag: string) =>
+  singleton({
+    label: `Teaching${tag}`,
+    path: `${dir}/teaching`,
+    format: { data: 'json' },
+    schema: {
+      intro: fields.text({ label: 'Intro', multiline: true }),
+      organisation: fields.text({
+        label: 'Organisation',
+        description: 'Where you teach or taught. Leave empty to hide the line.',
+      }),
+      period: fields.text({ label: 'Period', description: 'e.g. 2026 — Present. Leave empty to hide.' }),
+      role: fields.text({ label: 'Your role', description: 'e.g. Course designer and instructor.' }),
+      items: fields.array(
+        fields.object({
+          title: fields.text({ label: 'Title' }),
+          detail: fields.text({ label: 'What it is', multiline: true }),
+          tags: fields.array(fields.text({ label: 'Tag' }), {
+            label: 'Tags',
+            itemLabel: (props) => props.value || 'Tag',
+          }),
+          visible: fields.checkbox({ label: 'Show on the site', defaultValue: true }),
+        }),
+        { label: 'Courses and material', itemLabel: (props) => props.fields.title.value || 'Item' },
+      ),
+    },
+  })
+
 const openSourceDef = (dir: string, tag: string) =>
   singleton({
     label: `Open source${tag}`,
@@ -602,10 +631,10 @@ export default config({
       'Page setup': ['sections', 'site', 'appearance'],
       // `socials` sits beside `contact` because that is the only section it
       // appears in — a link list two groups away is a link list you forget.
-      Content: ['about', 'projects', 'posts', 'openSource', 'skills', 'experience', 'contact', 'socials'],
+      Content: ['about', 'projects', 'posts', 'teaching', 'openSource', 'skills', 'experience', 'contact', 'socials'],
       Credentials: ['education', 'publications'],
       'العربية · إعداد الصفحة': ['sectionsAr', 'siteAr'],
-      'العربية · المحتوى': ['aboutAr', 'projectsAr', 'openSourceAr', 'skillsAr', 'experienceAr', 'contactAr', 'socialsAr'],
+      'العربية · المحتوى': ['aboutAr', 'projectsAr', 'teachingAr', 'openSourceAr', 'skillsAr', 'experienceAr', 'contactAr', 'socialsAr'],
       'العربية · الروابط': ['educationAr', 'publicationsAr'],
       'العربية · النشر': ['arabicSettings'],
     },
@@ -657,6 +686,7 @@ export default config({
     education: educationDef('content', ''),
     publications: publicationsDef('content', ''),
     openSource: openSourceDef('content', ''),
+    teaching: teachingDef('content', ''),
 
     sectionsAr: sectionsDef('content/ar', ' · عربي'),
     siteAr: siteDef('content/ar', ' · عربي'),
@@ -668,6 +698,7 @@ export default config({
     educationAr: educationDef('content/ar', ' · عربي'),
     publicationsAr: publicationsDef('content/ar', ' · عربي'),
     openSourceAr: openSourceDef('content/ar', ' · عربي'),
+    teachingAr: teachingDef('content/ar', ' · عربي'),
 
     /**
      * Chrome rather than content, so it is deliberately NOT duplicated per

@@ -29,7 +29,7 @@ const reader = createReader(process.cwd(), keystaticConfig)
 
 export type { Tone } from './tones'
 
-type SectionKey = 'about' | 'projects' | 'openSource' | 'skills' | 'experience' | 'writing' | 'contact'
+type SectionKey = 'about' | 'projects' | 'openSource' | 'skills' | 'experience' | 'writing' | 'teaching' | 'contact'
 
 const shown = <T extends { visible?: boolean }>(items: readonly T[]) =>
   items.filter((i) => i.visible !== false)
@@ -55,6 +55,7 @@ const TREE = {
     education: reader.singletons.education,
     publications: reader.singletons.publications,
     openSource: reader.singletons.openSource,
+    teaching: reader.singletons.teaching,
     projects: reader.collections.projects,
   },
   ar: {
@@ -68,6 +69,7 @@ const TREE = {
     education: reader.singletons.educationAr,
     publications: reader.singletons.publicationsAr,
     openSource: reader.singletons.openSourceAr,
+    teaching: reader.singletons.teachingAr,
     projects: reader.collections.projectsAr,
   },
 } as const
@@ -366,5 +368,17 @@ export async function getPost(slug: string) {
     tags: [...entry.tags],
     draft: !entry.published,
     node,
+  }
+}
+
+export async function getTeaching(locale: Locale = 'en') {
+  const d = await TREE[locale].teaching.read()
+  if (!d) return null
+  return {
+    intro: d.intro,
+    organisation: d.organisation,
+    period: d.period,
+    role: d.role,
+    items: shown(d.items).map((i) => ({ title: i.title, detail: i.detail, tags: [...i.tags] })),
   }
 }

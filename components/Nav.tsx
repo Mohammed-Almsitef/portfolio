@@ -15,6 +15,7 @@ export const SECTION_IDS: Record<string, string> = {
   skills: 'skills',
   experience: 'experience',
   writing: 'writing',
+  teaching: 'teaching',
   contact: 'contact',
 }
 

@@ -21,6 +21,11 @@
       "visible": true
     },
     {
+      "key": "teaching",
+      "label": "Teaching",
+      "visible": false
+    },
+    {
       "key": "writing",
       "label": "Writing",
       "visible": true
