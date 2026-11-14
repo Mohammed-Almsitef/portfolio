@@ -14,9 +14,10 @@ import {
   type Sim,
 } from '@/lib/slam'
 
-/** Grid size in cells (10 cm each): a 9.6 m × 6 m floor. */
-const W = 96
-const H = 60
+/** Grid size in cells (10 cm each): a 7.2 m × 4.5 m floor, sized so the
+ *  robot is large enough to show its parts. */
+const W = 72
+const H = 45
 
 export type SlamLabels = {
   title: string
@@ -227,24 +228,9 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
         ctx.fill()
       }
 
-      // Robot footprint, heading and TF axes (x red, y green, as in RViz).
-      const R = ROBOT_RADIUS * c
-      ctx.fillStyle = rgba(pal.accent, 0.25)
-      ctx.strokeStyle = rgba(pal.accent, 1)
-      ctx.lineWidth = Math.max(1.5, c * 0.28)
-      ctx.beginPath()
-      ctx.arc(P.x * c, P.y * c, R, 0, Math.PI * 2)
-      ctx.fill()
-      ctx.stroke()
-      const axis = (ang: number, color: string) => {
-        ctx.strokeStyle = color
-        ctx.beginPath()
-        ctx.moveTo(P.x * c, P.y * c)
-        ctx.lineTo(P.x * c + Math.cos(ang) * R * 1.9, P.y * c + Math.sin(ang) * R * 1.9)
-        ctx.stroke()
-      }
-      axis(P.th + Math.PI / 2, 'rgb(52 211 153 / 0.9)')
-      axis(P.th, 'rgb(248 113 113 / 0.95)')
+      // Drawn out to the lethal inflation radius, which the planner keeps clear,
+      // so the larger body never visibly overlaps a wall.
+      drawBurgerBot(ctx, P.x * c, P.y * c, P.th, ROBOT_RADIUS * c * 1.6, pal, ink, sim.time)
     }
 
     let lastHud = 0
@@ -389,7 +375,7 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
           ref={canvasRef}
           role="img"
           aria-label={labels.aria}
-          className="block aspect-[96/60] w-full cursor-crosshair touch-manipulation"
+          className="block aspect-[72/45] w-full cursor-crosshair touch-manipulation"
         />
 
         {/* Live readouts, written straight to the DOM at ~8 Hz. */}
@@ -429,6 +415,145 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
       </div>
     </figure>
   )
+}
+
+/**
+ * The course's BurgerBot seen from above, in its real proportions: a 250 mm
+ * round three-layer stack with two drive wheels on a 160 mm track, a front
+ * caster, the Raspberry Pi and IMU on the middle layer, four support posts,
+ * and a Ø76 mm LiDAR on top whose head spins. Local frame: +x forward.
+ *
+ * `R` is the plate radius in pixels. It is drawn larger than the planner's
+ * footprint so the details read at hero size.
+ */
+function drawBurgerBot(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  th: number,
+  R: number,
+  pal: Palette,
+  ink: string,
+  time: number,
+) {
+  const line = Math.max(1, R * 0.07)
+  // Tyres, caster and LiDAR housing are black hardware in either theme; a
+  // light rim keeps them legible on the dark ground.
+  const rubber = 'rgb(18 20 26)'
+  const rim = rgba(ink, 0.45)
+  ctx.save()
+  ctx.translate(x, y)
+  ctx.rotate(th)
+
+  // Soft glow under the robot so it stands off the map.
+  const glow = ctx.createRadialGradient(0, 0, R * 0.4, 0, 0, R * 1.7)
+  glow.addColorStop(0, rgba(pal.accent, 0.35))
+  glow.addColorStop(1, rgba(pal.accent, 0))
+  ctx.fillStyle = glow
+  ctx.beginPath()
+  ctx.arc(0, 0, R * 1.7, 0, Math.PI * 2)
+  ctx.fill()
+
+  // Drive wheels (Ø66 × 18 mm, track 160 mm), poking out at the sides so
+  // they read from above, with tread lines.
+  const wl = R * 0.62
+  const ww = R * 0.24
+  for (const side of [-1, 1]) {
+    const wy = side * R * 0.86
+    ctx.fillStyle = rubber
+    ctx.strokeStyle = rim
+    ctx.lineWidth = Math.max(0.75, line * 0.5)
+    ctx.beginPath()
+    ctx.roundRect(-wl / 2, wy - ww / 2, wl, ww, ww * 0.35)
+    ctx.fill()
+    ctx.stroke()
+    ctx.strokeStyle = rgba(ink, 0.25)
+    ctx.lineWidth = Math.max(0.5, line * 0.5)
+    ctx.beginPath()
+    for (let k = 1; k < 5; k++) {
+      const tx = -wl / 2 + (wl * k) / 5
+      ctx.moveTo(tx, wy - ww / 2 + 1)
+      ctx.lineTo(tx, wy + ww / 2 - 1)
+    }
+    ctx.stroke()
+  }
+
+  // Bottom plate.
+  ctx.fillStyle = rgba(pal.accent, 0.22)
+  ctx.strokeStyle = rgba(pal.accent, 1)
+  ctx.lineWidth = line
+  ctx.beginPath()
+  ctx.arc(0, 0, R, 0, Math.PI * 2)
+  ctx.fill()
+  ctx.stroke()
+
+  // Middle layer, slightly inset, as seen through the stack.
+  ctx.strokeStyle = rgba(pal.accent, 0.45)
+  ctx.lineWidth = Math.max(0.75, line * 0.6)
+  ctx.beginPath()
+  ctx.arc(0, 0, R * 0.84, 0, Math.PI * 2)
+  ctx.stroke()
+
+  // Front caster.
+  ctx.fillStyle = rubber
+  ctx.strokeStyle = rim
+  ctx.lineWidth = Math.max(0.75, line * 0.5)
+  ctx.beginPath()
+  ctx.arc(R * 0.7, 0, R * 0.1, 0, Math.PI * 2)
+  ctx.fill()
+  ctx.stroke()
+
+  // Four support posts between the layers.
+  ctx.fillStyle = rgba(pal.accent, 0.9)
+  for (const a of [Math.PI / 4, (3 * Math.PI) / 4, (5 * Math.PI) / 4, (7 * Math.PI) / 4]) {
+    ctx.beginPath()
+    ctx.arc(Math.cos(a) * R * 0.72, Math.sin(a) * R * 0.72, R * 0.06, 0, Math.PI * 2)
+    ctx.fill()
+  }
+
+  // Raspberry Pi (85 × 56 mm), long side across the robot like the URDF.
+  ctx.fillStyle = rgba(pal.plan, 0.28)
+  ctx.strokeStyle = rgba(pal.plan, 0.85)
+  ctx.lineWidth = Math.max(0.75, line * 0.6)
+  ctx.beginPath()
+  ctx.roundRect(R * 0.08 - R * 0.22, -R * 0.34, R * 0.45, R * 0.68, R * 0.05)
+  ctx.fill()
+  ctx.stroke()
+
+  // IMU (30 × 27 mm), behind the Pi.
+  ctx.fillStyle = rgba(pal.scan, 0.8)
+  ctx.fillRect(-R * 0.26 - R * 0.12, -R * 0.11, R * 0.24, R * 0.22)
+
+  // LiDAR on the top layer: housing, then a spinning head.
+  ctx.fillStyle = rubber
+  ctx.beginPath()
+  ctx.arc(0, 0, R * 0.32, 0, Math.PI * 2)
+  ctx.fill()
+  ctx.strokeStyle = rgba(pal.accent, 0.9)
+  ctx.lineWidth = Math.max(0.75, line * 0.6)
+  ctx.stroke()
+  const spin = time * 9
+  ctx.strokeStyle = rgba(pal.scan, 1)
+  ctx.lineWidth = Math.max(1, line * 0.9)
+  ctx.beginPath()
+  ctx.moveTo(0, 0)
+  ctx.lineTo(Math.cos(spin) * R * 0.28, Math.sin(spin) * R * 0.28)
+  ctx.stroke()
+  ctx.fillStyle = rgba(pal.accent, 1)
+  ctx.beginPath()
+  ctx.arc(0, 0, R * 0.07, 0, Math.PI * 2)
+  ctx.fill()
+
+  // Heading notch at the front edge.
+  ctx.fillStyle = rgba(pal.accent, 1)
+  ctx.beginPath()
+  ctx.moveTo(R * 1.12, 0)
+  ctx.lineTo(R * 0.9, -R * 0.13)
+  ctx.lineTo(R * 0.9, R * 0.13)
+  ctx.closePath()
+  ctx.fill()
+
+  ctx.restore()
 }
 
 function Legend({ swatch, label }: { swatch: string; label: string }) {
