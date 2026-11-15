@@ -1058,3 +1058,160 @@ footer {
   -webkit-text-fill-color: currentColor;
   color: var(--color-text);
 }
+
+/* ======================================================================
+ * Course theme
+ *
+ * The palette of the "Autonomous Mobile Robots with ROS 2" slides: cream
+ * paper, deep navy, an orange accent, teal and gold as supporting tones;
+ * bold sans headings and JetBrains Mono labels. Light = the content slides,
+ * dark = the navy cover slides.
+ * ==================================================================== */
+:root {
+  --color-bg: #f4f1e8;
+  --color-surface: #fbfaf6;
+  --color-elevated: #ece8dc;
+  --color-border: #dedcd7;
+  --color-border-strong: #c3c0b9;
+  --color-text: #16233a;
+  --color-body: #3e4a5c;
+  --color-muted: #5b6980;
+
+  --d-bg: #16233a;
+  --d-surface: #1c2c47;
+  --d-elevated: #233552;
+  --d-border: #2c3e5c;
+  --d-border-strong: #3e4a5c;
+  --d-text: #f4f1e8;
+  --d-body: #d5dde8;
+  --d-muted: #9aaac4;
+
+  /* Supporting tones, from the deck. Darker on paper, brighter on navy. */
+  --tone-teal: 31 106 114;
+  --tone-cyan: 31 106 114;
+  --tone-amber: 150 104 18;
+  --tone-rose: 200 70 29;
+  --tone-emerald: 31 106 114;
+  --d-tone-teal: 92 200 210;
+  --d-tone-cyan: 92 200 210;
+  --d-tone-amber: 233 180 76;
+  --d-tone-rose: 240 120 80;
+  --d-tone-emerald: 92 200 210;
+
+  --logo-ink: #16233a;
+  --logo-accent: #e8582c;
+  --d-logo-ink: #f4f1e8;
+  --d-logo-accent: #e8582c;
+
+  --course-teal: 31 106 114;
+}
+:root[data-theme='dark'] {
+  --course-teal: 92 200 210;
+}
+/* The deck's orange, whichever accent the manager has selected. Darkened a
+   step on paper so it passes contrast as text. */
+:root[data-accent] {
+  --accent-tone: 200 70 29;
+}
+:root[data-theme='dark'][data-accent] {
+  --accent-tone: 240 110 66;
+}
+
+/* Headings: the deck sets them in a bold sans, not a serif. */
+.font-display,
+[lang='ar'] .font-display {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  font-style: normal;
+}
+[lang='ar'] .font-display {
+  font-family: var(--font-arabic), var(--font-sans);
+  letter-spacing: 0;
+}
+
+/* A navy "cover slide" region, with the palette inverted inside it. */
+.cover {
+  --color-bg: #16233a;
+  --color-surface: #1c2c47;
+  --color-elevated: #233552;
+  --color-border: #2c3e5c;
+  --color-border-strong: #3e4a5c;
+  --color-text: #f4f1e8;
+  --color-body: #d5dde8;
+  --color-muted: #9aaac4;
+  --accent-tone: 240 110 66;
+  --course-teal: 92 200 210;
+  /* The mark's ink must flip with the ground, or the M vanishes on navy. */
+  --logo-ink: #f4f1e8;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+:root[data-theme='dark'] .cover {
+  --color-bg: #0f1a2c;
+  --color-surface: #16233a;
+}
+/* A paper inset inside a cover (the simulation panel keeps the page's own
+   palette, which is what its canvas reads its colours from). */
+:root:not([data-theme='dark']) .cover .paper {
+  --color-bg: #f4f1e8;
+  --color-surface: #fbfaf6;
+  --color-elevated: #ece8dc;
+  --color-border: #dedcd7;
+  --color-border-strong: #c3c0b9;
+  --color-text: #16233a;
+  --color-body: #3e4a5c;
+  --color-muted: #5b6980;
+  --accent-tone: 200 70 29;
+  --course-teal: 31 106 114;
+  --logo-ink: #16233a;
+  color: var(--color-text);
+}
+
+/* Deck motifs. */
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(var(--course-teal));
+}
+[lang='ar'] .kicker {
+  font-family: var(--font-arabic), var(--font-sans);
+  letter-spacing: 0;
+  font-size: 0.8rem;
+}
+.rule-accent {
+  display: block;
+  width: 3.5rem;
+  height: 3px;
+  border-radius: 2px;
+  background: rgb(var(--accent-tone));
+}
+.section-index {
+  color: rgb(var(--course-teal));
+}
+@layer components {
+  .btn-primary,
+  :root:not([data-theme='dark']) .btn-primary {
+    background: #e8582c;
+    color: #fff;
+  }
+  .btn-primary:hover {
+    opacity: 1;
+    background: #c8461d;
+  }
+}
+
+/* Course theme: the remaining tones, so no cover drawing falls outside the
+   deck's palette. Blue becomes the deck's slate, violet its gold. */
+:root {
+  --tone-blue: 62 74 92;
+  --tone-violet: 150 104 18;
+  --tone-purple: 150 104 18;
+  --tone-lime: 31 106 114;
+  --d-tone-blue: 154 170 196;
+  --d-tone-violet: 233 180 76;
+  --d-tone-purple: 233 180 76;
+  --d-tone-lime: 92 200 210;
+}

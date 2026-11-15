@@ -23,7 +23,7 @@ export default async function Footer({ locale = 'en' }: { locale?: Locale }) {
   const anchor = (key: string) => `${home === '/' ? '' : home}/#${ID[key] ?? key}`
 
   return (
-    <footer data-print-hide className="border-t border-border">
+    <footer data-print-hide className="cover">
       <div className="mx-auto max-w-page px-6 pt-16">
         <a
           href={`mailto:${site.email}`}

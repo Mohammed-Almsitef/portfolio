@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from 'react'
 import Logo from './Logo'
 import ThemeToggle from './ThemeToggle'
 import { t, type Locale } from '@/lib/locale'
-import { useScrollValue } from '@/lib/hooks'
 import LanguageSwitch from './LanguageSwitch'
 
 /** Section keys map to the DOM ids the components render. */
@@ -44,7 +43,6 @@ export default function Nav({
     [sections],
   )
 
-  const scrolled = useScrollValue(() => window.scrollY > 8, false)
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState('')
 
@@ -100,7 +98,7 @@ export default function Nav({
             floating glass pill, inset from the edges. */}
         <div
           className={`flex items-center justify-between gap-4 rounded-2xl px-3 transition-all duration-300 ${
-            scrolled && !open ? 'glass nav-solid mt-3 py-2' : 'mt-1 border border-transparent py-3'
+            !open ? 'glass nav-solid mt-3 py-2' : 'mt-1 border border-transparent py-3'
           }`}
         >
           <div className="flex min-w-0 items-center gap-3">

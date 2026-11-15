@@ -21,7 +21,7 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
   const labels = simLabels(locale)
 
   return (
-    <section id="top" className="relative">
+    <section id="top" className="cover relative">
       <div className="mx-auto max-w-page px-6 pb-16 pt-32 md:pb-24 md:pt-40">
         {current && (
           <p className="hero-in flex flex-wrap items-center gap-x-2 text-sm text-muted">
@@ -33,20 +33,24 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
           </p>
         )}
 
+        {site.domains.length > 0 && (
+          <p className="hero-in kicker mt-8">{site.domains.slice(0, 3).join(' · ')}</p>
+        )}
         <h1
-          className="hero-in font-display mt-6 text-[clamp(3.25rem,9vw,8rem)] leading-[0.92] tracking-[-0.025em]"
+          className="hero-in font-display mt-4 text-[clamp(2.75rem,7.5vw,6.5rem)] leading-[0.98]"
           style={{ '--d': '60ms' } as React.CSSProperties}
         >
           {site.name}
         </h1>
         <p
-          className="hero-in font-display mt-4 text-[clamp(1.5rem,3vw,2.25rem)] italic text-muted"
+          className="hero-in mt-5 text-[clamp(1.25rem,2.4vw,1.75rem)] font-medium text-[rgb(var(--course-teal))]"
           style={{ '--d': '100ms' } as React.CSSProperties}
         >
           {site.role}
         </p>
+        <span aria-hidden="true" className="hero-in rule-accent mt-7" />
 
-        <div className="mt-14 grid gap-12 border-t border-border pt-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+        <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
           <div className="hero-in" style={{ '--d': '160ms' } as React.CSSProperties}>
             <p className="text-lg leading-relaxed text-body md:text-xl md:leading-relaxed">{site.tagline}</p>
 
@@ -85,11 +89,11 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
           </div>
 
           <figure className="hero-in min-w-0" style={{ '--d': '220ms' } as React.CSSProperties}>
-            <div data-print-hide>
+            <div data-print-hide className="paper">
               <SlamViewport labels={labels} />
             </div>
             <figcaption className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm text-muted">
-              <span className="font-display text-base italic text-text">Fig. 1</span>
+              <span className="kicker">Fig. 1</span>
               <span>{t(locale, 'simCaption')}</span>
               <a href={localePath(locale, '/demo')} className="ed-link font-medium text-text">
                 {t(locale, 'tryDemo')}

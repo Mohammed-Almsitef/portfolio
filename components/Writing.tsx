@@ -21,7 +21,7 @@ export default async function Writing({ title, locale = 'en' }: { title: string;
                 <time dateTime={p.date}>{formatDate(p.date)}</time>
               </p>
               <div>
-                <h3 className="font-display text-2xl leading-snug decoration-1 underline-offset-[0.18em] group-hover:underline md:text-[1.75rem]">
+                <h3 className="font-display text-xl leading-snug decoration-1 underline-offset-[0.18em] group-hover:underline md:text-2xl">
                   {p.title}
                 </h3>
                 <p className="mt-2 max-w-2xl leading-relaxed text-body">{p.summary}</p>

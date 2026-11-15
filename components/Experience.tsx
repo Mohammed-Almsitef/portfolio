@@ -46,7 +46,7 @@ export default async function Experience({
           <li key={`${job.company}-${job.period}`} className="relative">
 
             <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-              <h3 className="font-display text-[clamp(1.75rem,3vw,2.5rem)] leading-tight">
+              <h3 className="font-display text-[clamp(1.4rem,2.2vw,1.875rem)] leading-tight">
                 {job.role} <span className="font-normal text-muted">·</span>{' '}
                 {job.companyUrl ? (
                   <a

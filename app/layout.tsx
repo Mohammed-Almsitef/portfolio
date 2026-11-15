@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Geist, Geist_Mono, Instrument_Serif, Noto_Sans_Arabic } from 'next/font/google'
+import { Geist, Instrument_Serif, JetBrains_Mono, Noto_Sans_Arabic } from 'next/font/google'
 import { getAppearance, getSite } from '@/lib/content'
 import { alternatesFor } from '@/lib/metadata'
 import './globals.css'
@@ -32,7 +32,8 @@ const serif = Instrument_Serif({
   display: 'swap',
 })
 
-const mono = Geist_Mono({
+// The deck's label face.
+const mono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-geist-mono',
   display: 'swap',
@@ -43,8 +44,8 @@ const mono = Geist_Mono({
 /** Browser chrome (address bar on phones) matches the page ground. */
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: dark)', color: '#141312' },
-    { media: '(prefers-color-scheme: light)', color: '#faf9f6' },
+    { media: '(prefers-color-scheme: dark)', color: '#16233a' },
+    { media: '(prefers-color-scheme: light)', color: '#f4f1e8' },
   ],
 }
 
