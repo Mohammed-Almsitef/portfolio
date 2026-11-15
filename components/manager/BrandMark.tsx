@@ -18,8 +18,8 @@ export default function BrandMark({ colorScheme }: { colorScheme: 'light' | 'dar
       id="manager-logo"
       weight="medium"
       label="Mohammed Almsitef"
-      ink={dark ? '#f2efe9' : '#151413'}
-      accent={dark ? '#60a5fa' : '#1d4ed8'}
+      ink={dark ? '#f4f1e8' : '#16233a'}
+      accent={dark ? '#f06e42' : '#e8582c'}
       className="h-9 w-auto shrink-0"
     />
   )

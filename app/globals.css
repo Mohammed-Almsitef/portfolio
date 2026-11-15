@@ -1126,3 +1126,83 @@ body {
 .post-body pre code {
   border: 0;
 }
+
+/* ======================================================================
+ * Course palette
+ *
+ * The colours of the "Autonomous Mobile Robots with ROS 2" slides, on the
+ * editorial layout: light = the cream content slides, dark = the navy cover
+ * slides. Type and layout are unchanged.
+ * ==================================================================== */
+:root {
+  /* Light: cream paper, navy ink. */
+  --color-bg: #f4f1e8;
+  --color-surface: #fbfaf6;
+  --color-elevated: #ece8dc;
+  --color-border: #dedcd7;
+  --color-border-strong: #c3c0b9;
+  --color-text: #16233a;
+  --color-body: #3e4a5c;
+  --color-muted: #5b6980;
+
+  /* Dark: the deck's navy, cream ink. */
+  --d-bg: #16233a;
+  --d-surface: #1c2c47;
+  --d-elevated: #233552;
+  --d-border: #2c3e5c;
+  --d-border-strong: #44546f;
+  --d-text: #f4f1e8;
+  --d-body: #d5dde8;
+  --d-muted: #9aaac4;
+
+  /* Supporting tones from the deck: teal, gold, slate, burnt orange.
+     Darker on paper, brighter on navy. */
+  --tone-blue: 62 74 92;
+  --tone-violet: 150 104 18;
+  --tone-purple: 150 104 18;
+  --tone-cyan: 31 106 114;
+  --tone-teal: 31 106 114;
+  --tone-emerald: 31 106 114;
+  --tone-lime: 31 106 114;
+  --tone-amber: 150 104 18;
+  --tone-rose: 200 70 29;
+  --d-tone-blue: 154 170 196;
+  --d-tone-violet: 233 180 76;
+  --d-tone-purple: 233 180 76;
+  --d-tone-cyan: 92 200 210;
+  --d-tone-teal: 92 200 210;
+  --d-tone-emerald: 92 200 210;
+  --d-tone-lime: 92 200 210;
+  --d-tone-amber: 233 180 76;
+  --d-tone-rose: 240 120 80;
+
+  --logo-ink: #16233a;
+  --logo-accent: #e8582c;
+  --d-logo-ink: #f4f1e8;
+  --d-logo-accent: #f06e42;
+}
+/* The deck's orange is the accent, whichever one the manager has selected.
+   A step darker on paper so it passes contrast as text. */
+:root[data-accent] {
+  --accent-tone: 200 70 29;
+}
+:root[data-theme='dark'][data-accent] {
+  --accent-tone: 240 110 66;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme])[data-accent] {
+    --accent-tone: 240 110 66;
+  }
+}
+@layer components {
+  /* The one filled button takes the deck's orange. */
+  .btn-primary,
+  :root:not([data-theme='dark']) .btn-primary {
+    background: #e8582c;
+    color: #fff;
+  }
+  .btn-primary:hover {
+    opacity: 1;
+    background: #c8461d;
+  }
+}

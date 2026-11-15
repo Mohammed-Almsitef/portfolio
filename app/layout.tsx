@@ -43,8 +43,8 @@ const mono = Geist_Mono({
 /** Browser chrome (address bar on phones) matches the page ground. */
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: dark)', color: '#141312' },
-    { media: '(prefers-color-scheme: light)', color: '#faf9f6' },
+    { media: '(prefers-color-scheme: dark)', color: '#16233a' },
+    { media: '(prefers-color-scheme: light)', color: '#f4f1e8' },
   ],
 }
 
