@@ -85,7 +85,7 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
           </div>
 
           <figure className="hero-in min-w-0" style={{ '--d': '220ms' } as React.CSSProperties}>
-            <div data-print-hide>
+            <div data-print-hide className="paper">
               <SlamViewport labels={labels} />
             </div>
             <figcaption className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm text-muted">

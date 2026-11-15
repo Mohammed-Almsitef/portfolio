@@ -1274,3 +1274,62 @@ textarea {
 [lang='ar'] .post-body h3 {
   font-family: var(--font-arabic-display), var(--font-serif);
 }
+
+/* ======================================================================
+ * Alternating bands
+ *
+ * Like the deck, which alternates navy cover slides with cream content
+ * slides: the hero and every second section are navy, the ones between are
+ * cream. A band re-declares the palette for everything inside it, so text,
+ * rules, buttons and drawings all follow without per-component changes.
+ * ==================================================================== */
+main > section:nth-of-type(odd) {
+  --color-bg: #16233a;
+  --color-surface: #1c2c47;
+  --color-elevated: #233552;
+  --color-border: #2c3e5c;
+  --color-border-strong: #44546f;
+  --color-text: #f4f1e8;
+  --color-body: #d5dde8;
+  --color-muted: #9aaac4;
+  --accent-tone: 240 110 66;
+  --outline: #7386a6;
+  --tone-blue: var(--d-tone-blue);
+  --tone-violet: var(--d-tone-violet);
+  --tone-purple: var(--d-tone-purple);
+  --tone-cyan: var(--d-tone-cyan);
+  --tone-teal: var(--d-tone-teal);
+  --tone-emerald: var(--d-tone-emerald);
+  --tone-lime: var(--d-tone-lime);
+  --tone-amber: var(--d-tone-amber);
+  --tone-rose: var(--d-tone-rose);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+/* The rule above each section belongs to the page rhythm, not to a band:
+   between two different grounds it would read as a stray line. */
+main > .section > div > div {
+  border-top-width: 0;
+}
+/* In dark mode the whole site is navy, so the bands step between two
+   navies instead. */
+:root[data-theme='dark'] main > section:nth-of-type(odd) {
+  --color-bg: #0f1a2c;
+  --color-surface: #16233a;
+  --color-elevated: #1c2c47;
+}
+/* The simulation panel keeps the page's own palette inside a navy band:
+   its canvas reads its colours from the page, not from the band. */
+:root:not([data-theme='dark']) main > section:nth-of-type(odd) .paper {
+  --color-bg: #f4f1e8;
+  --color-surface: #fbfaf6;
+  --color-elevated: #ece8dc;
+  --color-border: #dedcd7;
+  --color-border-strong: #c3c0b9;
+  --color-text: #16233a;
+  --color-body: #3e4a5c;
+  --color-muted: #5b6980;
+  --accent-tone: 185 63 23;
+  --outline: #8e897e;
+  color: var(--color-text);
+}
