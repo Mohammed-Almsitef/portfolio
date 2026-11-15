@@ -1058,3 +1058,71 @@ footer {
   -webkit-text-fill-color: currentColor;
   color: var(--color-text);
 }
+
+/* ----------------------------------------------------------------------
+ * Editorial refinements: one colour system, one type scale.
+ * -------------------------------------------------------------------- */
+:root {
+  /* Text tones tuned for contrast on paper: body 11:1, muted 5.3:1. */
+  --color-body: #33312d;
+  --color-muted: #6b675f;
+  /* A deeper ink blue: reads as editorial, not as a default link colour. */
+  --tone-blue: 30 64 175;
+  --d-tone-blue: 147 180 250;
+  --logo-accent: #1e40af;
+  --d-logo-accent: #93b4fa;
+  --d-body: #cfcac0;
+  --d-muted: #9a958b;
+
+  /* Type scale (fluid). Display sizes are for the serif only. */
+  --step-hero: clamp(3rem, 7.4vw, 6.5rem);
+  --step-1: clamp(2.25rem, 5vw, 4rem);
+  --step-2: clamp(2rem, 3.4vw, 2.75rem);
+  --step-3: clamp(1.6rem, 2.5vw, 2.125rem);
+  --step-4: clamp(1.3rem, 1.8vw, 1.5rem);
+  --step-lead: clamp(1.125rem, 1.4vw, 1.25rem);
+}
+.t-hero { font-size: var(--step-hero); line-height: 0.95; }
+.t-1 { font-size: var(--step-1); line-height: 1.02; }
+.t-2 { font-size: var(--step-2); line-height: 1.05; }
+.t-3 { font-size: var(--step-3); line-height: 1.12; }
+.t-4 { font-size: var(--step-4); line-height: 1.25; }
+.t-lead { font-size: var(--step-lead); line-height: 1.6; }
+
+.font-display {
+  letter-spacing: -0.015em;
+}
+h1, h2, h3 {
+  text-wrap: balance;
+}
+p, li, dd {
+  text-wrap: pretty;
+}
+body {
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+/* Long-form: serif headings, neutral code, a comfortable measure. */
+.post-body {
+  max-width: 42rem;
+}
+.post-body h2,
+.post-body h3 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+.post-body h2 { font-size: 1.9rem; margin-top: 2.4em; }
+.post-body h3 { font-size: 1.45rem; }
+.post-body code {
+  background: var(--color-elevated);
+  border: 1px solid var(--color-border);
+  padding: 0.08em 0.35em;
+}
+.post-body pre {
+  background: var(--color-surface);
+}
+.post-body pre code {
+  border: 0;
+}

@@ -35,11 +35,11 @@ export default async function Contact({
     <Section id="contact" title={title}>
       <div className="grid gap-12 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-16">
         <div className="max-w-2xl">
-          <p className="font-display text-[clamp(2.5rem,6vw,4.5rem)] leading-[1.02]">
+          <p className="font-display t-1">
             {contact.headline}
           </p>
           {contact.blurb && (
-            <p className="mt-5 leading-relaxed text-body md:text-[1.0625rem]">{contact.blurb}</p>
+            <p className="t-lead mt-5 text-body">{contact.blurb}</p>
           )}
 
           <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">

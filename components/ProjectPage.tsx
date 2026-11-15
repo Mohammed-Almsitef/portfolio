@@ -26,7 +26,7 @@ const TONE_LINK =
 function Block({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
     <section id={id} className="scroll-mt-24 border-t border-border pt-10 first:border-0 first:pt-0">
-      <h2 className="mb-5 text-xl font-semibold tracking-tight md:text-2xl">{title}</h2>
+      <h2 className="font-display t-3 mb-5">{title}</h2>
       {children}
     </section>
   )
@@ -85,7 +85,8 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
     <div
       dir={dir(locale)}
       lang={locale}
-      style={{ '--tone': `var(--tone-${project.tone})` } as React.CSSProperties}
+      // One accent for the whole page; only the cover keeps the project's tone.
+      style={{ '--tone': 'var(--accent-tone)' } as React.CSSProperties}
     >
       <Aurora />
       <ScrollProgress />
@@ -137,11 +138,11 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
             {project.year}
           </p>
 
-          <h1 className="font-display mt-4 text-[clamp(2.1rem,4.4vw,3.25rem)] leading-[1.05] tracking-[-0.035em]">
+          <h1 className="font-display t-1 mt-4">
             {project.title}
           </h1>
 
-          <p className="mt-6 text-lg leading-relaxed text-body">{project.summary}</p>
+          <p className="t-lead mt-6 text-body">{project.summary}</p>
 
           {/* Role first: on a team project the reader needs to know which
               part was mine before reading anything else. */}
@@ -179,7 +180,7 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
 
         {/* Proof it runs, before any of the prose. A self-hosted clip is the
             strongest form of that, so it wins over an embed or the art. */}
-        <div>
+        <div style={{ '--tone': `var(--tone-${project.tone})` } as React.CSSProperties}>
           {project.clip ? (
             <ProjectClip
               src={project.clip}
@@ -220,7 +221,7 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
               {project.results.map((r, i) => (
                 <li
                   key={i}
-                  className="glass glow-border rounded-2xl p-5 text-[0.9375rem] leading-relaxed text-body [border-top:2px_solid_rgb(var(--tone))]"
+                  className="glass glow-border rounded-2xl p-5 text-[0.9375rem] leading-relaxed text-body [border-top:2px_solid_var(--color-text)]"
                 >
                   {r}
                 </li>

@@ -23,7 +23,7 @@ export default async function Skills({
           const evidence = g.projects.map((s) => bySlug.get(s)).filter((p) => p !== undefined)
           return (
             <div key={g.title} className="grid gap-3 py-7 md:grid-cols-[15rem_minmax(0,1fr)] md:gap-10">
-              <dt className="font-display text-2xl leading-tight">{g.title}</dt>
+              <dt className="font-display t-4">{g.title}</dt>
               <dd>
                 <p className="leading-relaxed text-body">{g.items.join(' · ')}</p>
                 {evidence.length > 0 && (

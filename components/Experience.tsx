@@ -46,7 +46,7 @@ export default async function Experience({
           <li key={`${job.company}-${job.period}`} className="relative">
 
             <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-              <h3 className="font-display text-[clamp(1.75rem,3vw,2.5rem)] leading-tight">
+              <h3 className="font-display t-3">
                 {job.role} <span className="font-normal text-muted">·</span>{' '}
                 {job.companyUrl ? (
                   <a
@@ -64,7 +64,7 @@ export default async function Experience({
               </span>
             </div>
 
-            <p className="mt-3 max-w-3xl text-lg text-body">{job.description}</p>
+            <p className="t-lead mt-3 max-w-3xl text-body">{job.description}</p>
 
             <ul className="mt-7 max-w-3xl divide-y divide-border border-y border-border">
               {job.highlights.map((h, i) => (
@@ -90,7 +90,7 @@ export default async function Experience({
                 <li key={e.degree} className="grid gap-1 py-5 md:grid-cols-[9rem_minmax(0,1fr)] md:gap-8">
                   <p className="font-mono text-xs text-muted">{e.period}</p>
                   <div>
-                  <p className="font-display text-xl leading-snug">{e.degree}</p>
+                  <p className="font-display t-4">{e.degree}</p>
                   <p className="mt-1.5 text-sm text-body">
                     <span>{institution}</span>
                     {rest.length > 0 && <span className="block text-muted">{rest.join(' · ')}</span>}

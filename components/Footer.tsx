@@ -27,7 +27,7 @@ export default async function Footer({ locale = 'en' }: { locale?: Locale }) {
       <div className="mx-auto max-w-page px-6 pt-16">
         <a
           href={`mailto:${site.email}`}
-          className="font-display block w-fit text-[clamp(2.25rem,7vw,6rem)] leading-[0.95] decoration-1 underline-offset-[0.12em] hover:underline"
+          className="font-display t-hero block w-fit decoration-1 underline-offset-[0.12em] hover:underline"
         >
           {t(locale, 'getInTouch')} <span aria-hidden="true" className="inline-block rtl:-scale-x-100">→</span>
         </a>

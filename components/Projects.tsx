@@ -48,7 +48,7 @@ export default async function Projects({ title, locale = 'en' }: { title: string
                     <span aria-hidden="true">/</span>
                     <span>{p.year}</span>
                   </p>
-                  <h3 className="font-display mt-3 text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.08]">
+                  <h3 className="font-display t-3 mt-3">
                     {/* Stretched link: the whole row opens the case study. */}
                     <Link
                       href={localePath(locale, `/projects/${p.slug}`)}

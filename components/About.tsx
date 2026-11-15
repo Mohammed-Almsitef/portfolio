@@ -43,7 +43,7 @@ export default async function About({
                 key={i}
                 className={
                   i === 0
-                    ? 'font-display text-[clamp(1.6rem,2.6vw,2.15rem)] leading-[1.22] text-text'
+                    ? 'font-display t-3 text-text'
                     : 'leading-relaxed text-body md:text-[1.0625rem]'
                 }
               >

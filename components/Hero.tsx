@@ -34,13 +34,13 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
         )}
 
         <h1
-          className="hero-in font-display mt-6 text-[clamp(3.25rem,9vw,8rem)] leading-[0.92] tracking-[-0.025em]"
+          className="hero-in font-display t-hero mt-6"
           style={{ '--d': '60ms' } as React.CSSProperties}
         >
           {site.name}
         </h1>
         <p
-          className="hero-in font-display mt-4 text-[clamp(1.5rem,3vw,2.25rem)] italic text-muted"
+          className="hero-in font-display t-3 mt-4 italic text-muted"
           style={{ '--d': '100ms' } as React.CSSProperties}
         >
           {site.role}
@@ -48,7 +48,7 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
 
         <div className="mt-14 grid gap-12 border-t border-border pt-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
           <div className="hero-in" style={{ '--d': '160ms' } as React.CSSProperties}>
-            <p className="text-lg leading-relaxed text-body md:text-xl md:leading-relaxed">{site.tagline}</p>
+            <p className="t-lead text-body">{site.tagline}</p>
 
             {/* One primary action, the CV beside it, contact as a quiet link. */}
             <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
@@ -74,7 +74,7 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
               <dl className="mt-12 grid grid-cols-3 border-t border-border">
                 {about.stats.map((st) => (
                   <div key={st.label} className="border-e border-border py-5 pe-4 last:border-e-0 [&:not(:first-child)]:ps-4">
-                    <dd dir="ltr" className="font-display w-fit text-4xl leading-none tabular-nums md:text-5xl">
+                    <dd dir="ltr" className="font-display t-1 w-fit tabular-nums">
                       <CountUp value={st.value} />
                     </dd>
                     <dt className="mt-2 text-xs leading-snug text-muted">{st.label}</dt>

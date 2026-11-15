@@ -30,7 +30,7 @@ export default async function WritingIndex() {
       </header>
       <main id="main" className="mx-auto max-w-3xl px-6 pb-24 pt-14 md:pt-20">
         <p className="font-mono text-sm text-accent">{t('en', 'writingKicker')}</p>
-        <h1 className="mt-3 text-[clamp(2.1rem,5vw,3rem)] font-semibold leading-tight tracking-[-0.035em]">
+        <h1 className="font-display t-1 mt-3">
           {t('en', 'writingTitle')}
         </h1>
         <p className="mt-4 text-lg leading-relaxed text-body">
@@ -44,7 +44,7 @@ export default async function WritingIndex() {
                   <time dateTime={p.date}>{formatDate(p.date)}</time>
                   {p.draft && <DraftBadge />}
                 </p>
-                <h2 className="mt-2 text-xl font-semibold tracking-tight transition-colors group-hover:text-accent">
+                <h2 className="font-display t-4 mt-2 decoration-1 underline-offset-[0.18em] group-hover:underline">
                   {p.title}
                 </h2>
                 <p className="mt-2 leading-relaxed text-body">{p.summary}</p>
