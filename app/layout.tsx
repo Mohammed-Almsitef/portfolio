@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Geist, Geist_Mono, Instrument_Serif, Noto_Sans_Arabic } from 'next/font/google'
+import { Amiri, Geist, Geist_Mono, IBM_Plex_Sans_Arabic, Instrument_Serif } from 'next/font/google'
 import { getAppearance, getSite } from '@/lib/content'
 import { alternatesFor } from '@/lib/metadata'
 import './globals.css'
@@ -13,13 +13,22 @@ const geist = Geist({
 // device happens to have — usually something that clashes badly with the rest
 // of the page. Subsetted to Arabic only, and applied via [lang='ar'], so
 // English visitors never download it.
-const arabic = Noto_Sans_Arabic({
+const arabic = IBM_Plex_Sans_Arabic({
   subsets: ['arabic'],
+  weight: ['400', '500', '600'],
   variable: '--font-arabic',
   display: 'swap',
-  // 166 KB: preloading it made every English visitor download it before the
-  // first paint. Not preloaded, the browser fetches it only when Arabic text
-  // is actually on the page.
+  // Not preloaded: English visitors should not download Arabic fonts before
+  // the first paint. The browser fetches them only when Arabic is on the page.
+  preload: false,
+})
+
+// The Arabic display face: a classic naskh, the counterpart of Instrument Serif.
+const arabicDisplay = Amiri({
+  subsets: ['arabic'],
+  weight: ['400', '700'],
+  variable: '--font-arabic-display',
+  display: 'swap',
   preload: false,
 })
 
@@ -106,7 +115,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       // Server-rendered, so the accent is right in the first paint — no flash
       // of blue before a client effect could correct it.
       data-accent={accent}
-      className={`${geist.variable} ${serif.variable} ${mono.variable} ${arabic.variable}`}
+      className={`${geist.variable} ${serif.variable} ${mono.variable} ${arabic.variable} ${arabicDisplay.variable}`}
     >
       <head>
         {/*
