@@ -920,3 +920,141 @@ footer {
   padding-inline-start: 1rem;
   color: var(--color-muted);
 }
+
+/* ======================================================================
+ * Editorial theme (v2)
+ *
+ * Warm paper, ink type, one quiet blue. Overrides the earlier dark-glass
+ * layer: tokens first (unlayered, so they beat @theme), then the shared
+ * component classes (later in the same layer, so they win there too).
+ * ==================================================================== */
+:root {
+  --font-serif: var(--font-instrument), ui-serif, Georgia, 'Times New Roman', serif;
+
+  --color-bg: #faf9f6;
+  --color-surface: #ffffff;
+  --color-elevated: #f3f1ec;
+  --color-border: #e7e4dd;
+  --color-border-strong: #d3cfc5;
+  --color-text: #151413;
+  --color-body: #3d3a36;
+  --color-muted: #77736b;
+  --accent-tone: 29 78 216;
+  --headline-gradient: none;
+  --card-shadow: none;
+  --grain: 0;
+
+  /* A warm dark for the optional dark mode: same paper feel, inverted. */
+  --d-bg: #141312;
+  --d-surface: #1b1a18;
+  --d-elevated: #22201e;
+  --d-border: #2e2c29;
+  --d-border-strong: #45423d;
+  --d-text: #f2efe9;
+  --d-body: #c9c4bb;
+  --d-muted: #8f8a81;
+  --d-headline-gradient: none;
+  --d-card-shadow: none;
+  --d-grain: 0;
+}
+
+.font-display {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+[lang='ar'] .font-display {
+  font-family: var(--font-arabic), var(--font-serif);
+}
+
+@layer components {
+  .glass,
+  :root .glass,
+  :root:not([data-theme='dark']) .glass {
+    background: var(--color-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border: 1px solid var(--color-border);
+    box-shadow: none;
+  }
+  .glass.nav-solid {
+    background-color: color-mix(in srgb, var(--color-bg) 92%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+  .btn-primary,
+  :root:not([data-theme='dark']) .btn-primary {
+    background: var(--color-text);
+    color: var(--color-bg);
+    box-shadow: none;
+    transition:
+      opacity 160ms ease,
+      transform 160ms ease;
+  }
+  .btn-primary::after {
+    display: none;
+  }
+  .btn-primary:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+    box-shadow: none;
+  }
+  .btn-ghost,
+  :root:not([data-theme='dark']) .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--color-border-strong);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .btn-ghost:hover {
+    background: var(--color-elevated);
+    border-color: var(--color-text);
+    transform: none;
+  }
+  .text-gradient {
+    background-image: none;
+    -webkit-text-fill-color: currentColor;
+    color: var(--color-text);
+  }
+  .glow-border::before {
+    display: none;
+  }
+  .glow-border {
+    transition: border-color 200ms ease;
+  }
+  .glow-border:hover,
+  .glow-border:focus-within {
+    border-color: var(--color-border-strong);
+  }
+  .panel-halo::before {
+    display: none;
+  }
+  /* Editorial link: a hairline that thickens on hover. */
+  .ed-link {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+    text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+    transition: text-decoration-color 160ms ease;
+  }
+  .ed-link:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+.aurora,
+.hero-grid {
+  display: none;
+}
+.js [data-reveal] {
+  filter: none;
+}
+
+/* Unlayered, to beat the original (unlayered) gradient-text rule. */
+.text-gradient {
+  background-image: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  -webkit-text-fill-color: currentColor;
+  color: var(--color-text);
+}

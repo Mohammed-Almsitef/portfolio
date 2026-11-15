@@ -2,7 +2,6 @@ import Link from 'next/link'
 import { getProjects, getSkillGroups } from '@/lib/content'
 import Section from './Section'
 import { localePath, t, type Locale } from '@/lib/locale'
-import { CARD_SURFACE, CARD_TONE_WASH } from '@/lib/styles'
 
 export default async function Skills({
   title,
@@ -17,54 +16,34 @@ export default async function Skills({
 
   return (
     <Section id="skills" title={title}>
-      <ul className="skills-grid grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {/* An editorial index: group name in the serif, skills as a plain
+          line, and the projects that prove them. */}
+      <dl className="divide-y divide-border border-y border-border">
         {groups.map((g) => {
           const evidence = g.projects.map((s) => bySlug.get(s)).filter((p) => p !== undefined)
           return (
-            <li
-              key={g.title}
-              // The tone is resolved per theme by globals.css; only the variable
-              // reference is dynamic, so no Tailwind class is built at runtime.
-              style={{ '--tone': `var(--tone-${g.tone})` } as React.CSSProperties}
-              className={`glow-border group flex flex-col p-6 ${CARD_SURFACE} ${CARD_TONE_WASH} transition-colors duration-300 hover:border-[rgb(var(--tone)/0.45)]`}
-            >
-              <h3 className="flex items-center gap-2.5 font-semibold tracking-tight">
-                <span
-                  aria-hidden="true"
-                  className="size-2 shrink-0 rounded-sm bg-[rgb(var(--tone))] shadow-[0_0_10px_rgb(var(--tone)/0.6)]"
-                />
-                {g.title}
-              </h3>
-              <ul className="mb-5 mt-5 flex flex-1 flex-wrap content-start gap-2">
-                {g.items.map((item) => (
-                  <li
-                    key={item}
-                    className="rounded-md border border-border bg-bg/50 px-2.5 py-1 text-[0.8125rem] text-body transition-colors group-hover:border-[rgb(var(--tone)/0.3)]"
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              {evidence.length > 0 && (
-                <p className="flex flex-wrap items-baseline gap-x-2 gap-y-1 border-t border-border pt-4 text-xs text-muted">
-                  <span>{t(locale, 'usedIn')}</span>
-                  {evidence.map((p, i) => (
-                    <span key={p.slug}>
-                      <Link
-                        href={localePath(locale, `/projects/${p.slug}`)}
-                        className="font-medium text-body underline-offset-4 transition-colors hover:text-accent hover:underline"
-                      >
-                        {p.shortTitle}
-                      </Link>
-                      {i < evidence.length - 1 && <span aria-hidden="true">,</span>}
-                    </span>
-                  ))}
-                </p>
-              )}
-            </li>
+            <div key={g.title} className="grid gap-3 py-7 md:grid-cols-[15rem_minmax(0,1fr)] md:gap-10">
+              <dt className="font-display text-2xl leading-tight">{g.title}</dt>
+              <dd>
+                <p className="leading-relaxed text-body">{g.items.join(' · ')}</p>
+                {evidence.length > 0 && (
+                  <p className="mt-3 flex flex-wrap gap-x-2 gap-y-1 text-sm text-muted">
+                    <span>{t(locale, 'usedIn')}</span>
+                    {evidence.map((p, i) => (
+                      <span key={p.slug}>
+                        <Link href={localePath(locale, `/projects/${p.slug}`)} className="ed-link text-text">
+                          {p.shortTitle}
+                        </Link>
+                        {i < evidence.length - 1 && <span aria-hidden="true">,</span>}
+                      </span>
+                    ))}
+                  </p>
+                )}
+              </dd>
+            </div>
           )
         })}
-      </ul>
+      </dl>
     </Section>
   )
 }

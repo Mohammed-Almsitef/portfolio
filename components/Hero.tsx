@@ -5,13 +5,11 @@ import { simLabels } from '@/lib/simLabels'
 import { localePath, t, type Locale } from '@/lib/locale'
 
 /**
- * The hero does not use the scroll reveal: it is the first paint, and hiding
- * it until JavaScript runs pushed Largest Contentful Paint past 5 s. It gets a
- * CSS-only entrance (`.hero-in`) that moves but never hides.
+ * Editorial hero: the name set large in the serif, the role in italic, the
+ * claim and actions beneath, and the live robot demo presented as a captioned
+ * figure — evidence, not decoration.
  *
- * Name, claim and proof side by side: the copy says what I build, and the
- * viewport beside it shows a robot doing it — exploring, mapping and planning
- * live in the browser, steerable with a click.
+ * No scroll reveal here (it is the first paint); `.hero-in` only moves.
  */
 export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
   const [site, jobs, about] = await Promise.all([
@@ -20,102 +18,84 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
     getAbout(locale),
   ])
   const current = jobs[0]
-
   const labels = simLabels(locale)
 
   return (
-    <section id="top" className="hero relative overflow-hidden">
-      {/* Blueprint grid fading out from the top, and one soft accent glow. */}
-      <div aria-hidden="true" data-print-hide className="hero-grid pointer-events-none absolute inset-0" />
+    <section id="top" className="relative">
+      <div className="mx-auto max-w-page px-6 pb-16 pt-32 md:pb-24 md:pt-40">
+        {current && (
+          <p className="hero-in flex flex-wrap items-center gap-x-2 text-sm text-muted">
+            <span className="relative flex size-1.5 shrink-0" aria-hidden="true">
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-[rgb(var(--tone-status))] opacity-60" />
+              <span className="relative inline-flex size-1.5 rounded-full bg-[rgb(var(--tone-status))]" />
+            </span>
+            {t(locale, 'currently')} {current.role} {t(locale, 'at')} {current.company}
+          </p>
+        )}
 
-      {/* Desktop: copy and figures on the left, the simulation on the right.
-          Phone: copy, then the simulation, then the figures, so the demo is
-          not pushed below three rows of numbers. */}
-      <div className="hero-layout relative z-2 mx-auto grid max-w-page items-center gap-x-14 gap-y-10 px-6 pb-20 pt-28 md:pt-36 lg:min-h-[92svh] lg:pb-24">
-        <div className="[grid-area:copy]">
-          {current && (
-            <div className="hero-in">
-              <p className="glass inline-flex flex-wrap items-center gap-x-2 gap-y-1 rounded-full px-3.5 py-1.5 text-xs text-muted">
-                <span className="relative flex size-1.5 shrink-0" aria-hidden="true">
-                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-[rgb(var(--tone-status))] opacity-70" />
-                  <span className="relative inline-flex size-1.5 rounded-full bg-[rgb(var(--tone-status))]" />
-                </span>
-                <span className="text-accent">{t(locale, 'currently')}</span>
-                <span aria-hidden="true">·</span>
-                <span className="text-text">
-                  {current.role} {t(locale, 'at')} {current.company}
-                </span>
-              </p>
-            </div>
-          )}
+        <h1
+          className="hero-in font-display mt-6 text-[clamp(3.25rem,9vw,8rem)] leading-[0.92] tracking-[-0.025em]"
+          style={{ '--d': '60ms' } as React.CSSProperties}
+        >
+          {site.name}
+        </h1>
+        <p
+          className="hero-in font-display mt-4 text-[clamp(1.5rem,3vw,2.25rem)] italic text-muted"
+          style={{ '--d': '100ms' } as React.CSSProperties}
+        >
+          {site.role}
+        </p>
 
-          <div className="hero-in" style={{ '--d': '60ms' } as React.CSSProperties}>
-            <h1 className="text-gradient mt-6 text-[clamp(2.75rem,6vw,4.75rem)] font-semibold leading-[0.98] tracking-[-0.04em]">
-              {site.name}
-            </h1>
-            <p className="mt-4 text-lg font-medium text-accent md:text-xl">{site.role}</p>
-          </div>
+        <div className="mt-14 grid gap-12 border-t border-border pt-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+          <div className="hero-in" style={{ '--d': '160ms' } as React.CSSProperties}>
+            <p className="text-lg leading-relaxed text-body md:text-xl md:leading-relaxed">{site.tagline}</p>
 
-          <div className="hero-in" style={{ '--d': '140ms' } as React.CSSProperties}>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-body">{site.tagline}</p>
-          </div>
-
-          {/* One primary action (the work), one secondary (the CV, which is
-              what a recruiter wants), and contact as a quieter link. */}
-          <div className="hero-in" style={{ '--d': '220ms' } as React.CSSProperties}>
+            {/* One primary action, the CV beside it, contact as a quiet link. */}
             <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-              <a href="#projects" className="btn-primary rounded-xl px-6 py-3 text-center text-sm font-semibold">
+              <a href="#projects" className="btn-primary rounded-full px-6 py-3 text-center text-sm font-medium">
                 {t(locale, 'viewMyWork')}
               </a>
               {site.resumeUrl && (
                 <a
                   href={site.resumeUrl}
-                  className="btn-ghost inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-medium"
+                  className="btn-ghost inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-medium"
                 >
-                  <svg aria-hidden="true" viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14" />
-                  </svg>
                   {t(locale, 'downloadCv')}
-                  <span className="text-xs font-normal text-muted">{t(locale, 'cvMeta')}</span>
+                  <span className="text-xs text-muted">{t(locale, 'cvMeta')}</span>
                 </a>
               )}
-              <a
-                href="#contact"
-                className="tap justify-center px-2 text-sm font-medium text-muted underline-offset-4 transition-colors hover:text-accent hover:underline"
-              >
-                {t(locale, 'getInTouch')} <span aria-hidden="true" className="ms-1 rtl:-scale-x-100">→</span>
+              <a href="#contact" className="ed-link px-2 text-center text-sm font-medium text-body sm:text-start">
+                {t(locale, 'getInTouch')}
               </a>
             </div>
-          </div>
-        </div>
 
-        {/* Proof, not adjectives. Edited in the manager under About →
-            Headline figures. Rows on a phone, a strip on wider screens. */}
-        {about.stats.length > 0 && (
-          <div className="hero-in [grid-area:stats] lg:self-start" style={{ '--d': '300ms' } as React.CSSProperties}>
-            <dl className="glass grid max-w-xl divide-y divide-border rounded-2xl sm:grid-cols-3 sm:divide-x sm:divide-y-0 rtl:sm:divide-x-reverse">
-              {about.stats.map((st) => (
-                <div key={st.label} className="flex items-center gap-4 px-5 py-3.5 sm:block sm:py-4">
-                  <dd dir="ltr" className="text-gradient w-fit shrink-0 text-2xl font-semibold tracking-tight tabular-nums md:text-3xl">
-                    <CountUp value={st.value} />
-                  </dd>
-                  <dt className="text-sm leading-snug text-muted sm:mt-1 sm:text-xs">{st.label}</dt>
-                </div>
-              ))}
-            </dl>
+            {/* Proof, as a fact strip. Edited under About → Headline figures. */}
+            {about.stats.length > 0 && (
+              <dl className="mt-12 grid grid-cols-3 border-t border-border">
+                {about.stats.map((st) => (
+                  <div key={st.label} className="border-e border-border py-5 pe-4 last:border-e-0 [&:not(:first-child)]:ps-4">
+                    <dd dir="ltr" className="font-display w-fit text-4xl leading-none tabular-nums md:text-5xl">
+                      <CountUp value={st.value} />
+                    </dd>
+                    <dt className="mt-2 text-xs leading-snug text-muted">{st.label}</dt>
+                  </div>
+                ))}
+              </dl>
+            )}
           </div>
-        )}
 
-        <div className="hero-in min-w-0 [grid-area:sim]" style={{ '--d': '180ms' } as React.CSSProperties}>
-          <div data-print-hide className="panel-halo">
-            <SlamViewport labels={labels} />
-          </div>
-          <p data-print-hide className="mt-4 text-center text-sm text-muted">
-            {t(locale, 'simCaption')}{' '}
-            <a href={localePath(locale, '/demo')} className="font-medium text-accent underline-offset-4 hover:underline">
-              {t(locale, 'tryDemo')} <span aria-hidden="true" className="inline-block rtl:-scale-x-100">→</span>
-            </a>
-          </p>
+          <figure className="hero-in min-w-0" style={{ '--d': '220ms' } as React.CSSProperties}>
+            <div data-print-hide>
+              <SlamViewport labels={labels} />
+            </div>
+            <figcaption className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm text-muted">
+              <span className="font-display text-base italic text-text">Fig. 1</span>
+              <span>{t(locale, 'simCaption')}</span>
+              <a href={localePath(locale, '/demo')} className="ed-link font-medium text-text">
+                {t(locale, 'tryDemo')}
+              </a>
+            </figcaption>
+          </figure>
         </div>
       </div>
     </section>

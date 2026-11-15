@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Geist, Geist_Mono, Noto_Sans_Arabic } from 'next/font/google'
+import { Geist, Geist_Mono, Instrument_Serif, Noto_Sans_Arabic } from 'next/font/google'
 import { getAppearance, getSite } from '@/lib/content'
 import { alternatesFor } from '@/lib/metadata'
 import './globals.css'
@@ -23,6 +23,15 @@ const arabic = Noto_Sans_Arabic({
   preload: false,
 })
 
+// The editorial display face: headings, the name, pull quotes.
+const serif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: '400',
+  style: ['normal', 'italic'],
+  variable: '--font-instrument',
+  display: 'swap',
+})
+
 const mono = Geist_Mono({
   subsets: ['latin'],
   variable: '--font-geist-mono',
@@ -34,8 +43,8 @@ const mono = Geist_Mono({
 /** Browser chrome (address bar on phones) matches the page ground. */
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: dark)', color: '#06070b' },
-    { media: '(prefers-color-scheme: light)', color: '#eef1f6' },
+    { media: '(prefers-color-scheme: dark)', color: '#141312' },
+    { media: '(prefers-color-scheme: light)', color: '#faf9f6' },
   ],
 }
 
@@ -68,7 +77,12 @@ export async function generateMetadata(): Promise<Metadata> {
       title: `${site.name} — ${site.role}`,
       description: site.tagline,
     },
-    robots: { index: true, follow: true },
+    // Only the production site is indexed: branch addresses (such as the v2
+    // subdomain) and previews would otherwise compete with it as duplicates.
+    robots:
+      process.env.VERCEL_ENV && process.env.VERCEL_ENV !== 'production'
+        ? { index: false, follow: false }
+        : { index: true, follow: true },
     // Search Console offers a meta tag as one way to prove you own the domain.
     // Read from the environment rather than committed, so the token can be
     // pasted into Vercel without a code change — and so an empty value simply
@@ -92,7 +106,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       // Server-rendered, so the accent is right in the first paint — no flash
       // of blue before a client effect could correct it.
       data-accent={accent}
-      className={`${geist.variable} ${mono.variable} ${arabic.variable}`}
+      className={`${geist.variable} ${serif.variable} ${mono.variable} ${arabic.variable}`}
     >
       <head>
         {/*

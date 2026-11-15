@@ -40,7 +40,7 @@ export default async function DemoPage({ locale }: { locale: Locale }) {
       </header>
       <main id="main" className="mx-auto max-w-6xl px-6 pb-24 pt-12 md:pt-16">
         <p className="font-mono text-sm text-accent">{t(locale, 'demoKicker')}</p>
-        <h1 className="text-gradient mt-3 max-w-3xl text-[clamp(2rem,5vw,3.25rem)] font-semibold leading-[1.08] tracking-[-0.035em]">
+        <h1 className="font-display mt-3 max-w-3xl text-[clamp(2rem,5vw,3.25rem)] leading-[1.08] tracking-[-0.035em]">
           {t(locale, 'demoTitle')}
         </h1>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-body">{t(locale, 'demoLead')}</p>
