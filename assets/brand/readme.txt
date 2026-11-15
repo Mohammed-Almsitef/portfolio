@@ -1,12 +1,16 @@
 MA monogram — Mohammed Almsitef
 
-A roman M and an italic A set tight, so the M's foot meets the A's.
+A roman M interlocked with an italic A: the A leans into the M and stands
+in front of it, so the M's right stem tapers into the A's diagonal. A
+hairline gap (30 units) separates them where they cross.
 Letterforms: Instrument Serif Regular (M) and Italic (A), SIL Open Font
-License, converted to outlines. Kerning between the two: -70 units.
+License, converted to outlines. The A is set 175 units into the M. The M
+is cut away behind the A's solid silhouette (apex to both feet).
 The M is ink; the A carries the accent.
 
 At small sizes the outlines are thickened with a same-colour stroke
-(0 at 48px+, 10 at ~32px, 20 at ~24px, 34 at 16px, in font units).
+(0 at 48px+, 10 at ~32px, 20 at ~24px, 30 at 16px, in font units), and the
+gap widens with it (30, 32, 38, 46).
 
 Files
 ma-primary.svg     ink M, blue A — light backgrounds

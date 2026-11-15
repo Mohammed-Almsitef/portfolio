@@ -258,7 +258,9 @@ Nothing overflows the viewport at 320px in either language.
 
 ## The monogram
 
-A roman **M** and an italic **A** set tight, so the M's foot meets the A's —
+A roman **M** interlocked with an italic **A**: the A leans into the M and
+stands in front of it, so the M's right stem tapers into the A's diagonal, with
+a hairline gap where they cross —
 Instrument Serif (the display face) converted to outlines, so the mark never
 waits for a font. The pairing mirrors the hero: name in roman, role in italic.
 The M is ink, the A carries the accent. `components/Logo.tsx` holds the
