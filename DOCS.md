@@ -258,23 +258,18 @@ Nothing overflows the viewport at 320px in either language.
 
 ## The monogram
 
-An **MA ligature** at one stroke weight with round ends: a vertical M stem and
-the M's two diagonals, where the M's second diagonal is also the A's left leg and
-the A's crossbar starts exactly at the M's valley. The A (right leg and crossbar)
-carries the accent. `components/Logo.tsx` implements it from the geometry in
-`assets/brand/readme.txt`, which is the source of truth.
+A roman **M** and an italic **A** set tight, so the M's foot meets the A's —
+Instrument Serif (the display face) converted to outlines, so the mark never
+waits for a font. The pairing mirrors the hero: name in roman, role in italic.
+The M is ink, the A carries the accent. `components/Logo.tsx` holds the
+outlines; `assets/brand/readme.txt` is the spec.
 
-- small sizes step the weight up: 12 at 48px+, 13 at ~32px, 14.5 at ~24px,
-  16 at 16px; the accent holds down to 16px, so there is no monochrome step
-- the viewBox is the mark's bounds plus half a stroke and 2 units of clearance,
-  computed from the weight
+- small sizes thicken the outlines with a same-colour stroke (0, 10, 20, 34
+  font units from 48px down to 16px), because hairline serifs vanish
+- the favicon is the M alone: two serif letters are illegible at 16px
 - the two colourways are not interchangeable: `#1D4ED8` never on a dark ground,
-  `#60A5FA` never on a light one
-
-That last rule is why the colours live in `--logo-ink` / `--logo-accent` rather
-than deriving from the accent token: the accent is user-selectable, and the mark
-is not. The manager passes its colours in explicitly instead, because its
-light/dark setting is its own.
+  `#60A5FA` never on a light one, which is why the colours live in
+  `--logo-ink` / `--logo-accent` and not the user-selectable accent
 
 ## Two languages, two sites
 

@@ -86,7 +86,7 @@
    * The pairing is also not interchangeable — #1D4ED8 must never sit on a dark
    * ground, nor #60A5FA on a light one — which is the whole reason these are
    * theme-scoped variables rather than one value. */
-  --logo-ink: #0f172a;
+  --logo-ink: #151413;
   --logo-accent: #1d4ed8;
 
   /* Light-theme values for the properties Tailwind doesn't generate. */
@@ -132,7 +132,7 @@
   --d-card-shadow: none;
   --d-grain: 0.022;
   --d-headline-gradient: linear-gradient(110deg, #ffffff 20%, #dbe4ff 45%, rgb(var(--accent-tone)) 75%, rgb(var(--tone-violet)) 100%);
-  --d-logo-ink: #f3f4f6;
+  --d-logo-ink: #f2efe9;
   --d-logo-accent: #60a5fa;
 }
 

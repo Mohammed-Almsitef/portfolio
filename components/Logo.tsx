@@ -1,46 +1,41 @@
 /**
- * The MA ligature.
+ * The MA monogram: a roman M and an italic A, the M's foot meeting the A's.
  *
- * One continuous geometry for both letters: a vertical M stem, the M's two
- * diagonals, and an A whose left leg *is* the M's second diagonal. The A's
- * crossbar starts exactly at the M's valley, so the letters share their
- * construction instead of overlapping. One stroke weight, round ends — the
- * same family as the site's Geist type.
+ * The letterforms are Instrument Serif (the site's display face, SIL Open Font
+ * License) converted to outlines, so the mark never depends on a font loading.
+ * The roman/italic pairing mirrors the hero, where the name is roman and the
+ * role italic. The M is ink; the A carries the accent.
  *
- * The A (its right leg and crossbar) carries the accent; the M is ink. Colours
- * come from `--logo-ink` / `--logo-accent` (globals.css), which hold the
- * correct pairing per theme: #1D4ED8 only on light grounds, #60A5FA only on
- * dark ones.
- *
- * Construction (120-unit grid): M = M26 94 V30 L52 70 L78 30; A = M78 30
- * L98 94; crossbar = M52 70 H90.5. The viewBox carries half a stroke of
- * clearance around the round ends. Source files: assets/brand/.
+ * Colours come from `--logo-ink` / `--logo-accent` (globals.css), which hold
+ * the right pairing per theme. Source files: assets/brand/.
  */
 
-const M = 'M26 94 V30 L52 70 L78 30'
-const A = 'M78 30 L98 94'
-const CROSSBAR = 'M52 70 H90.5'
+const M = 'M315.0 -10.0Q311.0 -10.0 306.0 -13.0Q301.0 -16.0 299.0 -26.0L148.0 -639.0Q147.0 -646.0 142.0 -645.5Q137.0 -645.0 137.0 -638.0L117.0 -86.0Q116.0 -58.0 126.0 -43.5Q136.0 -29.0 161.0 -25.0L174.0 -23.0Q187.0 -22.0 187.0 -11.0Q187.0 0.0 172.0 0.0H29.0Q14.0 0.0 14.0 -11.0Q14.0 -22.0 27.0 -23.0L40.0 -25.0Q66.0 -29.0 75.5 -43.5Q85.0 -58.0 86.0 -86.0L106.0 -654.0Q107.0 -675.0 100.0 -682.0Q93.0 -689.0 70.0 -693.0L47.0 -697.0Q34.0 -700.0 34.0 -709.0Q34.0 -720.0 49.0 -720.0H169.0Q200.0 -720.0 207.0 -690.0L328.0 -191.0Q330.0 -184.0 334.5 -184.0Q339.0 -184.0 340.0 -191.0L466.0 -695.0Q472.0 -720.0 498.0 -720.0H616.0Q631.0 -720.0 631.0 -709.0Q631.0 -700.0 618.0 -697.0L595.0 -693.0Q574.0 -689.0 567.0 -682.0Q560.0 -675.0 561.0 -654.0L581.0 -66.0Q582.0 -45.0 588.0 -38.0Q594.0 -31.0 615.0 -27.0L638.0 -23.0Q651.0 -20.0 651.0 -11.0Q651.0 0.0 636.0 0.0H455.0Q440.0 0.0 440.0 -11.0Q440.0 -20.0 453.0 -23.0L476.0 -27.0Q497.0 -31.0 504.0 -38.0Q511.0 -45.0 510.0 -66.0L493.0 -638.0Q493.0 -645.0 488.5 -645.5Q484.0 -646.0 482.0 -640.0L330.0 -26.0Q328.0 -16.0 323.5 -13.0Q319.0 -10.0 315.0 -10.0Z'
+const A = 'M533.0 0.0Q521.0 0.0 521.0 -10.0Q521.0 -19.0 537.0 -23.0L553.0 -26.0Q573.0 -30.0 587.5 -45.5Q602.0 -61.0 615.0 -89.0L914.0 -714.0Q919.0 -724.0 924.0 -727.0Q929.0 -730.0 933.0 -730.0Q938.0 -730.0 941.5 -727.0Q945.0 -724.0 945.0 -714.0L956.0 -80.0Q957.0 -52.0 963.0 -41.5Q969.0 -31.0 988.0 -26.0L1001.0 -23.0Q1013.0 -20.0 1013.0 -11.0Q1013.0 0.0 996.0 0.0H831.0Q818.0 0.0 818.0 -10.0Q818.0 -21.0 838.0 -23.0L858.0 -25.0Q875.0 -27.0 881.5 -36.0Q888.0 -45.0 888.0 -67.0L886.0 -222.0Q886.0 -248.0 859.0 -248.0H752.0Q726.0 -248.0 713.0 -222.0L648.0 -88.0Q621.0 -31.0 666.0 -25.0L680.0 -23.0Q695.0 -21.0 695.0 -11.0Q695.0 0.0 678.0 0.0ZM756.0 -278.0H868.0Q885.0 -278.0 885.0 -295.0L883.0 -568.0H878.0L747.0 -295.0Q743.0 -288.0 746.0 -283.0Q749.0 -278.0 756.0 -278.0Z'
+
+/** Advance width and cap height of the pair, in font units. */
+const W = 1052
+const CAP = 720
 
 /**
- * Optical weight compensation: smaller renderings get a heavier stroke so the
- * counters stay open and the mark keeps its colour at tab-icon size.
+ * Optical compensation: a hairline serif disappears at small sizes, so the
+ * outlines are thickened with a stroke of their own colour as the mark shrinks.
  */
 const WEIGHTS = {
   /** 48px and above. */
-  regular: 12,
+  regular: 0,
   /** ~32px. */
-  medium: 13,
+  medium: 10,
   /** ~24px. */
-  small: 14.5,
+  small: 20,
   /** 16px — the minimum size. */
-  tiny: 16,
+  tiny: 34,
 } as const
 
 type LogoWeight = keyof typeof WEIGHTS
 
 export default function Logo({
-  // Kept for call-site compatibility; the mark no longer needs per-instance
-  // ids now that it has no mask.
+  // Kept for call-site compatibility; the mark needs no per-instance ids.
   id: _id,
   weight = 'medium',
   className,
@@ -59,19 +54,17 @@ export default function Logo({
 }) {
   void _id
   const stroke = WEIGHTS[weight]
-  const pad = stroke / 2 + 2
+  const pad = 30 + stroke
 
   return (
     <svg
-      viewBox={`${26 - pad} ${30 - pad} ${72 + pad * 2} ${64 + pad * 2}`}
+      viewBox={`${-pad} ${-CAP - pad} ${W + pad * 2} ${CAP + pad * 2}`}
       className={className}
       {...(label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': true })}
       focusable="false"
     >
-      <g fill="none" strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round">
-        <path d={M} stroke={ink} />
-        <path d={`${A} ${CROSSBAR}`} stroke={accent} />
-      </g>
+      <path d={M} fill={ink} stroke={ink} strokeWidth={stroke} strokeLinejoin="round" />
+      <path d={A} fill={accent} stroke={accent} strokeWidth={stroke} strokeLinejoin="round" />
     </svg>
   )
 }
