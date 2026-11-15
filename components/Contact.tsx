@@ -5,7 +5,7 @@ import Section from './Section'
 import SocialIcon from './SocialIcon'
 import { outbound } from '@/lib/links'
 import { t, type Locale } from '@/lib/locale'
-import { CARD_SURFACE, EYEBROW } from '@/lib/styles'
+import { EYEBROW } from '@/lib/styles'
 
 /**
  * How to reach me, in the order a recruiter acts: the pitch, email (copyable),
@@ -35,7 +35,7 @@ export default async function Contact({
     <Section id="contact" title={title}>
       <div className="grid gap-12 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-16">
         <div className="max-w-2xl">
-          <p className="text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-tight tracking-tight">
+          <p className="font-display text-[clamp(2.5rem,6vw,4.5rem)] leading-[1.02]">
             {contact.headline}
           </p>
           {contact.blurb && (
@@ -78,9 +78,9 @@ export default async function Contact({
         </div>
 
         <div className="space-y-5 self-start">
-          <dl className={`space-y-5 p-6 ${CARD_SURFACE}`}>
+          <dl className="divide-y divide-border border-t border-text">
             {details.map((d) => (
-              <div key={d.k}>
+              <div key={d.k} className="py-4">
                 <dt className={EYEBROW}>{d.k}</dt>
                 <dd className="mt-1.5 text-sm font-medium">{d.v}</dd>
               </div>

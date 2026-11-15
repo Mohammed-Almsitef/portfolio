@@ -2,7 +2,6 @@ import Link from 'next/link'
 import { getPosts } from '@/lib/content'
 import { t, type Locale } from '@/lib/locale'
 import Section from './Section'
-import { CARD_SURFACE } from '@/lib/styles'
 
 /** The latest notes on the home page, linking to the full Writing index. */
 export default async function Writing({ title, locale = 'en' }: { title: string; locale?: Locale }) {
@@ -11,29 +10,36 @@ export default async function Writing({ title, locale = 'en' }: { title: string;
 
   return (
     <Section id="writing" title={title}>
-      <ul className="grid gap-5 md:grid-cols-3">
+      <ul className="divide-y divide-border border-y border-border">
         {posts.map((p) => (
           <li key={p.slug}>
             <Link
               href={`/writing/${p.slug}`}
-              className={`glow-border group flex h-full flex-col p-6 ${CARD_SURFACE}`}
+              className="group grid gap-2 py-7 md:grid-cols-[9rem_minmax(0,1fr)_auto] md:items-baseline md:gap-8"
             >
-              <p className="flex items-center gap-2 text-xs text-muted">
+              <p className="flex items-center gap-2 font-mono text-xs text-muted">
                 <time dateTime={p.date}>{formatDate(p.date)}</time>
-                {p.draft && <DraftBadge />}
               </p>
-              <h3 className="mt-3 text-lg font-semibold leading-snug tracking-tight transition-colors group-hover:text-accent">
-                {p.title}
-              </h3>
-              <p className="mt-3 flex-1 text-sm leading-relaxed text-body">{p.summary}</p>
-              <span className="mt-5 text-sm font-medium text-accent">
-                {t(locale, 'readPost')} <span aria-hidden="true">→</span>
+              <div>
+                <h3 className="font-display text-2xl leading-snug decoration-1 underline-offset-[0.18em] group-hover:underline md:text-[1.75rem]">
+                  {p.title}
+                </h3>
+                <p className="mt-2 max-w-2xl leading-relaxed text-body">{p.summary}</p>
+              </div>
+              <span className="flex items-center gap-3 text-sm font-medium">
+                {p.draft && <DraftBadge />}
+                <span>
+                  {t(locale, 'readPost')}{' '}
+                  <span aria-hidden="true" className="inline-block transition-transform group-hover:translate-x-1">
+                    →
+                  </span>
+                </span>
               </span>
             </Link>
           </li>
         ))}
       </ul>
-      <Link href="/writing" className="tap mt-8 text-sm font-medium text-muted transition-colors hover:text-accent">
+      <Link href="/writing" className="ed-link mt-8 inline-block text-sm font-medium">
         {t(locale, 'allPosts')} <span aria-hidden="true" className="ms-1">→</span>
       </Link>
     </Section>

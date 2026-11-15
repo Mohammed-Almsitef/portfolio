@@ -2,7 +2,7 @@ import { getAbout, getContact, getSite } from '@/lib/content'
 import AboutPhoto from './AboutPhoto'
 import Section from './Section'
 import { t, type Locale } from '@/lib/locale'
-import { CARD_SURFACE, EYEBROW } from '@/lib/styles'
+import { EYEBROW } from '@/lib/styles'
 
 export default async function About({
   title,
@@ -43,7 +43,7 @@ export default async function About({
                 key={i}
                 className={
                   i === 0
-                    ? 'text-lg leading-relaxed text-text md:text-xl md:leading-relaxed'
+                    ? 'font-display text-[clamp(1.6rem,2.6vw,2.15rem)] leading-[1.22] text-text'
                     : 'leading-relaxed text-body md:text-[1.0625rem]'
                 }
               >
@@ -53,13 +53,13 @@ export default async function About({
           </div>
 
           {facts.length > 0 && (
-            <aside className={`self-start p-6 ${CARD_SURFACE}`}>
+            <aside className="self-start border-t border-text pt-5">
               <h3 className={EYEBROW}>{t(locale, 'quickFacts')}</h3>
-              <dl className="mt-5 space-y-4">
+              <dl className="mt-4 divide-y divide-border">
                 {facts.map((f) => (
                   <div key={f.k}>
-                    <dt className="text-xs text-muted">{f.k}</dt>
-                    <dd className="mt-0.5 text-sm font-medium leading-snug">{f.v}</dd>
+                    <dt className="pt-3 text-xs text-muted">{f.k}</dt>
+                    <dd className="mt-0.5 pb-3 text-sm font-medium leading-snug">{f.v}</dd>
                   </div>
                 ))}
               </dl>

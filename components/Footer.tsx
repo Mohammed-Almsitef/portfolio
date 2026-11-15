@@ -23,7 +23,15 @@ export default async function Footer({ locale = 'en' }: { locale?: Locale }) {
   const anchor = (key: string) => `${home === '/' ? '' : home}/#${ID[key] ?? key}`
 
   return (
-    <footer data-print-hide className="border-t border-border bg-surface/40">
+    <footer data-print-hide className="border-t border-border">
+      <div className="mx-auto max-w-page px-6 pt-16">
+        <a
+          href={`mailto:${site.email}`}
+          className="font-display block w-fit text-[clamp(2.25rem,7vw,6rem)] leading-[0.95] decoration-1 underline-offset-[0.12em] hover:underline"
+        >
+          {t(locale, 'getInTouch')} <span aria-hidden="true" className="inline-block rtl:-scale-x-100">→</span>
+        </a>
+      </div>
       <div className="mx-auto grid max-w-page gap-10 px-6 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
           <a href={home} className="inline-flex items-center gap-2.5 text-[0.9375rem] font-semibold tracking-tight">

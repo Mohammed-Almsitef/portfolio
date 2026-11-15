@@ -2,11 +2,11 @@ import { getEducation, getExperience, getPublications } from '@/lib/content'
 import Section from './Section'
 import { outbound } from '@/lib/links'
 import { t, type Locale } from '@/lib/locale'
-import { BLOCK_HEADING, CARD_SURFACE } from '@/lib/styles'
+import { BLOCK_HEADING } from '@/lib/styles'
 import ExternalGlyph from './ExternalGlyph'
 
 function SubHeading({ children }: { children: React.ReactNode }) {
-  return <h3 className={`${BLOCK_HEADING} text-accent`}>{children}</h3>
+  return <h3 className={`${BLOCK_HEADING} text-muted`}>{children}</h3>
 }
 
 /**
@@ -45,34 +45,33 @@ export default async function Experience({
         {experience.map((job) => (
           <li key={`${job.company}-${job.period}`} className="relative">
 
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-              <h3 className="text-xl font-semibold tracking-tight">
+            <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+              <h3 className="font-display text-[clamp(1.75rem,3vw,2.5rem)] leading-tight">
                 {job.role} <span className="font-normal text-muted">·</span>{' '}
                 {job.companyUrl ? (
                   <a
                     {...outbound(job.companyUrl)}
-                    className="tap-inline text-accent underline-offset-4 hover:underline"
+                    className="ed-link"
                   >
                     {job.company}
                   </a>
                 ) : (
-                  <span className="text-accent">{job.company}</span>
+                  <span>{job.company}</span>
                 )}
               </h3>
-              <span className="rounded-full border border-border px-2.5 py-0.5 font-mono text-xs text-muted">
+              <span className="font-mono text-xs text-muted">
                 {job.period}
               </span>
             </div>
 
             <p className="mt-3 max-w-3xl text-lg text-body">{job.description}</p>
 
-            <ul className="mt-6 max-w-3xl space-y-3.5">
+            <ul className="mt-7 max-w-3xl divide-y divide-border border-y border-border">
               {job.highlights.map((h, i) => (
-                <li key={i} className="flex gap-3 text-[0.9375rem] leading-relaxed text-body">
-                  <span
-                    aria-hidden="true"
-                    className="mt-[0.6rem] h-px w-3 shrink-0 bg-accent"
-                  />
+                <li key={i} className="flex gap-4 py-3.5 leading-relaxed text-body">
+                  <span aria-hidden="true" className="mt-1 shrink-0 font-mono text-xs text-muted">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
                   {h}
                 </li>
               ))}
@@ -84,17 +83,19 @@ export default async function Experience({
       {education.length > 0 && (
         <div className="mt-20">
           <SubHeading>{t(locale, 'education')}</SubHeading>
-          <ul className="grid gap-4 md:grid-cols-2">
+          <ul className="divide-y divide-border border-y border-border">
             {education.map((e) => {
               const [institution, ...rest] = e.school.split(' · ')
               return (
-                <li key={e.degree} className={`glow-border p-6 ${CARD_SURFACE}`}>
+                <li key={e.degree} className="grid gap-1 py-5 md:grid-cols-[9rem_minmax(0,1fr)] md:gap-8">
                   <p className="font-mono text-xs text-muted">{e.period}</p>
-                  <p className="mt-2 font-semibold tracking-tight">{e.degree}</p>
+                  <div>
+                  <p className="font-display text-xl leading-snug">{e.degree}</p>
                   <p className="mt-1.5 text-sm text-body">
-                    <span className="text-accent">{institution}</span>
+                    <span>{institution}</span>
                     {rest.length > 0 && <span className="block text-muted">{rest.join(' · ')}</span>}
                   </p>
+                  </div>
                 </li>
               )
             })}

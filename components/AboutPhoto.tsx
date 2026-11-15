@@ -162,36 +162,17 @@ export default function AboutPhoto({
   /** Set in the manager. False keeps the portrait off screens under 640px. */
   onPhones?: boolean
 }) {
-  const ground = backdrop === 'none' ? null : BACKDROPS[backdrop]
+  // Editorial treatment: the portrait as a plain framed photograph. The
+  // decorative grounds above were drawn for a cut-out image; with a normal
+  // photo they sit behind an opaque rectangle, so they are not used here.
+  void backdrop
+  void BACKDROPS
 
   return (
-    <div
-      className={`relative isolate w-52 shrink-0 sm:w-60 lg:w-64 ${
-        onPhones ? '' : 'hidden sm:block'
-      }`}
-    >
-      {/* Taller than the photo, not inset into it: the hair starts 1.6% down the
-          source image, so anything short of the top edge left the head outside
-          the backdrop. The extra above it is headroom. */}
-      {ground && (
-        <div
-          className={`absolute inset-x-0 -top-4 bottom-0 -z-10 overflow-hidden rounded-[1.5rem] border border-border shadow-[inset_0_1px_0_rgb(255_255_255/0.05),var(--card-shadow)] sm:-top-5 lg:-top-8 ${ground.wash}`}
-        >
-          {ground.layers}
-        </div>
-      )}
-
-      <Image
-        src={src}
-        alt={alt}
-        // The real pixel size of the source, so the box reserved during load has
-        // the photo's own aspect ratio and nothing shifts.
-        width={1024}
-        height={1137}
-        // The crop at the hips is faded out instead of ending on a line. Kept
-        // short — dissolve too much of the body and the ground reads through it.
-        className="relative h-auto w-full [mask-image:linear-gradient(to_bottom,#000_89%,transparent_100%)]"
-      />
-    </div>
+    <figure className={`w-52 shrink-0 sm:w-60 lg:w-64 ${onPhones ? '' : 'hidden sm:block'}`}>
+      <div className="relative aspect-[4/5] overflow-hidden rounded-lg border border-border bg-elevated">
+        <Image src={src} alt={alt} fill sizes="(max-width: 640px) 208px, 256px" className="object-cover object-top" />
+      </div>
+    </figure>
   )
 }
