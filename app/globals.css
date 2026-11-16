@@ -49,8 +49,8 @@
   --color-accent-alt: #4f46e5;
 
   --font-sans:
-    var(--font-geist), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    var(--font-sans-latin), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: var(--font-mono-latin), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 :root {
@@ -435,7 +435,7 @@ body::before {
  * size, so it gets a little more line height to stay readable.
  */
 [lang='ar'] {
-  font-family: var(--font-arabic), var(--font-geist), system-ui, sans-serif;
+  font-family: var(--font-arabic), var(--font-sans-latin), system-ui, sans-serif;
   line-height: 1.85;
 }
 
@@ -461,7 +461,7 @@ body::before {
  * the `.font-mono` rule: same specificity, so source order decides.
  */
 [lang='ar'] .mono-label {
-  font-family: var(--font-arabic), var(--font-geist), system-ui, sans-serif;
+  font-family: var(--font-arabic), var(--font-sans-latin), system-ui, sans-serif;
   direction: inherit;
   unicode-bidi: normal;
   letter-spacing: normal;

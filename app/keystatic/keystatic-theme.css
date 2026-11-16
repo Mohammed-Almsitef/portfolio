@@ -129,11 +129,11 @@
 /* --------------------------------------------------------- type and shape ---- */
 
 .kui-theme.kui-theme {
-  /* Keystar reaches for --font-inter; point it at the site's Geist so the
+  /* Keystar reaches for --font-inter; point it at the site's Plex Sans so the
      manager and the site share a face. Its mono was a system stack, so code
      and identifiers were set in a different face here than on the site. */
-  --font-inter: var(--font-geist);
-  --kui-typography-font-family-code: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo,
+  --font-inter: var(--font-sans-latin);
+  --kui-typography-font-family-code: var(--font-mono-latin), ui-monospace, SFMono-Regular, Menlo,
     Consolas, monospace;
 
   /* Rounder, to match the site's cards. Keystar's defaults (4/6/8/12) read

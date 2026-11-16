@@ -1,15 +1,18 @@
 import type { Metadata, Viewport } from 'next'
-import { Cairo, Geist, Geist_Mono, IBM_Plex_Sans_Arabic } from 'next/font/google'
+import { Cairo, IBM_Plex_Mono, IBM_Plex_Sans, IBM_Plex_Sans_Arabic } from 'next/font/google'
 import { getAppearance, getSite } from '@/lib/content'
 import { alternatesFor } from '@/lib/metadata'
 import './globals.css'
 
-const geist = Geist({
+// IBM Plex Sans: an engineering face with its own Arabic sibling below, so
+// both languages read as one family.
+const sans = IBM_Plex_Sans({
   subsets: ['latin'],
-  variable: '--font-geist',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-sans-latin',
   display: 'swap',
 })
-// Geist carries no Arabic glyphs, so Arabic would fall back to whatever the
+// Plex Sans carries no Arabic glyphs, so Arabic would fall back to whatever the
 // device happens to have — usually something that clashes badly with the rest
 // of the page. Subsetted to Arabic only, and applied via [lang='ar'], so
 // English visitors never download it.
@@ -22,7 +25,7 @@ const arabic = IBM_Plex_Sans_Arabic({
   preload: false,
 })
 
-// Arabic headings: a modern geometric sans, the counterpart of Geist's bold.
+// Arabic headings: a modern geometric sans, the counterpart of Plex Sans bold.
 const arabicDisplay = Cairo({
   subsets: ['arabic'],
   variable: '--font-arabic-display',
@@ -30,9 +33,10 @@ const arabicDisplay = Cairo({
   preload: false,
 })
 
-const mono = Geist_Mono({
+const mono = IBM_Plex_Mono({
   subsets: ['latin'],
-  variable: '--font-geist-mono',
+  weight: ['400', '500'],
+  variable: '--font-mono-latin',
   display: 'swap',
   // Only small labels use it; it should not compete with the headline font.
   preload: false,
@@ -104,7 +108,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       // Server-rendered, so the accent is right in the first paint — no flash
       // of blue before a client effect could correct it.
       data-accent={accent}
-      className={`${geist.variable} ${mono.variable} ${arabic.variable} ${arabicDisplay.variable}`}
+      className={`${sans.variable} ${mono.variable} ${arabic.variable} ${arabicDisplay.variable}`}
     >
       <head>
         {/*
