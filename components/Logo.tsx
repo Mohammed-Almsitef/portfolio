@@ -1,44 +1,46 @@
 /**
  * The MA monogram, for a robotics and AI engineer.
  *
- * The M is a linkage: four bold links joined at five pierced pivots. The
- * pivots read two ways at once — the joints of a robot arm, and the nodes of
- * a network — which is the pairing in the job title. The A is a heading
- * arrow, the marker a robot's pose is drawn with on a map.
+ * Two bold, forward-leaning letters cut from one block: the M's last stroke
+ * and the A's first run parallel, separated by a single slash. The M carries
+ * four pierced pivots, like the joints of a linkage; the A's counter is a
+ * round core, like a node or a sensor. Constructed on one grid (120 units
+ * tall), not taken from a typeface. The M is ink; the A carries the accent.
  *
- * Constructed on one grid (120 units tall), not taken from a typeface. The M
- * is ink; the arrow carries the accent. Colours come from `--logo-ink` /
- * `--logo-accent` (globals.css), which flip inside navy bands. Spec and
- * source files: assets/brand/.
+ * Colours come from `--logo-ink` / `--logo-accent` (globals.css), which flip
+ * inside navy bands. Spec and source files: assets/brand/.
  */
 
-/** The M's five joints, in order along the linkage. */
-const JOINTS: [number, number][] = [
-  [16, 108],
-  [16, 12],
-  [62, 84],
-  [108, 12],
-  [108, 108],
+const M =
+  'M0 120 L18 0 L46 0 L28 120 Z M38.5 50 L46 0 L94.75 75 L70 120 Z M70 120 L136 0 L170 0 L104 120 Z'
+/** The A's outer shape and the opening under its crossbar. */
+const A_BODY = 'M114 120 L180 0 L222 0 L255.6 120 Z M146 120 L161.4 92 L215.8 92 L223.6 120 Z'
+/** The A's counter as a plain triangle, used where the core would be too small. */
+const A_COUNTER = 'M197.4 26.5 L209.6 70 L173.5 70 Z'
+const CORE = { cx: 194.5, cy: 57 }
+const PIVOTS: [number, number][] = [
+  [16.1, 106],
+  [29.9, 14],
+  [94.7, 106],
+  [145.3, 14],
 ]
-const LINKS = `M${JOINTS.map(([x, y]) => `${x} ${y}`).join(' L')}`
-const ARROW = 'M124 120 L172 0 L220 120 L172 92 Z'
 
 /**
- * Optical compensation. The links thicken as the mark shrinks; the pivots
- * shrink with it and are dropped at 16px, where they would only be noise.
+ * Optical simplification: details that would turn to noise are dropped as the
+ * mark shrinks. The letters themselves never change.
  */
-const WEIGHTS = {
+const DETAIL = {
   /** 48px and above. */
-  regular: { stroke: 24, pivot: 5.5 },
+  regular: { pivot: 5.2, core: 7.5 },
   /** ~32px. */
-  medium: { stroke: 24, pivot: 5.5 },
-  /** ~24px. */
-  small: { stroke: 25, pivot: 5 },
-  /** 16px — the minimum size. */
-  tiny: { stroke: 26, pivot: 0 },
+  medium: { pivot: 5.2, core: 7.5 },
+  /** ~24px: the core only. */
+  small: { pivot: 0, core: 8 },
+  /** 16px: plain letters. */
+  tiny: { pivot: 0, core: 0 },
 } as const
 
-type LogoWeight = keyof typeof WEIGHTS
+type LogoWeight = keyof typeof DETAIL
 
 export default function Logo({
   id,
@@ -58,36 +60,31 @@ export default function Logo({
   ink?: string
   accent?: string
 }) {
-  const { stroke, pivot } = WEIGHTS[weight]
-  const maskId = `${id}-pivots`
+  const { pivot, core } = DETAIL[weight]
+  const maskId = `${id}-detail`
+  const masked = pivot > 0 || core > 0
 
   return (
     <svg
-      viewBox="-6 -6 234 132"
+      viewBox="-6 -6 268 132"
       className={className}
       {...(label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': true })}
       focusable="false"
     >
-      {pivot > 0 && (
+      {masked && (
         <defs>
-          <mask id={maskId} maskUnits="userSpaceOnUse" x="-10" y="-10" width="140" height="140">
-            <rect x="-10" y="-10" width="140" height="140" fill="#fff" />
-            {JOINTS.map(([x, y]) => (
-              <circle key={`${x}-${y}`} cx={x} cy={y} r={pivot} fill="#000" />
-            ))}
+          <mask id={maskId} maskUnits="userSpaceOnUse" x="-10" y="-10" width="280" height="140">
+            <rect x="-10" y="-10" width="280" height="140" fill="#fff" />
+            {pivot > 0 &&
+              PIVOTS.map(([x, y]) => <circle key={`${x}-${y}`} cx={x} cy={y} r={pivot} fill="#000" />)}
+            {core > 0 && <circle cx={CORE.cx} cy={CORE.cy} r={core} fill="#000" />}
           </mask>
         </defs>
       )}
-      <path
-        d={LINKS}
-        fill="none"
-        stroke={ink}
-        strokeWidth={stroke}
-        strokeLinejoin="round"
-        strokeLinecap="round"
-        mask={pivot > 0 ? `url(#${maskId})` : undefined}
-      />
-      <path d={ARROW} fill={accent} />
+      <g mask={masked ? `url(#${maskId})` : undefined}>
+        <path d={M} fill={ink} />
+        <path d={core > 0 ? A_BODY : `${A_BODY} ${A_COUNTER}`} fill={accent} fillRule="evenodd" />
+      </g>
     </svg>
   )
 }

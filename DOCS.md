@@ -258,14 +258,15 @@ Nothing overflows the viewport at 320px in either language.
 
 ## The monogram
 
-For a robotics and AI engineer. The **M** is a linkage — four bold links joined
-at five pierced pivots, which read both as a robot arm's joints and as a
-network's nodes — and the **A** is a heading arrow, the marker a robot's pose is
-drawn with on a map. Constructed on one grid rather than taken from a typeface.
-`components/Logo.tsx` holds the geometry; `assets/brand/readme.txt` is the spec.
+For a robotics and AI engineer. Two bold, forward-leaning letters cut from one
+block: the **M**'s last stroke and the **A**'s first run parallel, separated by a
+single slash. The M carries four pierced pivots, like the joints of a linkage;
+the A's counter is a round core, like a node or a sensor. Constructed on one
+grid rather than taken from a typeface. `components/Logo.tsx` holds the
+geometry; `assets/brand/readme.txt` is the spec.
 
-- small sizes thicken the links and shrink the pivots; at 16px (the favicon)
-  the pivots are dropped, where they would only be noise
+- details drop away as the mark shrinks: pivots and core at 32px and up, the
+  core only at ~24px, plain letters at 16px (the favicon)
 - the colours live in `--logo-ink` / `--logo-accent`, which flip inside navy
   bands, and not in the user-selectable accent
 
