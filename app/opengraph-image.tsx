@@ -66,7 +66,7 @@ export default async function Image() {
           left: 0,
           right: 0,
           height: 5,
-          background: 'linear-gradient(90deg, #60a5fa, #818cf8 55%, rgba(96,165,250,0))',
+          background: '#60a5fa',
         }}
       />
 
@@ -97,7 +97,7 @@ export default async function Image() {
                 background: '#60a5fa',
               }}
             />
-            Available for work
+            {site.workPreference || 'Available for work'}
           </div>
         )}
 

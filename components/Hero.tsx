@@ -41,6 +41,8 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
                   {current.role} {t(locale, 'at')} {current.company}
                 </span>
               </p>
+              {/* Its own line, so a wrap never strands a separator. */}
+              {site.workPreference && <p className="mt-1 ps-3.5 text-sm text-muted">{site.workPreference}</p>}
             </div>
           )}
 
