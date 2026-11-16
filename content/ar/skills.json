@@ -21,7 +21,7 @@
     },
     {
       "title": "الإدراك والحساسات",
-      "tone": "cyan",
+      "tone": "blue",
       "items": [
         "LiDAR filtering & scan merging",
         "Point clouds (PCL)",
@@ -37,7 +37,7 @@
     },
     {
       "title": "العتاد والأنظمة المدمجة",
-      "tone": "amber",
+      "tone": "blue",
       "items": [
         "BLDC motor drivers",
         "Modbus / RS-485",
@@ -54,7 +54,7 @@
     },
     {
       "title": "الذكاء الاصطناعي وتعلم الآلة",
-      "tone": "violet",
+      "tone": "blue",
       "items": [
         "Python",
         "TensorFlow / Keras",
@@ -69,7 +69,7 @@
     },
     {
       "title": "الهندسة والتسليم",
-      "tone": "emerald",
+      "tone": "blue",
       "items": [
         "C++17",
         "GoogleTest & pytest",

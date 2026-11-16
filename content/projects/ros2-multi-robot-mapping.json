@@ -1,7 +1,7 @@
 {
   "title": "Multi-Robot Mapping with a Lego EV3 Swarm and ROS 2",
   "year": "2025",
-  "tone": "emerald",
+  "tone": "blue",
   "visual": "cloud",
   "summary": "Two Lego Mindstorms EV3 robots build a single shared map together, bridged into ROS 2 and SLAM Toolbox over MQTT. It was my first ROS 2 project, built with hardware that was never meant to run it.",
   "problem": "Our university lab had no budget to build robots from scratch, so the only robots available were Lego Mindstorms EV3 units: enough to drive motors and read a single infrared sensor, with nowhere near the compute to run ROS 2 on board. The team still needed two robots to explore independently and merge their observations into one consistent map, which meant designing a way to get an EV3 talking to a full ROS 2 stack it could never host itself.",

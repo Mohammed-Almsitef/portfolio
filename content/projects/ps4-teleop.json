@@ -1,7 +1,7 @@
 {
   "title": "ps4_teleop: Gamepad Teleoperation for Any ROS 2 Robot",
   "year": "2026",
-  "tone": "violet",
+  "tone": "blue",
   "visual": "gamepad",
   "summary": "A ROS 2 package that drives a robot from a PS4 DualShock 4 controller over USB or Bluetooth. It works with wheeled (differential, holonomic, Ackermann), legged, drone and underwater robots, and has the safety behaviour a real robot needs built in.",
   "problem": "Driving a robot by hand is the first thing you do with it and the last thing you want to be unsafe. A generic joystick node publishes whatever the stick says: no deadman, no ramps, no reaction when the controller's battery dies or Bluetooth drops, and it keeps fighting Nav2 for the velocity topic even when nobody is driving.",

@@ -1,7 +1,7 @@
 {
   "title": "Intelligent Courses Recommendation System",
   "year": "2024",
-  "tone": "rose",
+  "tone": "blue",
   "visual": "pipeline",
   "summary": "A university graduation project that recommends the right Coursera course from a free-text description of what a learner already knows, trained end to end on a dataset I scraped and cleaned myself.",
   "problem": "The sheer volume of online course content makes it hard for a learner to find the course that actually matches their current level and goals, without wading through material that is either redundant or over their head. There was no ready-made dataset suited to the task. Kaggle and similar sources came up short, and Coursera itself doesn't offer one.",

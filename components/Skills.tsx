@@ -29,10 +29,6 @@ export default async function Skills({
               className={`glow-border group flex flex-col p-6 ${CARD_SURFACE} transition-colors duration-200`}
             >
               <h3 className="flex items-center gap-2.5 font-semibold tracking-tight">
-                <span
-                  aria-hidden="true"
-                  className="size-2 shrink-0 rounded-sm bg-[rgb(var(--tone))]"
-                />
                 {g.title}
               </h3>
               <ul className="mb-5 mt-5 flex flex-wrap content-start gap-2">

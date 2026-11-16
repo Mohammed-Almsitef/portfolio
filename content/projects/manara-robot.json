@@ -1,7 +1,7 @@
 {
   "title": "Manara Robot",
   "year": "2025 – Present",
-  "tone": "amber",
+  "tone": "blue",
   "visual": "dock",
   "summary": "The ROS 2 platform behind a service robot deployed to help pilgrims at the Two Holy Mosques in Mecca and Medina: autonomous navigation, self-docking and charging, and the sensor pipeline that a 25-language on-screen AI assistant rides on top of.",
   "problem": "A service robot for pilgrims at Al-Masjid al-Haram and Al-Masjid an-Nabawi needs to move around a busy, changing space on its own, find its way back to charge without help, and stay reliable through long unattended shifts, while an on-screen assistant handles the actual conversations with pilgrims in real time. None of that works if the robotics underneath it isn't solid.",
