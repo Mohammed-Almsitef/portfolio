@@ -19,9 +19,9 @@ export default function Section({
       aria-labelledby={`${id}-heading`}
       className="section relative"
     >
-      <div className="relative mx-auto max-w-page px-6 py-10 md:py-16">
+      <div className="relative mx-auto max-w-page px-6 py-8 md:py-12">
         <Reveal>
-          <header className="mb-10 md:mb-12">
+          <header className="mb-8 md:mb-10">
             <div>
               {/* The number comes from a CSS counter on <main>, so it follows
                   the order set in the manager without any prop plumbing. */}
