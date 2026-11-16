@@ -19,7 +19,7 @@ export default function Section({
   children: React.ReactNode
 }) {
   return (
-    <section id={id} aria-labelledby={`${id}-heading`} className="section relative">
+    <section id={id} aria-labelledby={`${id}-heading`} className="section band relative">
       <div className="mx-auto max-w-page px-6">
         <div className="grid gap-8 border-t border-border py-14 md:py-20 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-14">
           <header className="lg:sticky lg:top-28 lg:self-start">

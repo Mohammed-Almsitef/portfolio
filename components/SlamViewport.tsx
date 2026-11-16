@@ -537,7 +537,7 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
               resetRef.current()
             }}
             className={`tap rounded-md px-2.5 py-1 font-medium transition-colors ${
-              layout === l ? 'bg-accent/15 text-accent' : 'text-muted hover:text-text'
+              layout === l ? 'bg-text text-bg' : 'text-muted hover:text-text'
             }`}
           >
             {labels.layouts[l]}

@@ -1283,7 +1283,7 @@ textarea {
  * cream. A band re-declares the palette for everything inside it, so text,
  * rules, buttons and drawings all follow without per-component changes.
  * ==================================================================== */
-main > section:nth-of-type(odd) {
+main > .band:nth-of-type(odd) {
   --color-bg: #16233a;
   --color-surface: #1c2c47;
   --color-elevated: #233552;
@@ -1313,14 +1313,14 @@ main > .section > div > div {
 }
 /* In dark mode the whole site is navy, so the bands step between two
    navies instead. */
-:root[data-theme='dark'] main > section:nth-of-type(odd) {
+:root[data-theme='dark'] main > .band:nth-of-type(odd) {
   --color-bg: #0f1a2c;
   --color-surface: #16233a;
   --color-elevated: #1c2c47;
 }
 /* The simulation panel keeps the page's own palette inside a navy band:
    its canvas reads its colours from the page, not from the band. */
-:root:not([data-theme='dark']) main > section:nth-of-type(odd) .paper {
+:root:not([data-theme='dark']) main > .band:nth-of-type(odd) .paper {
   --color-bg: #f4f1e8;
   --color-surface: #fbfaf6;
   --color-elevated: #ece8dc;

@@ -21,7 +21,7 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
   const labels = simLabels(locale)
 
   return (
-    <section id="top" className="relative">
+    <section id="top" className="band relative">
       <div className="mx-auto max-w-page px-6 pb-16 pt-32 md:pb-24 md:pt-40">
         {current && (
           <p className="hero-in flex flex-wrap items-center gap-x-2 text-sm text-muted">
