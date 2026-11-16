@@ -1,43 +1,32 @@
 /**
- * The MA monogram: a bold M with an A locked into its right side.
+ * The MA monogram: a geometric M and an A drawn as a heading arrow.
  *
- * The A stands in front and slices the M's right stem at its own angle, with
- * a narrow gap between them, so the two initials read as one shape while the
- * M stays whole. The letterforms are Space Grotesk Bold (the site's display
- * face, SIL Open Font License) converted to outlines, so the mark never
- * depends on a font loading. The M is ink; the A carries the accent.
+ * The A is the marker a robot's pose is drawn with on a map — a pointed arrow
+ * with a notched base — so the initials carry the subject of the work. Both
+ * letters are constructed on one grid (120 units tall, flat-cut terminals),
+ * not taken from a typeface. The M is ink; the arrow carries the accent.
  *
  * Colours come from `--logo-ink` / `--logo-accent` (globals.css), which flip
  * inside navy bands. Source files and spec: assets/brand/.
  */
 
-const M = 'M66 0V-700H311L432 -90H450L571 -700H816V0H688V-603H670L550 0H332L212 -603H194V0Z'
-const A = 'M750 0 934 -700H1164L1348 0H1212L1174 -154H924L886 0ZM955 -276H1143L1058 -617H1040Z'
-/** The A as a solid silhouette: what the M is cut away behind. */
-const A_SILHOUETTE = 'M934 -700 L1164 -700 L1348 0 L750 0 Z'
+/** The M's centre line; it is stroked, then cut flat at the cap and baseline. */
+const M = 'M14 140 V0 L62 82 L110 0 V140'
+const ARROW = 'M124 120 L172 0 L220 120 L172 92 Z'
 
-/** Left edge, right edge and cap height of the mark, in font units. */
-const X0 = 66
-const X1 = 1348
-const CAP = 700
-
-/**
- * Optical compensation: the gap between the letters widens as the mark
- * shrinks, so it does not close up. The letters are already bold, so they
- * need no thickening.
- */
-const GAPS = {
+/** Optical compensation: the M's stroke thickens as the mark shrinks. */
+const STROKES = {
   /** 48px and above. */
-  regular: 34,
+  regular: 24,
   /** ~32px. */
-  medium: 40,
+  medium: 25,
   /** ~24px. */
-  small: 50,
+  small: 27,
   /** 16px — the minimum size. */
-  tiny: 62,
+  tiny: 29,
 } as const
 
-type LogoWeight = keyof typeof GAPS
+type LogoWeight = keyof typeof STROKES
 
 export default function Logo({
   id,
@@ -47,7 +36,7 @@ export default function Logo({
   ink = 'var(--logo-ink)',
   accent = 'var(--logo-accent)',
 }: {
-  /** Unique per instance: several marks can share a page, and mask ids must not collide. */
+  /** Unique per instance: several marks can share a page, and clip ids must not collide. */
   id: string
   weight?: LogoWeight
   className?: string
@@ -57,26 +46,31 @@ export default function Logo({
   ink?: string
   accent?: string
 }) {
-  const gap = GAPS[weight]
-  const pad = 24
-  const maskId = `${id}-cut`
-  const box = { x: X0 - 200, y: -CAP - 200, width: X1 - X0 + 400, height: CAP + 400 }
+  const stroke = STROKES[weight]
+  const clipId = `${id}-cap`
 
   return (
     <svg
-      viewBox={`${X0 - pad} ${-CAP - pad} ${X1 - X0 + pad * 2} ${CAP + pad * 2}`}
+      viewBox="-6 -6 234 132"
       className={className}
       {...(label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': true })}
       focusable="false"
     >
       <defs>
-        <mask id={maskId} maskUnits="userSpaceOnUse" {...box}>
-          <rect {...box} fill="#fff" />
-          <path d={A_SILHOUETTE} fill="#000" stroke="#000" strokeWidth={gap} strokeLinejoin="round" />
-        </mask>
+        <clipPath id={clipId}>
+          <rect x="-20" y="0" width="160" height="120" />
+        </clipPath>
       </defs>
-      <path d={M} fill={ink} mask={`url(#${maskId})`} />
-      <path d={A} fill={accent} />
+      <path
+        d={M}
+        fill="none"
+        stroke={ink}
+        strokeWidth={stroke}
+        strokeLinejoin="miter"
+        strokeMiterlimit={10}
+        clipPath={`url(#${clipId})`}
+      />
+      <path d={ARROW} fill={accent} />
     </svg>
   )
 }
