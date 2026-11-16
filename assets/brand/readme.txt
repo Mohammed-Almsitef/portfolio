@@ -1,31 +1,26 @@
 MA monogram — Mohammed Almsitef
 
-A roman M interlocked with an italic A: the A leans into the M and stands
-in front of it, so the M's right stem tapers into the A's diagonal. A
-hairline gap (30 units) separates them where they cross.
-Letterforms: Instrument Serif Regular (M) and Italic (A), SIL Open Font
-License, converted to outlines. The A is set 175 units into the M. The M
-is cut away behind the A's solid silhouette (apex to both feet).
-The M is ink; the A carries the accent.
+A bold M with an A locked into its right side. The A stands in front and
+slices the M's right stem at its own angle; a narrow gap separates them.
 
-At small sizes the outlines are thickened with a same-colour stroke
-(0 at 48px+, 10 at ~32px, 20 at ~24px, 30 at 16px, in font units), and the
-gap widens with it (30, 32, 38, 46).
+Letterforms: Space Grotesk Bold (SIL Open Font License), converted to
+outlines. The A is set 150 units into the M. The M is cut away behind the
+A's solid silhouette (apex to both feet) plus the gap.
+
+Gap: 34 units at 48px+, 40 at ~32px, 50 at ~24px, 62 at 16px.
 
 Files
-ma-primary.svg     ink M, blue A — light backgrounds
-ma-reversed.svg    light M, light-blue A — dark backgrounds
-ma-mono-ink.svg    single ink
+ma-primary.svg     navy M, orange A — light backgrounds
+ma-reversed.svg    cream M, orange A — dark backgrounds
+ma-mono-ink.svg    single navy
 ma-mono-white.svg  single white
-ma-plate-ink.svg   rounded dark plate — avatars, social profiles
-ma-plate-blue.svg  rounded blue plate — avatars
-favicon.svg        the M alone on a dark plate, thickened — two serif letters
-                   are illegible at 16px (also app/icon.svg)
+ma-plate-ink.svg   rounded navy plate — avatars, social profiles
+ma-plate-blue.svg  rounded orange plate — avatars (file name kept)
+favicon.svg        navy plate, wider gap for 16-32px (also app/icon.svg)
 
 Colour
-ink   #151413 (light grounds) / #F2EFE9 (dark grounds)
-blue  #1D4ED8 (light grounds) / #60A5FA (dark grounds)
-Never put #1D4ED8 on a dark ground or #60A5FA on a light one.
+navy    #16233A        cream  #F4F1E8
+orange  #E8582C (on light) / #F06E42 (on dark)
 
-Clear space: the height of the A's crossbar gap on all sides. Do not
-outline, rotate, add effects to, or recolour the mark outside this palette.
+Clear space: the width of the M's stem on all sides. Do not outline,
+rotate, add effects to, or recolour the mark outside this palette.

@@ -258,20 +258,16 @@ Nothing overflows the viewport at 320px in either language.
 
 ## The monogram
 
-A roman **M** interlocked with an italic **A**: the A leans into the M and
-stands in front of it, so the M's right stem tapers into the A's diagonal, with
-a hairline gap where they cross —
-Instrument Serif (the display face) converted to outlines, so the mark never
-waits for a font. The pairing mirrors the hero: name in roman, role in italic.
-The M is ink, the A carries the accent. `components/Logo.tsx` holds the
-outlines; `assets/brand/readme.txt` is the spec.
+A bold **M** with an **A** locked into its right side: the A stands in front and
+slices the M's right stem at its own angle, with a narrow gap between them.
+Space Grotesk Bold (the display face) converted to outlines, so the mark never
+waits for a font. The M is ink, the A carries the accent. `components/Logo.tsx`
+holds the outlines; `assets/brand/readme.txt` is the spec.
 
-- small sizes thicken the outlines with a same-colour stroke (0, 10, 20, 34
-  font units from 48px down to 16px), because hairline serifs vanish
-- the favicon is the M alone: two serif letters are illegible at 16px
-- the two colourways are not interchangeable: `#1D4ED8` never on a dark ground,
-  `#60A5FA` never on a light one, which is why the colours live in
-  `--logo-ink` / `--logo-accent` and not the user-selectable accent
+- the gap widens as the mark shrinks (34, 40, 50, 62 font units from 48px down
+  to 16px) so it does not close up
+- the colours live in `--logo-ink` / `--logo-accent`, which flip inside navy
+  bands, and not in the user-selectable accent
 
 ## Two languages, two sites
 
