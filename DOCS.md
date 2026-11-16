@@ -282,7 +282,7 @@ independent: different projects, a different section order, a different bio.
 - `dir` sits on a wrapper inside `HomePage`, not on `<html>`, so adding Arabic did
   not require moving every English URL under a `[locale]` segment
 - English keeps the bare path; `/en` would break every indexed URL for symmetry
-- Amiri (display) and IBM Plex Sans Arabic (text) are subsetted to Arabic and applied via `[lang='ar']`, so
+- Cairo (display) and IBM Plex Sans Arabic (text) are subsetted to Arabic and applied via `[lang='ar']`, so
   English visitors never download it
 - interface strings (not content) live in `lib/locale.ts` behind `t(locale, key)`
 - `hreflang` alternates are emitted on both pages and in the sitemap

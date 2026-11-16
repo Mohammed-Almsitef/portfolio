@@ -132,7 +132,7 @@ Eight wrong passwords from one IP lock sign-in for 15 minutes.
 
 ## Design system
 
-Type is Instrument Serif (display), Geist (text) and Geist Mono (labels); on the Arabic site Amiri (display) and IBM Plex Sans Arabic (text). All self-hosted at build time via `next/font/google` — no runtime request to Google.
+Type is Space Grotesk (display), Geist (text) and Geist Mono (labels); on the Arabic site Cairo (display) and IBM Plex Sans Arabic (text). All self-hosted at build time via `next/font/google` — no runtime request to Google.
 
 ### Theming
 

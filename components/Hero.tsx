@@ -40,7 +40,7 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
           {site.name}
         </h1>
         <p
-          className="hero-in font-display t-3 mt-4 italic text-muted"
+          className="hero-in t-3 mt-4 font-medium text-muted"
           style={{ '--d': '100ms' } as React.CSSProperties}
         >
           {site.role}

@@ -1333,3 +1333,48 @@ main > .section > div > div {
   --outline: #8e897e;
   color: var(--color-text);
 }
+
+/* ======================================================================
+ * Type: bold modern sans
+ *
+ * Space Grotesk for display (Cairo in Arabic), Geist for text (IBM Plex
+ * Sans Arabic in Arabic). Replaces the serif display face; the scale is
+ * tightened because a bold sans reads larger than a light serif.
+ * ==================================================================== */
+:root {
+  --font-serif: var(--font-display), var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --step-hero: clamp(2.75rem, 6.4vw, 5.5rem);
+  --step-1: clamp(2rem, 4.2vw, 3.25rem);
+  --step-2: clamp(1.75rem, 2.8vw, 2.375rem);
+  --step-3: clamp(1.35rem, 2vw, 1.75rem);
+  --step-4: clamp(1.125rem, 1.4vw, 1.25rem);
+}
+.font-display {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: -0.035em;
+}
+.t-hero { line-height: 1; }
+.t-3, .t-4 { letter-spacing: -0.02em; }
+.post-body h2,
+.post-body h3 {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+.post-body h2 { font-size: 1.6rem; }
+.post-body h3 { font-size: 1.25rem; }
+
+[lang='ar'] .font-display,
+[lang='ar'] .post-body h2,
+[lang='ar'] .post-body h3 {
+  font-family: var(--font-arabic-display), var(--font-arabic), sans-serif;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+[lang='ar'] .t-hero { line-height: 1.35; }
+[lang='ar'] .t-1 { line-height: 1.4; }
+[lang='ar'] .t-2 { line-height: 1.45; }
+[lang='ar'] .t-3 { line-height: 1.5; }
+[lang='ar'] .t-4 { line-height: 1.6; }

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Amiri, Geist, Geist_Mono, IBM_Plex_Sans_Arabic, Instrument_Serif } from 'next/font/google'
+import { Cairo, Geist, Geist_Mono, IBM_Plex_Sans_Arabic, Space_Grotesk } from 'next/font/google'
 import { getAppearance, getSite } from '@/lib/content'
 import { alternatesFor } from '@/lib/metadata'
 import './globals.css'
@@ -23,21 +23,20 @@ const arabic = IBM_Plex_Sans_Arabic({
   preload: false,
 })
 
-// The Arabic display face: a classic naskh, the counterpart of Instrument Serif.
-const arabicDisplay = Amiri({
+// The Arabic display face: a modern geometric sans, the counterpart of Space
+// Grotesk and close to the Dubai face of the course slides.
+const arabicDisplay = Cairo({
   subsets: ['arabic'],
-  weight: ['400', '700'],
   variable: '--font-arabic-display',
   display: 'swap',
   preload: false,
 })
 
-// The editorial display face: headings, the name, pull quotes.
-const serif = Instrument_Serif({
+// The display face: headings, the name, figures.
+const display = Space_Grotesk({
   subsets: ['latin'],
-  weight: '400',
-  style: ['normal', 'italic'],
-  variable: '--font-instrument',
+  // Variable font: all weights from one file.
+  variable: '--font-display',
   display: 'swap',
 })
 
@@ -115,7 +114,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       // Server-rendered, so the accent is right in the first paint — no flash
       // of blue before a client effect could correct it.
       data-accent={accent}
-      className={`${geist.variable} ${serif.variable} ${mono.variable} ${arabic.variable} ${arabicDisplay.variable}`}
+      className={`${geist.variable} ${display.variable} ${mono.variable} ${arabic.variable} ${arabicDisplay.variable}`}
     >
       <head>
         {/*
