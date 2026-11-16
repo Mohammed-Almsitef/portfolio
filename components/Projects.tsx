@@ -84,7 +84,7 @@ function Body({
         <span className="text-[rgb(var(--tone))]">
           {String(index + 1).padStart(2, '0')}
           {lead && (
-            <span className="mono-label ms-3 rounded-full border border-[rgb(var(--tone)/0.35)] px-2 py-0.5 uppercase tracking-wider">
+            <span className="mono-label ms-3 rounded-full border border-[rgb(var(--tone)/0.35)] px-2 py-0.5">
               {t(locale, 'featured')}
             </span>
           )}
@@ -150,7 +150,7 @@ function Card({
           '--card-glow': 'rgb(var(--tone) / 0.14)',
         } as React.CSSProperties
       }
-      className={`glow-border group h-full overflow-hidden ${CARD_SURFACE} transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[rgb(var(--tone)/0.45)]`}
+      className={`glow-border group h-full overflow-hidden ${CARD_SURFACE} transition-colors duration-200`}
       innerClassName={`flex h-full flex-col ${lead ? 'md:flex-row' : ''}`}
     >
       <div

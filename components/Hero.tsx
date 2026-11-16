@@ -1,5 +1,4 @@
 import { getAbout, getExperience, getSite } from '@/lib/content'
-import CountUp from './CountUp'
 import SlamViewport from './SlamViewport'
 import { simLabels } from '@/lib/simLabels'
 import { localePath, t, type Locale } from '@/lib/locale'
@@ -35,13 +34,9 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
         <div className="[grid-area:copy]">
           {current && (
             <div className="hero-in">
-              <p className="glass inline-flex flex-wrap items-center gap-x-2 gap-y-1 rounded-full px-3.5 py-1.5 text-xs text-muted">
-                <span className="relative flex size-1.5 shrink-0" aria-hidden="true">
-                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-[rgb(var(--tone-status))] opacity-70" />
-                  <span className="relative inline-flex size-1.5 rounded-full bg-[rgb(var(--tone-status))]" />
-                </span>
-                <span className="text-accent">{t(locale, 'currently')}</span>
-                <span aria-hidden="true">·</span>
+              <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted">
+                <span className="size-1.5 shrink-0 rounded-full bg-[rgb(var(--tone-status))]" aria-hidden="true" />
+                <span>{t(locale, 'currently')}</span>
                 <span className="text-text">
                   {current.role} {t(locale, 'at')} {current.company}
                 </span>
@@ -50,7 +45,7 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
           )}
 
           <div className="hero-in" style={{ '--d': '60ms' } as React.CSSProperties}>
-            <h1 className="text-gradient mt-6 text-[clamp(2.75rem,6vw,4.75rem)] font-semibold leading-[0.98] tracking-[-0.04em]">
+            <h1 className="mt-5 text-[clamp(2.75rem,6vw,4.75rem)] font-semibold leading-[0.98] tracking-[-0.04em]">
               {site.name}
             </h1>
             <p className="mt-4 text-lg font-medium text-accent md:text-xl">{site.role}</p>
@@ -93,11 +88,11 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
             Headline figures. Rows on a phone, a strip on wider screens. */}
         {about.stats.length > 0 && (
           <div className="hero-in [grid-area:stats] lg:self-start" style={{ '--d': '300ms' } as React.CSSProperties}>
-            <dl className="glass grid max-w-xl divide-y divide-border rounded-2xl sm:grid-cols-3 sm:divide-x sm:divide-y-0 rtl:sm:divide-x-reverse">
+            <dl className="grid max-w-xl divide-y divide-border border-y border-border sm:grid-cols-3 sm:divide-x sm:divide-y-0 rtl:sm:divide-x-reverse">
               {about.stats.map((st) => (
-                <div key={st.label} className="flex items-center gap-4 px-5 py-3.5 sm:block sm:py-4">
-                  <dd dir="ltr" className="text-gradient w-fit shrink-0 text-2xl font-semibold tracking-tight tabular-nums md:text-3xl">
-                    <CountUp value={st.value} />
+                <div key={st.label} className="flex items-center gap-4 py-3.5 sm:block sm:px-5 sm:py-4 sm:first:ps-0">
+                  <dd dir="ltr" className="w-fit shrink-0 text-2xl font-semibold tracking-tight tabular-nums text-text md:text-3xl">
+                    {st.value}
                   </dd>
                   <dt className="text-sm leading-snug text-muted sm:mt-1 sm:text-xs">{st.label}</dt>
                 </div>

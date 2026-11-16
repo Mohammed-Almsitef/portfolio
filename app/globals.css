@@ -93,7 +93,7 @@
   /* Light-theme values for the properties Tailwind doesn't generate. */
   --canvas-ink: var(--accent-tone);
   --glow: rgb(var(--accent-tone) / 0.06);
-  --card-glow: rgb(var(--accent-tone) / 0.09);
+  --card-glow: transparent;
   --btn-glow: rgb(var(--accent-tone) / 0.3);
   --card-shadow: 0 1px 2px rgb(11 18 32 / 0.04), 0 10px 26px -14px rgb(11 18 32 / 0.14);
   --grain: 0.02;
@@ -128,7 +128,7 @@
   --d-accent-alt: #818cf8;
   --d-canvas-ink: var(--accent-tone);
   --d-glow: rgb(var(--accent-tone) / 0.08);
-  --d-card-glow: rgb(var(--accent-tone) / 0.12);
+  --d-card-glow: transparent;
   --d-btn-glow: rgb(var(--accent-tone) / 0.5);
   --d-card-shadow: none;
   --d-grain: 0.022;
@@ -283,10 +283,9 @@ body::before {
    Deliberately weighted toward the ink end so contrast stays high — a
    gradient running accent-to-accent looks striking and reads poorly. */
 .text-gradient {
-  background-image: var(--headline-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  /* Kept as a hook for print and per-page overrides; the headline itself is
+     plain ink now. Gradient text read as template, not as a person. */
+  color: var(--color-text);
 }
 
 /*
@@ -489,8 +488,8 @@ main {
 main > .section {
   counter-increment: section;
 }
-.section-index::before {
-  content: counter(section, decimal-leading-zero) ' /';
+.section-index {
+  display: none;
 }
 
 /* The simulation's mode badge takes the colour of what the robot is doing. */
@@ -569,6 +568,9 @@ main > .section {
 :root[data-theme='dark'] .aurora {
   --aurora-o: 0.26;
 }
+.aurora span:nth-child(n + 2) {
+  display: none;
+}
 .aurora span {
   position: absolute;
   border-radius: 9999px;
@@ -582,7 +584,7 @@ main > .section {
   top: -18vw;
   left: -6vw;
   background: rgb(var(--accent-tone));
-  animation: aurora-a 26s ease-in-out infinite alternate;
+  opacity: calc(var(--aurora-o) * 0.45);
 }
 .aurora span:nth-child(2) {
   width: 38vw;
@@ -619,6 +621,7 @@ main > .section {
 
 /* A faint dot lattice over the aurora, fading toward the bottom of the screen. */
 .aurora::after {
+  display: none;
   content: '';
   position: absolute;
   inset: 0;
@@ -649,23 +652,12 @@ footer {
  * catch on the top edge. The one card ground for the whole site.
  */
 .glass {
-  background:
-    linear-gradient(180deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.01)),
-    color-mix(in srgb, var(--color-surface) 62%, transparent);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  backdrop-filter: blur(18px) saturate(140%);
-  border: 1px solid rgb(255 255 255 / 0.08);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.06),
-    0 24px 60px -30px rgb(0 0 0 / 0.65);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
 }
 :root:not([data-theme='dark']) .glass {
-  background:
-    linear-gradient(180deg, rgb(255 255 255 / 0.9), rgb(255 255 255 / 0.65));
-  border-color: rgb(15 23 42 / 0.08);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.9),
-    0 20px 50px -30px rgb(15 23 42 / 0.25);
+  background: #fff;
+  border-color: var(--color-border);
 }
 
 /*
@@ -676,6 +668,7 @@ footer {
   position: relative;
 }
 .glow-border::before {
+  display: none;
   content: '';
   position: absolute;
   inset: 0;
@@ -700,9 +693,12 @@ footer {
   opacity: 0;
   transition: opacity 400ms ease;
 }
-.glow-border:hover::before,
-.glow-border:focus-within::before {
-  opacity: 1;
+.glow-border {
+  transition: border-color 200ms ease;
+}
+.glow-border:hover,
+.glow-border:focus-within {
+  border-color: var(--color-border-strong);
 }
 
 /* Primary action: accent-to-violet gradient, soft glow, a light sweep on hover. */
@@ -710,16 +706,14 @@ footer {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  background: linear-gradient(135deg, rgb(var(--accent-tone)), rgb(var(--tone-violet)));
-  color: #fff;
-  box-shadow:
-    0 10px 30px -10px rgb(var(--accent-tone) / 0.7),
-    inset 0 1px 0 rgb(255 255 255 / 0.25);
-  transition:
-    transform 200ms ease,
-    box-shadow 200ms ease;
+  background: rgb(var(--accent-tone));
+  /* Dark ink on the light dark-mode blue (8:1); white on the deep
+     light-mode blue, set below. */
+  color: #06070b;
+  transition: background-color 150ms ease;
 }
 .btn-primary::after {
+  display: none;
   content: '';
   position: absolute;
   inset: 0;
@@ -729,10 +723,7 @@ footer {
   transition: transform 700ms ease;
 }
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 16px 40px -12px rgb(var(--accent-tone) / 0.85),
-    inset 0 1px 0 rgb(255 255 255 / 0.25);
+  background: color-mix(in srgb, rgb(var(--accent-tone)) 85%, #fff);
 }
 .btn-primary:hover::after {
   transform: translateX(120%);
@@ -743,19 +734,15 @@ footer {
 
 /* Secondary action: a glass pill. */
 .btn-ghost {
-  background: rgb(255 255 255 / 0.04);
-  border: 1px solid rgb(255 255 255 / 0.12);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  background: transparent;
+  border: 1px solid var(--color-border-strong);
   transition:
-    border-color 200ms ease,
-    background-color 200ms ease,
-    transform 200ms ease;
+    border-color 150ms ease,
+    background-color 150ms ease;
 }
 .btn-ghost:hover {
-  border-color: rgb(var(--accent-tone) / 0.6);
-  background: rgb(var(--accent-tone) / 0.08);
-  transform: translateY(-2px);
+  border-color: var(--color-muted);
+  background: rgb(255 255 255 / 0.04);
 }
 :root:not([data-theme='dark']) .btn-ghost {
   background: rgb(255 255 255 / 0.7);
@@ -765,13 +752,7 @@ footer {
 /* A glowing hairline that fades in from both ends. */
 .hairline {
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgb(var(--accent-tone) / 0.5),
-    rgb(var(--tone-violet) / 0.4),
-    transparent
-  );
+  background: var(--color-border);
 }
 
 /* The simulation panel sits on a soft gradient halo. */
@@ -779,6 +760,7 @@ footer {
   position: relative;
 }
 .panel-halo::before {
+  display: none;
   content: '';
   position: absolute;
   inset: -18px;
@@ -799,11 +781,10 @@ footer {
 
 /* Reveal also brings content into focus, not only into place. */
 .js [data-reveal] {
-  filter: blur(6px);
+  transform: translateY(8px);
   transition:
-    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 700ms cubic-bezier(0.22, 1, 0.36, 1),
-    filter 700ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 450ms ease-out,
+    transform 450ms ease-out;
   transition-delay: var(--reveal-delay, 0ms);
 }
 .js [data-reveal='shown'] {
@@ -861,7 +842,9 @@ footer {
    through it while they scroll underneath. */
 @layer components {
   .glass.nav-solid {
-    background-color: color-mix(in srgb, var(--color-bg) 82%, transparent);
+    background-color: color-mix(in srgb, var(--color-bg) 86%, transparent);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
   }
 }
 

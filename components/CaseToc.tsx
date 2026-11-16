@@ -30,7 +30,7 @@ export default function CaseToc({
 
   return (
     <nav aria-label={title} data-print-hide>
-      <p className="mono-label mb-4 font-mono text-xs uppercase tracking-wider text-muted">{title}</p>
+      <p className="mono-label mb-4 text-xs font-medium text-muted">{title}</p>
       <ul className="space-y-1 border-s border-border text-sm">
         {items.map((i) => (
           <li key={i.id}>
