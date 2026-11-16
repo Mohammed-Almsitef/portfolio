@@ -15,8 +15,7 @@ export default function FlowDiagram({
 }) {
   return (
     <figure className="glass not-prose my-8 rounded-2xl p-5 md:p-7">
-      <figcaption className="mb-5 flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-[rgb(var(--tone))]">
-        <span aria-hidden="true" className="size-1.5 rounded-full bg-[rgb(var(--tone))]" />
+      <figcaption className="mb-5 text-sm font-semibold text-text">
         <span className="mono-label">{title}</span>
       </figcaption>
       <ol className="flex flex-col items-stretch gap-0 lg:flex-row">
