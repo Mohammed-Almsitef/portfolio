@@ -1,53 +1,59 @@
 /**
- * The MA ligature.
+ * The MA monogram, for a robotics and AI engineer.
  *
- * One continuous geometry for both letters: a vertical M stem, the M's two
- * diagonals, and an A whose left leg *is* the M's second diagonal. The A's
- * crossbar starts exactly at the M's valley, so the letters share their
- * construction instead of overlapping. One stroke weight, round ends — the
- * same family as the site's Geist type.
+ * Two bold, forward-leaning letters cut from one block: the M's last stroke
+ * and the A's first run parallel, separated by a single slash. The M carries
+ * four pierced pivots, like the joints of a linkage; the A's counter is a
+ * round core, like a node or a sensor. Constructed on one grid (120 units
+ * tall), not taken from a typeface. The M is ink; the A carries the accent,
+ * as a blue-to-indigo gradient — the same pairing as the headline and the
+ * primary button.
  *
- * The A (its right leg and crossbar) carries the accent; the M is ink. Colours
- * come from `--logo-ink` / `--logo-accent` (globals.css), which hold the
- * correct pairing per theme: #1D4ED8 only on light grounds, #60A5FA only on
- * dark ones.
- *
- * Construction (120-unit grid): M = M26 94 V30 L52 70 L78 30; A = M78 30
- * L98 94; crossbar = M52 70 H90.5. The viewBox carries half a stroke of
- * clearance around the round ends. Source files: assets/brand/.
+ * Colours come from `--logo-ink` / `--logo-accent` / `--logo-accent-2`
+ * (globals.css), set per theme. Spec and source files: assets/brand/.
  */
 
-const M = 'M26 94 V30 L52 70 L78 30'
-const A = 'M78 30 L98 94'
-const CROSSBAR = 'M52 70 H90.5'
+const M =
+  'M0 120 L18 0 L46 0 L28 120 Z M38.5 50 L46 0 L94.75 75 L70 120 Z M70 120 L136 0 L170 0 L104 120 Z'
+/** The A's outer shape and the opening under its crossbar. */
+const A_BODY = 'M114 120 L180 0 L222 0 L255.6 120 Z M146 120 L161.4 92 L215.8 92 L223.6 120 Z'
+/** The A's counter as a plain triangle, used where the core would be too small. */
+const A_COUNTER = 'M197.4 26.5 L209.6 70 L173.5 70 Z'
+const CORE = { cx: 194.5, cy: 57 }
+const PIVOTS: [number, number][] = [
+  [16.1, 106],
+  [29.9, 14],
+  [94.7, 106],
+  [145.3, 14],
+]
 
 /**
- * Optical weight compensation: smaller renderings get a heavier stroke so the
- * counters stay open and the mark keeps its colour at tab-icon size.
+ * Optical simplification: details that would turn to noise are dropped as the
+ * mark shrinks. The letters themselves never change.
  */
-const WEIGHTS = {
+const DETAIL = {
   /** 48px and above. */
-  regular: 12,
+  regular: { pivot: 5.2, core: 7.5 },
   /** ~32px. */
-  medium: 13,
-  /** ~24px. */
-  small: 14.5,
-  /** 16px — the minimum size. */
-  tiny: 16,
+  medium: { pivot: 5.2, core: 7.5 },
+  /** ~24px: the core only. */
+  small: { pivot: 0, core: 8 },
+  /** 16px: plain letters. */
+  tiny: { pivot: 0, core: 0 },
 } as const
 
-type LogoWeight = keyof typeof WEIGHTS
+type LogoWeight = keyof typeof DETAIL
 
 export default function Logo({
-  // Kept for call-site compatibility; the mark no longer needs per-instance
-  // ids now that it has no mask.
-  id: _id,
+  id,
   weight = 'medium',
   className,
   label,
   ink = 'var(--logo-ink)',
   accent = 'var(--logo-accent)',
+  accent2 = 'var(--logo-accent-2)',
 }: {
+  /** Unique per instance: several marks can share a page, and mask ids must not collide. */
   id: string
   weight?: LogoWeight
   className?: string
@@ -56,21 +62,38 @@ export default function Logo({
   /** Overridden only where the theme cannot be read from CSS, as in the manager. */
   ink?: string
   accent?: string
+  /** Second gradient stop for the A; pass the same as `accent` for a flat fill. */
+  accent2?: string
 }) {
-  void _id
-  const stroke = WEIGHTS[weight]
-  const pad = stroke / 2 + 2
+  const { pivot, core } = DETAIL[weight]
+  const maskId = `${id}-detail`
+  const gradId = `${id}-accent`
+  const masked = pivot > 0 || core > 0
 
   return (
     <svg
-      viewBox={`${26 - pad} ${30 - pad} ${72 + pad * 2} ${64 + pad * 2}`}
+      viewBox="-6 -6 268 132"
       className={className}
       {...(label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': true })}
       focusable="false"
     >
-      <g fill="none" strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round">
-        <path d={M} stroke={ink} />
-        <path d={`${A} ${CROSSBAR}`} stroke={accent} />
+      <defs>
+        <linearGradient id={gradId} gradientUnits="userSpaceOnUse" x1="114" y1="120" x2="256" y2="0">
+          <stop offset="0" style={{ stopColor: accent }} />
+          <stop offset="1" style={{ stopColor: accent2 }} />
+        </linearGradient>
+        {masked && (
+          <mask id={maskId} maskUnits="userSpaceOnUse" x="-10" y="-10" width="280" height="140">
+            <rect x="-10" y="-10" width="280" height="140" fill="#fff" />
+            {pivot > 0 &&
+              PIVOTS.map(([x, y]) => <circle key={`${x}-${y}`} cx={x} cy={y} r={pivot} fill="#000" />)}
+            {core > 0 && <circle cx={CORE.cx} cy={CORE.cy} r={core} fill="#000" />}
+          </mask>
+        )}
+      </defs>
+      <g mask={masked ? `url(#${maskId})` : undefined}>
+        <path d={M} fill={ink} />
+        <path d={core > 0 ? A_BODY : `${A_BODY} ${A_COUNTER}`} fill={`url(#${gradId})`} fillRule="evenodd" />
       </g>
     </svg>
   )

@@ -88,6 +88,7 @@
    * theme-scoped variables rather than one value. */
   --logo-ink: #0f172a;
   --logo-accent: #1d4ed8;
+  --logo-accent-2: #4f46e5;
 
   /* Light-theme values for the properties Tailwind doesn't generate. */
   --canvas-ink: var(--accent-tone);
@@ -134,6 +135,7 @@
   --d-headline-gradient: linear-gradient(110deg, #ffffff 20%, #dbe4ff 45%, rgb(var(--accent-tone)) 75%, rgb(var(--tone-violet)) 100%);
   --d-logo-ink: #f3f4f6;
   --d-logo-accent: #60a5fa;
+  --d-logo-accent-2: #818cf8;
 }
 
 /* Explicit dark choice, and the resolved value the inline script writes. */
@@ -142,6 +144,7 @@
   --color-bg: var(--d-bg);
   --logo-ink: var(--d-logo-ink);
   --logo-accent: var(--d-logo-accent);
+  --logo-accent-2: var(--d-logo-accent-2);
   --color-surface: var(--d-surface);
   --color-elevated: var(--d-elevated);
   --color-border: var(--d-border);
@@ -178,6 +181,7 @@
     --color-bg: var(--d-bg);
     --logo-ink: var(--d-logo-ink);
     --logo-accent: var(--d-logo-accent);
+    --logo-accent-2: var(--d-logo-accent-2);
     --color-surface: var(--d-surface);
     --color-elevated: var(--d-elevated);
     --color-border: var(--d-border);
@@ -522,6 +526,21 @@ main > .section {
   }
   .skills-grid > li:last-child:nth-child(3n + 1) {
     grid-column: 1 / -1;
+  }
+}
+/* Side by side, each card borrows its row's tracks (title / chips / "used
+ * in"), so the chip blocks and the footer rules line up across a row instead
+ * of drifting with each card's content. */
+@media (min-width: 640px) {
+  .skills-grid > li {
+    display: grid;
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+    row-gap: 0;
+    align-content: start;
+  }
+  .skills-grid > li > p {
+    align-self: start;
   }
 }
 @media (min-width: 640px) and (max-width: 1023px) {

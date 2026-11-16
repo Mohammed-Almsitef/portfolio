@@ -43,36 +43,40 @@ export default async function Experience({
     <Section id="experience" title={title}>
       <ol className="space-y-14">
         {experience.map((job) => (
-          <li key={`${job.company}-${job.period}`} className="relative">
+          // Wide screens: who/when/what on the left, held in view while the
+          // highlights scroll past on the right, so the record fills the
+          // width instead of leaving half the page empty.
+          <li
+            key={`${job.company}-${job.period}`}
+            className="relative lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-x-16"
+          >
+            <div className="lg:sticky lg:top-28 lg:self-start">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                <h3 className="text-xl font-semibold tracking-tight">
+                  {job.role} <span className="font-normal text-muted">·</span>{' '}
+                  {job.companyUrl ? (
+                    <a
+                      {...outbound(job.companyUrl)}
+                      className="tap-inline text-accent underline-offset-4 hover:underline"
+                    >
+                      {job.company}
+                    </a>
+                  ) : (
+                    <span className="text-accent">{job.company}</span>
+                  )}
+                </h3>
+                <span className="rounded-full border border-border px-2.5 py-0.5 font-mono text-xs text-muted">
+                  {job.period}
+                </span>
+              </div>
 
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-              <h3 className="text-xl font-semibold tracking-tight">
-                {job.role} <span className="font-normal text-muted">·</span>{' '}
-                {job.companyUrl ? (
-                  <a
-                    {...outbound(job.companyUrl)}
-                    className="tap-inline text-accent underline-offset-4 hover:underline"
-                  >
-                    {job.company}
-                  </a>
-                ) : (
-                  <span className="text-accent">{job.company}</span>
-                )}
-              </h3>
-              <span className="rounded-full border border-border px-2.5 py-0.5 font-mono text-xs text-muted">
-                {job.period}
-              </span>
+              <p className="mt-3 max-w-3xl text-lg text-body">{job.description}</p>
             </div>
 
-            <p className="mt-3 max-w-3xl text-lg text-body">{job.description}</p>
-
-            <ul className="mt-6 max-w-3xl space-y-3.5">
+            <ul className="mt-6 max-w-3xl space-y-3.5 lg:mt-0 lg:max-w-none lg:border-s lg:border-border lg:ps-8">
               {job.highlights.map((h, i) => (
                 <li key={i} className="flex gap-3 text-[0.9375rem] leading-relaxed text-body">
-                  <span
-                    aria-hidden="true"
-                    className="mt-[0.6rem] h-px w-3 shrink-0 bg-accent"
-                  />
+                  <span aria-hidden="true" className="mt-[0.6rem] h-px w-3 shrink-0 bg-accent" />
                   {h}
                 </li>
               ))}
@@ -93,7 +97,9 @@ export default async function Experience({
                   <p className="mt-2 font-semibold tracking-tight">{e.degree}</p>
                   <p className="mt-1.5 text-sm text-body">
                     <span className="text-accent">{institution}</span>
-                    {rest.length > 0 && <span className="block text-muted">{rest.join(' · ')}</span>}
+                    {rest.length > 0 && (
+                      <span className="block text-muted">{rest.join(' · ')}</span>
+                    )}
                   </p>
                 </li>
               )
@@ -122,7 +128,6 @@ export default async function Experience({
           </ul>
         </div>
       )}
-
     </Section>
   )
 }

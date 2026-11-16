@@ -35,7 +35,7 @@ export default async function Skills({
                 />
                 {g.title}
               </h3>
-              <ul className="mb-5 mt-5 flex flex-1 flex-wrap content-start gap-2">
+              <ul className="mb-5 mt-5 flex flex-wrap content-start gap-2">
                 {g.items.map((item) => (
                   <li
                     key={item}
