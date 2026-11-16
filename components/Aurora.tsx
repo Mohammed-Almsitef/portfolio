@@ -1,7 +1,7 @@
 /**
- * The page's ambient light: three blurred glows in the accent, violet and cyan
- * tones drifting slowly behind everything (styles in globals.css, `.aurora`).
- * Pure CSS, so it costs no JavaScript and stops under reduced motion.
+ * The page's ambient light: two still, blurred glows in the accent blue, top
+ * left and bottom right (styles in globals.css, `.aurora`; the third span is
+ * hidden). Pure CSS, no JavaScript.
  */
 export default function Aurora() {
   return (
