@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import { ImageResponse } from 'next/og'
 import { getSite } from '@/lib/content'
 
-export const alt = 'Portfolio'
+export const alt = 'Mohammed Almsitef — Robotics & AI Engineer'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -16,7 +16,8 @@ export const contentType = 'image/png'
  */
 export default async function Image() {
   const site = await getSite()
-  const domains = site.domains
+  // Four chips fit on two rows above the domain line; more overlapped it.
+  const domains = site.domains.slice(0, 4)
 
   // Read from disk and inline as a data URI: the renderer has no origin to
   // fetch a relative path from at build time.

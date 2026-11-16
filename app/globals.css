@@ -920,3 +920,21 @@ footer {
   padding-inline-start: 1rem;
   color: var(--color-muted);
 }
+
+/* Arabic headings in Cairo; naskh-free sans needs a little more leading than
+   Latin at display sizes. */
+[lang='ar'] h1,
+[lang='ar'] h2,
+[lang='ar'] h3 {
+  font-family: var(--font-arabic-display), var(--font-arabic), sans-serif;
+  letter-spacing: 0;
+  line-height: 1.4;
+}
+
+/* Even heading lines and no single-word last lines. */
+h1, h2, h3 {
+  text-wrap: balance;
+}
+p, li, dd {
+  text-wrap: pretty;
+}

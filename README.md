@@ -132,7 +132,7 @@ Eight wrong passwords from one IP lock sign-in for 15 minutes.
 
 ## Design system
 
-Type is Geist (sans) and Geist Mono (mono), with Noto Sans Arabic on the Arabic site, self-hosted at build time via `next/font/google` — no runtime request to Google.
+Type is Geist (sans) and Geist Mono (mono), with Cairo (headings) and IBM Plex Sans Arabic (text) on the Arabic site, self-hosted at build time via `next/font/google` — no runtime request to Google.
 
 ### Theming
 
