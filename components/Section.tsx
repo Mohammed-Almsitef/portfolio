@@ -23,9 +23,6 @@ export default function Section({
         <Reveal>
           <header className="mb-8 md:mb-10">
             <div>
-              {/* The number comes from a CSS counter on <main>, so it follows
-                  the order set in the manager without any prop plumbing. */}
-              <p aria-hidden="true" className="section-index font-mono text-sm text-accent" />
               <h2
                 id={`${id}-heading`}
                 className="mt-2 text-[clamp(2rem,4.4vw,3rem)] font-semibold leading-tight tracking-[-0.035em]"

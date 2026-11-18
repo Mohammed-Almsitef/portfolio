@@ -44,7 +44,6 @@ lib/
   theme.ts           the shared colour mode: read it, set it, subscribe to it
   hooks.ts           client behaviour used by more than one component
   styles.ts          class recipes shared by more than one component
-  geometry.ts        the corner table both isometric drawings walk
   manager/           auth.ts, crypto.ts, store.ts — the password gate
 content/             the English tree (JSON, edited by the manager)
 content/ar/          the Arabic tree, same schema, independent contents
@@ -90,8 +89,8 @@ never reads the reader directly. Consequences worth knowing:
 - **Hidden items are filtered in the loader.** `shown()` drops anything with
   `visible: false`, so a toggle cannot be honoured in one place and forgotten in
   another.
-- **Values that pick a code path are validated, not cast.** The accent, the photo
-  backdrop and the contact-link style are checked against their known sets and
+- **Values that pick a code path are validated, not cast.** The accent and the
+  contact-link style are checked against their known sets and
   fall back to a default, because an unrecognised value would otherwise reach a
   CSS variable name or a lookup and render nothing.
 - **Empty means absent.** No publications, no Publications heading. No photo, no
@@ -118,9 +117,8 @@ never reads the reader directly. Consequences worth knowing:
 
 ### `about.json` — About
 
-`photo` · `photoBackdrop` (grid / dots / spotlight / studio / sweep / none) ·
-`photoOnPhones` · `paragraphs[]` · `stats[]` (`value`, `label` — numbers count up
-when scrolled into view; placeholders like `X+` stay put).
+`photo` · `photoOnPhones` · `paragraphs[]` · `stats[]` (`value`, `label`, shown
+as written).
 
 ### `projects/*.json` — one file per case study
 
@@ -206,15 +204,10 @@ They are stored as space-separated RGB so they work at any alpha
 
 ### The card language
 
-One shape recurs: `rounded-2xl`, `border-border`, `bg-surface`, a tone wash as a
-background *image* over that colour, `--card-shadow`, and on hover a lift plus a
-pointer-tracking glow from `Spotlight`. Project cards, contact links and the
-About backdrop are all the same object with a different tone.
-
-The ground and the wash are `CARD_SURFACE` and `CARD_TONE_WASH` in
-`lib/styles.ts`; the hover behaviour stays at the call site, because that is
-where cards legitimately differ — the project grid lifts, a contribution row
-only warms its border.
+One shape recurs: `rounded-2xl`, a flat `bg-surface` (white in light mode) and
+a hairline `border-border`. Cards that respond to hover add `.glow-border`,
+which only firms up the border; nothing lifts or glows. The ground is
+`CARD_SURFACE` in `lib/styles.ts`.
 
 ### What belongs in `lib/styles.ts`
 
@@ -375,8 +368,7 @@ follows the colour mode and the accent.
 | --- | --- |
 | `SlamViewport` | the hero: a live robot running frontier exploration, lidar mapping, an inflated costmap, A* and pure pursuit (logic in `lib/slam.ts`), drawn like RViz; a click sends a navigation goal |
 | `ProjectVisual` | six generated cover arts (node graph, occupancy grid, detection boxes, joint traces, point cloud, retrieved chunks), used when a project has no clip or image |
-| `AboutPhoto` | the six portrait backdrops |
-| `Spotlight` | the pointer-tracking card glow; writes CSS variables directly rather than re-rendering per mousemove |
+| `AboutPhoto` | the framed portrait |
 
 Anything seeded uses a seeded PRNG rather than `Math.random`, so the server and
 the client render the same arrangement.
@@ -400,9 +392,8 @@ bare icons and full cards under Appearance → Contact links.
 **Change the accent or the default theme.** Appearance. Everything accented
 follows, including the generative art — the monogram deliberately does not.
 
-**Swap the portrait.** About → Profile photo. A cut-out with a transparent
-background works best, since the backdrops are drawn behind it. Pick a
-*Photo background* to suit it.
+**Swap the portrait.** About → Profile photo. A 4:5 portrait works best; it is
+shown framed, cropped from the top.
 
 **Rename something in `public/`.** Update the path in **both** `content/` and
 `content/ar/`. The dev server's image cache will hide a broken path that a

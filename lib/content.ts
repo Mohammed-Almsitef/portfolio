@@ -151,9 +151,6 @@ export async function getSocials(locale: Locale = 'en'): Promise<Social[]> {
   })
 }
 
-const PHOTO_BACKDROPS = ['grid', 'dots', 'spotlight', 'studio', 'sweep', 'none'] as const
-export type PhotoBackdrop = (typeof PHOTO_BACKDROPS)[number]
-
 export async function getAbout(locale: Locale = 'en') {
   const about = await TREE[locale].about.readOrThrow()
   const base = {
@@ -161,9 +158,6 @@ export async function getAbout(locale: Locale = 'en') {
     // not a broken image pointing at a file that may never have existed.
     photo: about.photo || null,
     photoOnPhones: about.photoOnPhones !== false,
-    photoBackdrop: PHOTO_BACKDROPS.includes(about.photoBackdrop as PhotoBackdrop)
-      ? (about.photoBackdrop as PhotoBackdrop)
-      : ('grid' as PhotoBackdrop),
     paragraphs: [...about.paragraphs],
     languages: about.languages || '',
     stats: about.stats.map((s) => ({ value: s.value, label: s.label })),

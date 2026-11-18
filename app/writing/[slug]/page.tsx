@@ -59,7 +59,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             {post.tags.join(' · ')}
             {post.draft && <DraftBadge />}
           </p>
-          <h1 className="text-gradient mt-4 text-[clamp(2rem,5vw,3rem)] font-semibold leading-[1.1] tracking-[-0.035em]">
+          <h1 className="mt-4 text-[clamp(2rem,5vw,3rem)] font-semibold leading-[1.1] tracking-[-0.035em]">
             {post.title}
           </h1>
           <p className="mt-5 text-lg leading-relaxed text-body">{post.summary}</p>

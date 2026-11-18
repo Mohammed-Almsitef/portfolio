@@ -104,7 +104,7 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
         )}
 
         <div className="hero-in min-w-0 [grid-area:sim]" style={{ '--d': '180ms' } as React.CSSProperties}>
-          <div data-print-hide className="panel-halo">
+          <div data-print-hide>
             <SlamViewport labels={labels} />
           </div>
           <p data-print-hide className="mt-4 text-center text-sm text-muted">

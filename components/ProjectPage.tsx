@@ -137,7 +137,7 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
             {project.year}
           </p>
 
-          <h1 className="text-gradient mt-4 text-[clamp(2.1rem,4.4vw,3.25rem)] font-semibold leading-[1.05] tracking-[-0.035em]">
+          <h1 className="mt-4 text-[clamp(2.1rem,4.4vw,3.25rem)] font-semibold leading-[1.05] tracking-[-0.035em]">
             {project.title}
           </h1>
 

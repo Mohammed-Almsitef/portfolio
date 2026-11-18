@@ -177,12 +177,7 @@ The accent is an engineering blue — the register robotics and AI research read
 
 Neither ground is pushed to an extreme. Dark sits at `#131720` rather than near-black and light at `#eef1f6` rather than white — both are easier to read for long stretches, and the softer light ground is what lets white cards register as raised panels instead of blending into the page. Changing either ground shifts every contrast ratio on the site, so re-run the tones suite after touching them.
 
-Two helper classes carry the polish:
-
-- `.text-gradient` — the headline treatment, ink cooling into the accent. It paints through `background-clip: text`, so the element's computed `color` is transparent; measure contrast from **rendered pixels**, not from CSS. The print block overrides it back to solid ink, otherwise it clips to nothing on paper.
-- `.rule-fade` — the hairline beside section headings.
-- `.section-rule` — the divider between sections, drawn by [`components/SectionRule.tsx`](components/SectionRule.tsx). A hairline that fades at both ends and _draws itself_ across the viewport when scrolled into view, terminating in a short accent segment and a glowing node at the content gutter — an instrument trace rather than a border. The old flat `border-border` version measured 1.2:1 against the page and effectively disappeared; this reads at 1.6–1.8:1. The draw-in is gated on `.js`, so with no JavaScript the rule renders fully drawn instead of collapsed to `scaleX(0)`.
-- `.animate-drift` — the hero scroll cue. Tailwind's `animate-bounce` is too springy for this register; the drift is a slow fade-and-settle.
+The look is deliberately quiet: solid headlines, flat cards (surface plus a hairline border), a solid primary button, and two still, faint accent lights behind the page (`.aurora`). No gradient text, glow rings, pointer-tracking highlights or hover lifts; those read as template rather than as a person.
 
 Anything that can't inherit a CSS colour needs the theme fed to it explicitly. [`components/SlamViewport.tsx`](components/SlamViewport.tsx) reads `--color-text`, `--accent-tone` and the rose/emerald tones from the computed style and re-reads them on a `data-theme` or `data-accent` mutation; add new canvas work the same way rather than hardcoding a colour.
 
@@ -243,8 +238,6 @@ The footer deliberately does **not** restate role, location or the social links,
 | [`components/ThemeToggle.tsx`](components/ThemeToggle.tsx)       | Flips light ↔ dark and persists to `localStorage`. Reads and writes the mode through [`lib/theme.ts`](lib/theme.ts), so the command palette's copy stays in step. |
 | [`components/CommandPalette.tsx`](components/CommandPalette.tsx) | ⌘K / Ctrl-K quick-open: sections, case studies, copy email, résumé, socials, theme.                                                                             |
 | [`components/ProjectVisual.tsx`](components/ProjectVisual.tsx)   | Generated cover art per project — six shapes echoing what each one does.                                                                                        |
-| [`components/Spotlight.tsx`](components/Spotlight.tsx)           | Card highlight that tracks the pointer, written to CSS vars and coalesced to one rAF.                                                                           |
-| [`components/CountUp.tsx`](components/CountUp.tsx)               | Stat counter that animates when scrolled into view.                                                                                                             |
 | [`app/opengraph-image.tsx`](app/opengraph-image.tsx)             | 1200×630 link preview, generated at build from `site`, `domains`, and the profile photo.                                                                        |
 
 Three things to preserve if you refactor:

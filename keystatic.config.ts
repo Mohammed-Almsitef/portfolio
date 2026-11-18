@@ -364,21 +364,6 @@ const aboutDef = (dir: string, tag: string) =>
         directory: 'public',
         publicPath: '/',
       }),
-      photoBackdrop: fields.select({
-        label: 'Photo background',
-        description:
-          'What sits behind the portrait. All six are drawn from the site’s own palette, so each ' +
-          'one follows the colour mode and the accent you picked.',
-        options: [
-          { label: 'Engineering grid', value: 'grid' },
-          { label: 'Dot matrix', value: 'dots' },
-          { label: 'Spotlight', value: 'spotlight' },
-          { label: 'Studio sweep', value: 'studio' },
-          { label: 'Sensor sweep (LiDAR)', value: 'sweep' },
-          { label: 'None — no background', value: 'none' },
-        ],
-        defaultValue: 'grid',
-      }),
       photoOnPhones: fields.checkbox({
         label: 'Show the photo on phones',
         description:

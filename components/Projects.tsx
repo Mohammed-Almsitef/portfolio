@@ -7,7 +7,6 @@ import ProjectClip from './ProjectClip'
 import ProjectVisual from './ProjectVisual'
 import Reveal from './Reveal'
 import Section from './Section'
-import Spotlight from './Spotlight'
 import TagList from './TagList'
 import { CARD_SURFACE } from '@/lib/styles'
 
@@ -141,17 +140,15 @@ function Card({
   lead?: boolean
 }) {
   return (
-    <Spotlight
+    <div
       style={
         {
           // One accent for everything interactive, so the grid reads as one
           // brand; each project keeps its own colour only inside its cover.
           '--tone': 'var(--accent-tone)',
-          '--card-glow': 'rgb(var(--tone) / 0.14)',
         } as React.CSSProperties
       }
-      className={`glow-border group h-full overflow-hidden ${CARD_SURFACE} transition-colors duration-200`}
-      innerClassName={`flex h-full flex-col ${lead ? 'md:flex-row' : ''}`}
+      className={`glow-border group flex h-full flex-col overflow-hidden ${CARD_SURFACE} ${lead ? 'md:flex-row' : ''}`}
     >
       <div
         style={{ '--tone': `var(--tone-${p.tone})` } as React.CSSProperties}
@@ -160,7 +157,7 @@ function Card({
         <Cover p={p} className="size-full" />
       </div>
       <Body p={p} index={i} locale={locale} lead={lead} />
-    </Spotlight>
+    </div>
   )
 }
 

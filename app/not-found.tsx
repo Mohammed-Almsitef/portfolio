@@ -16,7 +16,7 @@ export default function NotFound() {
           <Logo id="nf-logo" weight="medium" className="h-10 w-auto" />
         </Link>
         <p className="font-mono text-sm text-accent">{t('en', 'nfKicker')}</p>
-        <h1 className="text-gradient mt-3 text-[clamp(2.25rem,6vw,3.75rem)] font-semibold leading-tight tracking-[-0.035em]">
+        <h1 className="mt-3 text-[clamp(2.25rem,6vw,3.75rem)] font-semibold leading-tight tracking-[-0.035em]">
           {t('en', 'nfTitle')}
         </h1>
         <p className="mt-5 text-lg leading-relaxed text-body">

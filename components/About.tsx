@@ -31,7 +31,6 @@ export default async function About({
             <AboutPhoto
               src={about.photo}
               alt={site.name}
-              backdrop={about.photoBackdrop}
               onPhones={about.photoOnPhones}
             />
           </div>

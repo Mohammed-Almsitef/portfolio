@@ -38,5 +38,3 @@ export const BLOCK_HEADING = 'mono-label mb-5 text-base font-semibold tracking-t
 /** The card ground shared by project cards, contribution cards and link tiles. */
 export const CARD_SURFACE = 'glass rounded-2xl'
 
-/** The accent wash laid over a card, keyed to whatever `--tone` is in scope. */
-export const CARD_TONE_WASH = ''
