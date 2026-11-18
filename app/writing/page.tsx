@@ -23,11 +23,30 @@ export default async function WritingIndex() {
             <Logo id="writing-logo" weight="medium" className="h-9 w-auto shrink-0" />
             <span className="hidden sm:inline">{site.name}</span>
           </Link>
-          <ThemeToggle />
+          <div className="flex items-center gap-3">
+            <Link
+              href={'/'}
+              className="tap gap-1.5 whitespace-nowrap text-sm text-muted transition-colors hover:text-accent"
+            >
+              <span aria-hidden="true" className="inline-block rtl:-scale-x-100">
+                ←
+              </span>
+              {t('en', 'home')}
+            </Link>
+            {site.resumeUrl && (
+              <a
+                href={site.resumeUrl}
+                className="btn-ghost hidden h-9 items-center rounded-lg px-3 text-sm font-medium sm:inline-flex"
+              >
+                {t('en', 'cv')}
+              </a>
+            )}
+            <ThemeToggle />
+          </div>
         </div>
       </header>
       <main id="main" className="mx-auto max-w-3xl px-6 pb-24 pt-14 md:pt-20">
-        <p className="font-mono text-sm text-accent">{t('en', 'writingKicker')}</p>
+        <p className="mono-label font-mono text-sm text-accent">{t('en', 'writingKicker')}</p>
         <h1 className="font-display t-1 mt-3">
           {t('en', 'writingTitle')}
         </h1>

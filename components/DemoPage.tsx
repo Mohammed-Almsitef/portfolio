@@ -33,11 +33,30 @@ export default async function DemoPage({ locale }: { locale: Locale }) {
             <Logo id="demo-logo" weight="medium" className="h-9 w-auto shrink-0" />
             <span className="hidden sm:inline">{site.name}</span>
           </Link>
-          <ThemeToggle />
+          <div className="flex items-center gap-3">
+            <Link
+              href={localePath(locale)}
+              className="tap gap-1.5 whitespace-nowrap text-sm text-muted transition-colors hover:text-accent"
+            >
+              <span aria-hidden="true" className="inline-block rtl:-scale-x-100">
+                ←
+              </span>
+              {t(locale, 'home')}
+            </Link>
+            {site.resumeUrl && (
+              <a
+                href={site.resumeUrl}
+                className="btn-ghost hidden h-9 items-center rounded-lg px-3 text-sm font-medium sm:inline-flex"
+              >
+                {t(locale, 'cv')}
+              </a>
+            )}
+            <ThemeToggle />
+          </div>
         </div>
       </header>
       <main id="main" className="mx-auto max-w-6xl px-6 pb-24 pt-12 md:pt-16">
-        <p className="font-mono text-sm text-accent">{t(locale, 'demoKicker')}</p>
+        <p className="mono-label font-mono text-sm text-accent">{t(locale, 'demoKicker')}</p>
         <h1 className="font-display t-1 mt-3 max-w-3xl ">
           {t(locale, 'demoTitle')}
         </h1>
