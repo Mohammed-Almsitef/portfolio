@@ -244,3 +244,14 @@
   unicode-bidi: plaintext;
   text-align: start;
 }
+
+/* --------------------------------------------------------- centred content ---- */
+
+/* Edit screens hold their fields in a column of fixed width (940px) that
+   Keystatic pins to the left of the scroll area, leaving the right empty on a
+   wide screen. Centre that column; full-width screens (dashboard, lists) are
+   unaffected, since auto margins do nothing on a full-width box.
+   Structural selector, not Keystar's hashed class names. */
+.kui-theme main [data-scrollable='true'] > div {
+  margin-inline: auto;
+}
