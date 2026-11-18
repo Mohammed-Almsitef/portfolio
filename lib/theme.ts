@@ -16,11 +16,11 @@ export type ThemeMode = 'light' | 'dark'
 const subscribers = new Set<(mode: ThemeMode) => void>()
 
 /** Reads what the pre-paint script (or a previous toggle) stamped on <html>. */
-export function currentTheme(): ThemeMode {
+function currentTheme(): ThemeMode {
   return document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'
 }
 
-export function applyTheme(mode: ThemeMode) {
+function applyTheme(mode: ThemeMode) {
   document.documentElement.dataset.theme = mode
   try {
     localStorage.setItem('theme', mode)

@@ -91,12 +91,8 @@
 
   /* Light-theme values for the properties Tailwind doesn't generate. */
   --canvas-ink: var(--accent-tone);
-  --glow: rgb(var(--accent-tone) / 0.06);
-  --card-glow: rgb(var(--accent-tone) / 0.09);
-  --btn-glow: rgb(var(--accent-tone) / 0.3);
   --card-shadow: 0 1px 2px rgb(11 18 32 / 0.04), 0 10px 26px -14px rgb(11 18 32 / 0.14);
   --grain: 0.02;
-  --headline-gradient: linear-gradient(110deg, #0b1220 20%, #1e2b4a 45%, rgb(var(--accent-tone)) 78%, rgb(var(--tone-violet)) 100%);
 
   /*
    * Dark-theme literals, declared once here and only *aliased* by the two
@@ -126,12 +122,8 @@
   --d-accent-dim: #6b98d6;
   --d-accent-alt: #818cf8;
   --d-canvas-ink: var(--accent-tone);
-  --d-glow: rgb(var(--accent-tone) / 0.08);
-  --d-card-glow: rgb(var(--accent-tone) / 0.12);
-  --d-btn-glow: rgb(var(--accent-tone) / 0.5);
   --d-card-shadow: none;
   --d-grain: 0.022;
-  --d-headline-gradient: linear-gradient(110deg, #ffffff 20%, #dbe4ff 45%, rgb(var(--accent-tone)) 75%, rgb(var(--tone-violet)) 100%);
   --d-logo-ink: #f2efe9;
   --d-logo-accent: #60a5fa;
 }
@@ -163,12 +155,8 @@
   --tone-teal: var(--d-tone-teal);
   --tone-lime: var(--d-tone-lime);
   --canvas-ink: var(--d-canvas-ink);
-  --glow: var(--d-glow);
-  --card-glow: var(--d-card-glow);
-  --btn-glow: var(--d-btn-glow);
   --card-shadow: var(--d-card-shadow);
   --grain: var(--d-grain);
-  --headline-gradient: var(--d-headline-gradient);
 }
 
 /* Fallback for when the script never ran: honour the OS preference. */
@@ -199,12 +187,8 @@
     --tone-teal: var(--d-tone-teal);
     --tone-lime: var(--d-tone-lime);
     --canvas-ink: var(--d-canvas-ink);
-    --glow: var(--d-glow);
-    --card-glow: var(--d-card-glow);
-    --btn-glow: var(--d-btn-glow);
     --card-shadow: var(--d-card-shadow);
     --grain: var(--d-grain);
-    --headline-gradient: var(--d-headline-gradient);
   }
 }
 
@@ -273,16 +257,6 @@ body::before {
 /* Pointer users don't get the ring; keyboard users always do. */
 :focus:not(:focus-visible) {
   outline: none;
-}
-
-/* Headline treatment: starts at full-strength ink and cools into the accent.
-   Deliberately weighted toward the ink end so contrast stays high — a
-   gradient running accent-to-accent looks striking and reads poorly. */
-.text-gradient {
-  background-image: var(--headline-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
 }
 
 /*
@@ -385,14 +359,6 @@ body::before {
     background: #fff !important;
   }
 
-  /* The gradient headline is painted through the text; on paper it would
-     clip to transparent and vanish. */
-  .text-gradient {
-    background-image: none !important;
-    -webkit-text-fill-color: #000 !important;
-    color: #000 !important;
-  }
-
   header,
   footer,
   canvas,
@@ -465,19 +431,6 @@ body::before {
   text-transform: none;
 }
 
-/*
- * Hero blueprint grid: a 32px drafting grid that fades out downwards, so the
- * top of the page reads as an engineering sheet without competing with text.
- */
-.hero-grid {
-  background-image:
-    linear-gradient(to right, rgb(var(--accent-tone) / 0.07) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(var(--accent-tone) / 0.07) 1px, transparent 1px);
-  background-size: 32px 32px;
-  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 30%, transparent 75%);
-  mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 30%, transparent 75%);
-}
-
 /* Section numbers follow the manager's order: 01, 02, … */
 main {
   counter-reset: section;
@@ -503,114 +456,8 @@ main > .section {
   color: rgb(var(--tone-rose));
 }
 
-
 /*
- * Skill groups on a six-column track: three per row, and whatever is left in
- * the last row widens to fill it (two cards share it, one takes it all), so
- * any number of groups ends flush.
- */
-@media (min-width: 1024px) {
-  .skills-grid {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-  }
-  .skills-grid > li {
-    grid-column: span 2;
-  }
-  .skills-grid > li:nth-last-child(2):nth-child(3n + 1),
-  .skills-grid > li:last-child:nth-child(3n + 2) {
-    grid-column: span 3;
-  }
-  .skills-grid > li:last-child:nth-child(3n + 1) {
-    grid-column: 1 / -1;
-  }
-}
-@media (min-width: 640px) and (max-width: 1023px) {
-  .skills-grid > li:last-child:nth-child(2n + 1) {
-    grid-column: 1 / -1;
-  }
-}
-
-/* ======================================================================
- * Premium dark theme layer
- * ==================================================================== */
-
-/*
- * Aurora: three blurred light sources drifting slowly behind the page.
- * Transform-only animation, so it stays on the compositor. Fixed, so the
- * glow follows the reader down the page instead of living only in the hero.
- */
-.aurora {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-  --aurora-o: 0.16;
-}
-:root[data-theme='dark'] .aurora {
-  --aurora-o: 0.26;
-}
-.aurora span {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(100px);
-  opacity: var(--aurora-o);
-  will-change: transform;
-}
-.aurora span:nth-child(1) {
-  width: 46vw;
-  height: 46vw;
-  top: -18vw;
-  left: -6vw;
-  background: rgb(var(--accent-tone));
-  animation: aurora-a 26s ease-in-out infinite alternate;
-}
-.aurora span:nth-child(2) {
-  width: 38vw;
-  height: 38vw;
-  top: 8vh;
-  right: -10vw;
-  background: rgb(var(--tone-violet));
-  animation: aurora-b 32s ease-in-out infinite alternate;
-}
-.aurora span:nth-child(3) {
-  width: 34vw;
-  height: 34vw;
-  bottom: -16vw;
-  left: 30vw;
-  background: rgb(var(--tone-cyan));
-  opacity: calc(var(--aurora-o) * 0.7);
-  animation: aurora-c 38s ease-in-out infinite alternate;
-}
-@keyframes aurora-a {
-  to {
-    transform: translate3d(18vw, 12vh, 0) scale(1.15);
-  }
-}
-@keyframes aurora-b {
-  to {
-    transform: translate3d(-16vw, 18vh, 0) scale(0.9);
-  }
-}
-@keyframes aurora-c {
-  to {
-    transform: translate3d(-12vw, -14vh, 0) scale(1.2);
-  }
-}
-
-/* A faint dot lattice over the aurora, fading toward the bottom of the screen. */
-.aurora::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(rgb(var(--accent-tone) / 0.12) 1px, transparent 1px);
-  background-size: 28px 28px;
-  -webkit-mask-image: linear-gradient(to bottom, #000, transparent 70%);
-  mask-image: linear-gradient(to bottom, #000, transparent 70%);
-}
-
-/*
- * Everything that is not the aurora paints above it. Only elements with no
+ * Page content paints above any fixed background layer. Only elements with no
  * Tailwind position class are listed: plain CSS sits outside Tailwind's
  * layers and would override a `fixed` utility (the nav) if it named it.
  */
@@ -655,31 +502,6 @@ footer {
  */
 .glow-border {
   position: relative;
-}
-.glow-border::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  padding: 1px;
-  border-radius: inherit;
-  pointer-events: none;
-  background: linear-gradient(
-    135deg,
-    rgb(var(--tone, var(--accent-tone)) / 0.9),
-    rgb(var(--tone-violet) / 0.5) 45%,
-    transparent 70%,
-    rgb(var(--tone, var(--accent-tone)) / 0.6)
-  );
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask:
-    linear-gradient(#000 0 0) content-box exclude,
-    linear-gradient(#000 0 0);
-  opacity: 0;
-  transition: opacity 400ms ease;
 }
 .glow-border:hover::before,
 .glow-border:focus-within::before {
@@ -755,27 +577,6 @@ footer {
   );
 }
 
-/* The simulation panel sits on a soft gradient halo. */
-.panel-halo {
-  position: relative;
-}
-.panel-halo::before {
-  content: '';
-  position: absolute;
-  inset: -18px;
-  z-index: -1;
-  border-radius: 2rem;
-  background: conic-gradient(
-    from 180deg,
-    rgb(var(--accent-tone) / 0.35),
-    rgb(var(--tone-violet) / 0.3),
-    rgb(var(--tone-cyan) / 0.25),
-    rgb(var(--accent-tone) / 0.35)
-  );
-  filter: blur(40px);
-  opacity: 0.55;
-}
-
 }
 
 /* Reveal also brings content into focus, not only into place. */
@@ -792,17 +593,8 @@ footer {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .aurora span {
-    animation: none !important;
-  }
   .js [data-reveal] {
     filter: none;
-  }
-}
-
-@media print {
-  .aurora {
-    display: none !important;
   }
 }
 
@@ -822,19 +614,6 @@ footer {
 @media (prefers-reduced-motion: reduce) {
   .hero-in {
     animation: none;
-  }
-}
-
-/* Hero grid areas: see components/Hero.tsx. */
-.hero-layout {
-  grid-template-areas: 'copy' 'sim' 'stats';
-}
-@media (min-width: 1024px) {
-  .hero-layout {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-    grid-template-areas: 'copy sim' 'stats sim';
-    grid-template-rows: auto auto;
-    align-content: center;
   }
 }
 
@@ -940,7 +719,6 @@ footer {
   --color-body: #3d3a36;
   --color-muted: #77736b;
   --accent-tone: 29 78 216;
-  --headline-gradient: none;
   --card-shadow: none;
   --grain: 0;
 
@@ -953,7 +731,6 @@ footer {
   --d-text: #f2efe9;
   --d-body: #c9c4bb;
   --d-muted: #8f8a81;
-  --d-headline-gradient: none;
   --d-card-shadow: none;
   --d-grain: 0;
 }
@@ -1011,23 +788,12 @@ footer {
     border-color: var(--color-text);
     transform: none;
   }
-  .text-gradient {
-    background-image: none;
-    -webkit-text-fill-color: currentColor;
-    color: var(--color-text);
-  }
-  .glow-border::before {
-    display: none;
-  }
   .glow-border {
     transition: border-color 200ms ease;
   }
   .glow-border:hover,
   .glow-border:focus-within {
     border-color: var(--color-border-strong);
-  }
-  .panel-halo::before {
-    display: none;
   }
   /* Editorial link: a hairline that thickens on hover. */
   .ed-link {
@@ -1041,22 +807,8 @@ footer {
     text-decoration-color: currentColor;
   }
 }
-
-.aurora,
-.hero-grid {
-  display: none;
-}
 .js [data-reveal] {
   filter: none;
-}
-
-/* Unlayered, to beat the original (unlayered) gradient-text rule. */
-.text-gradient {
-  background-image: none;
-  -webkit-background-clip: border-box;
-  background-clip: border-box;
-  -webkit-text-fill-color: currentColor;
-  color: var(--color-text);
 }
 
 /* ----------------------------------------------------------------------
@@ -1249,7 +1001,7 @@ textarea {
 }
 
 /* ----------------------------------------------------------------------
- * Arabic type: Amiri (naskh) for display, IBM Plex Sans Arabic for text.
+ * Arabic type: Cairo for display, IBM Plex Sans Arabic for text.
  * -------------------------------------------------------------------- */
 [lang='ar'] {
   font-family: var(--font-arabic), var(--font-geist), system-ui, sans-serif;

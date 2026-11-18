@@ -10,7 +10,6 @@ import LanguageSwitch from '@/components/LanguageSwitch'
 import ProjectClip from '@/components/ProjectClip'
 import ProjectVisual from '@/components/ProjectVisual'
 import ScrollProgress from '@/components/ScrollProgress'
-import Aurora from '@/components/Aurora'
 import FlowDiagram from '@/components/FlowDiagram'
 import CaseToc from '@/components/CaseToc'
 import CopyEmail from '@/components/CopyEmail'
@@ -88,7 +87,6 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
       // One accent for the whole page; only the cover keeps the project's tone.
       style={{ '--tone': 'var(--accent-tone)' } as React.CSSProperties}
     >
-      <Aurora />
       <ScrollProgress />
 
       <header data-print-hide className="sticky top-0 z-40 border-b border-border bg-bg/60 backdrop-blur-md">

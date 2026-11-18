@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Aurora from '@/components/Aurora'
 import Footer from '@/components/Footer'
 import Logo from '@/components/Logo'
 import ThemeToggle from '@/components/ThemeToggle'
@@ -18,7 +17,6 @@ export default async function WritingIndex() {
   const [posts, site] = await Promise.all([getPosts(), getSite()])
   return (
     <div>
-      <Aurora />
       <header data-print-hide className="sticky top-0 z-40 border-b border-border bg-bg/60 backdrop-blur-md">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-4 px-6 py-4">
           <Link href="/" aria-label={site.name} className="tap items-center gap-2.5 text-[0.9375rem] font-semibold tracking-tight hover:text-accent">

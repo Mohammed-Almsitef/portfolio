@@ -39,7 +39,7 @@ export function hrefOf(href: string): string {
 }
 
 /** Whether following this link leaves the browser, and so earns a new tab. */
-export function isExternal(href: string): boolean {
+function isExternal(href: string): boolean {
   return /^https?:/i.test(hrefOf(href))
 }
 

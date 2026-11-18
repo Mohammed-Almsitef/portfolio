@@ -1,7 +1,6 @@
 import Nav from '@/components/Nav'
 import CommandPalette from '@/components/CommandPalette'
 import Hero from '@/components/Hero'
-import Aurora from '@/components/Aurora'
 import About from '@/components/About'
 import Projects from '@/components/Projects'
 import OpenSource from '@/components/OpenSource'
@@ -70,7 +69,6 @@ export default async function HomePage({ locale }: { locale: Locale }) {
       {/* Machine-readable identity, for the name query. */}
       <StructuredData locale={locale} />
 
-      <Aurora />
       <ScrollProgress />
       <Nav
         siteName={site.name}

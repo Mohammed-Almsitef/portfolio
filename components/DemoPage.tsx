@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Aurora from '@/components/Aurora'
 import Footer from '@/components/Footer'
 import Logo from '@/components/Logo'
 import SlamViewport from '@/components/SlamViewport'
@@ -24,7 +23,6 @@ export default async function DemoPage({ locale }: { locale: Locale }) {
 
   return (
     <div dir={dir(locale)} lang={locale}>
-      <Aurora />
       <header data-print-hide className="sticky top-0 z-40 border-b border-border bg-bg/60 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
           <Link
@@ -45,7 +43,7 @@ export default async function DemoPage({ locale }: { locale: Locale }) {
         </h1>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-body">{t(locale, 'demoLead')}</p>
 
-        <div data-print-hide className="panel-halo mt-10">
+        <div data-print-hide className="mt-10">
           <SlamViewport labels={simLabels(locale)} />
         </div>
 

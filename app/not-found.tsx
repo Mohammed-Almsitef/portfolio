@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Aurora from '@/components/Aurora'
 import Logo from '@/components/Logo'
 import { t } from '@/lib/locale'
 
@@ -10,7 +9,6 @@ import { t } from '@/lib/locale'
 export default function NotFound() {
   return (
     <>
-      <Aurora />
       <main id="main" className="mx-auto flex min-h-svh max-w-2xl flex-col items-start justify-center px-6">
         <Link href="/" aria-label="Home" className="mb-10">
           <Logo id="nf-logo" weight="medium" className="h-10 w-auto" />

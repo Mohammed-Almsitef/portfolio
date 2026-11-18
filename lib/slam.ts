@@ -12,7 +12,7 @@
  */
 
 export const UNKNOWN = 0
-export const FREE = 1
+const FREE = 1
 export const OCC = 2
 
 /** Robot footprint radius, in cells. */
@@ -460,7 +460,7 @@ export const coverage = (s: Sim) => Math.min(1, s.known / s.truthFree)
 const passable = (s: Sim, i: number) => s.map[i] !== OCC && s.cost[i] < 255
 
 /** A* over the costmap, 8-connected. Unknown space is allowed, at a premium. */
-export function plan(s: Sim, from: Pt, to: Pt): Pt[] | null {
+function plan(s: Sim, from: Pt, to: Pt): Pt[] | null {
   const { w, h } = s
   const sx = Math.floor(from.x)
   const sy = Math.floor(from.y)
@@ -849,4 +849,4 @@ export function step(s: Sim, dt: number) {
   senseAndMap(s)
 }
 
-export { LIDAR_BEAMS, LIDAR_RANGE }
+export { LIDAR_BEAMS }
