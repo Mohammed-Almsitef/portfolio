@@ -42,7 +42,7 @@ export default async function StructuredData({ locale = 'en' }: { locale?: Local
   ])
 
   const home = locale === 'ar' ? `${site.url}/ar` : site.url
-  const [city, ...rest] = site.location.split(',').map((part) => part.trim())
+  const [city, ...rest] = site.location.split(/[,،]/).map((part) => part.trim())
 
   const person = {
     '@type': 'Person',

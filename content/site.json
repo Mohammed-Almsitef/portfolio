@@ -1,8 +1,9 @@
 {
   "name": "Mohammed Almsitef",
   "role": "Robotics & AI Engineer",
-  "tagline": "I build robots that perceive, plan and act — from the ROS 2 autonomy stack that drives a service robot at the Two Holy Mosques to the deep-learning models that let machines understand language.",
+  "tagline": "I build robots that perceive, plan and act, from the ROS 2 autonomy stack that drives a service robot at the Two Holy Mosques to the deep-learning models that let machines understand language.",
   "location": "Aleppo, Syria",
+  "workPreference": "Open to remote work and relocation",
   "email": "almositefmohammed@gmail.com",
   "url": "https://mohammedalmsitef.me",
   "resumeUrl": "/resume.pdf",

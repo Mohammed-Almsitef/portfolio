@@ -57,6 +57,7 @@ export default async function Image() {
         </div>
         <div style={{ display: 'flex', fontSize: 24, fontWeight: 500, color: SLATE }}>
           {site.url.replace(/^https?:\/\//, '')}
+          {site.workPreference ? `  ·  ${site.workPreference}` : ''}
         </div>
       </div>
       {/* eslint-disable-next-line @next/next/no-img-element */}

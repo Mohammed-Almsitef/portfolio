@@ -4,10 +4,10 @@
       "companyUrl": "",
       "role": "Robotics Engineer",
       "company": "SWB",
-      "period": "June 2025 — Present",
-      "description": "ROS 2 and applied AI for robots — object detection and natural spoken interaction with people.",
+      "period": "June 2025 – Present",
+      "description": "ROS 2 and applied AI for robots: object detection and natural spoken interaction with people.",
       "highlights": [
-        "Own the ROS 2 platform behind Manara, an in-production service robot deployed at the Two Holy Mosques — autonomous navigation, motor control, and a self-docking/charging system rewritten from scratch.",
+        "Own the ROS 2 platform behind Manara, an in-production service robot deployed at the Two Holy Mosques: autonomous navigation, motor control, and a self-docking/charging system rewritten from scratch.",
         "Lead developer of the fleet's core ROS 2 package (500+ commits): bringup, layered configuration and setup tooling for 4 robots across 3 hardware models.",
         "Tuned Nav2 (MPPI controller) and AMCL on production robots, and built a heading-fusion node that fuses wheel odometry with gyro data.",
         "Introduced per-package semantic versioning and monthly fleet releases, shipped as Debian packages through GitHub Actions.",

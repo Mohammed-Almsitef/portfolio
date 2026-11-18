@@ -4,9 +4,9 @@
   "photoOnPhones": true,
   "languages": "Arabic (native) · English (professional)",
   "paragraphs": [
-    "I'm a robotics and AI engineer at SWB, where I own the ROS 2 platform behind Manara — an in-production service robot helping pilgrims at the Two Holy Mosques — and the software that runs our fleet of four robots.",
-    "My background is AI: I graduated with honors in Informatics Engineering (Artificial Intelligence) from the University of Aleppo in 2025, then taught myself robotics on the job. The problems I like most sit between the two — making autonomy work on real hardware, with weak actuators, limited sensors and networks that drop out.",
-    "I also design ROS 2 course material — the BurgerBot driving around the top of this page comes from it — and build open tools like ps4_teleop."
+    "I'm a robotics and AI engineer at SWB, where I own the ROS 2 platform behind Manara, a service robot working with pilgrims at the Two Holy Mosques, and the software that runs our fleet of four robots.",
+    "My background is AI: I graduated with honors in Informatics Engineering (Artificial Intelligence) from the University of Aleppo in 2025, then taught myself robotics on the job. The problems I like most sit between the two: making autonomy work on real hardware, with weak actuators, limited sensors and networks that drop out.",
+    "I also design ROS 2 course material (the BurgerBot at the top of this page comes from it) and build open tools like ps4_teleop."
   ],
   "stats": [
     {

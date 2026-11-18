@@ -27,6 +27,7 @@ export default async function Contact({
 
   const details = [
     { k: t(locale, 'basedIn'), v: site.location },
+    site.workPreference && { k: t(locale, 'availability'), v: site.workPreference },
     contact.timezone && { k: t(locale, 'timezone'), v: contact.timezone },
     contact.responseTime && { k: t(locale, 'responseTime'), v: contact.responseTime },
   ].filter(Boolean) as { k: string; v: string }[]

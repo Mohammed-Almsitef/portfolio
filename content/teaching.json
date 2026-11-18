@@ -5,7 +5,7 @@
   "role": "",
   "items": [
     {
-      "title": "From Zero to ROS 2 Developer — program syllabus",
+      "title": "From Zero to ROS 2 Developer: program syllabus",
       "detail": "Three stackable courses over about 31 weeks: Programming Foundations (Linux, Python), Robotics & ROS 2 Core, and Autonomous Robotics (simulation, Nav2, a capstone). Written in Arabic and English.",
       "tags": [
         "Curriculum design",
@@ -15,7 +15,7 @@
       "visible": true
     },
     {
-      "title": "Basics to an autonomous robot — two-course plan",
+      "title": "Basics to an autonomous robot: two-course plan",
       "detail": "Course one covers microcontrollers (Arduino, ESP32, STM32), sensors and motor control; course two builds an autonomous wheeled robot with ROS 2, PID control, mapping and localization.",
       "tags": [
         "Embedded",

@@ -264,6 +264,11 @@ const siteDef = (dir: string, tag: string) =>
       }),
       tagline: fields.text({ label: 'Tagline', multiline: true }),
       location: fields.text({ label: 'Location' }),
+      workPreference: fields.text({
+        label: 'Remote / relocation',
+        description:
+          'One line on where you can work, e.g. "Open to remote work and relocation". Shown in the hero, About, Contact and the link preview. Leave empty to hide.',
+      }),
       email: fields.text({ label: 'Email' }),
       url: fields.url({
         label: 'Site URL',

@@ -17,6 +17,7 @@ export default async function About({
   // figures already have their own homes.
   const facts = [
     { k: t(locale, 'factLocation'), v: site.location },
+    site.workPreference && { k: t(locale, 'availability'), v: site.workPreference },
     contact.timezone && { k: t(locale, 'timezone'), v: contact.timezone },
     about.languages && { k: t(locale, 'languages'), v: about.languages },
   ].filter(Boolean) as { k: string; v: string }[]

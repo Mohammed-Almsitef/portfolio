@@ -25,12 +25,13 @@ export default async function Hero({ locale = 'en' }: { locale?: Locale }) {
       <div className="mx-auto max-w-page px-6 pb-16 pt-32 md:pb-24 md:pt-40">
         {current && (
           <p className="hero-in flex flex-wrap items-center gap-x-2 text-sm text-muted">
-            <span className="relative flex size-1.5 shrink-0" aria-hidden="true">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-[rgb(var(--tone-status))] opacity-60" />
-              <span className="relative inline-flex size-1.5 rounded-full bg-[rgb(var(--tone-status))]" />
-            </span>
+            <span className="size-1.5 shrink-0 rounded-full bg-[rgb(var(--tone-status))]" aria-hidden="true" />
             {t(locale, 'currently')} {current.role} {t(locale, 'at')} {current.company}
           </p>
+        )}
+        {/* Its own line, so a wrap never strands a separator. */}
+        {site.workPreference && (
+          <p className="hero-in mt-1 ps-3.5 text-sm text-muted">{site.workPreference}</p>
         )}
 
         <h1

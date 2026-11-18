@@ -8,10 +8,10 @@ export default function CopyEmail({ email, locale = 'en' }: { email: string; loc
   const { copied, copy } = useCopyToClipboard()
 
   return (
-    <span className="flex flex-wrap items-center gap-2">
+    <span className="flex max-w-full items-center gap-2">
       <a
         href={`mailto:${email}`}
-        className="btn-primary inline-flex min-w-0 items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium sm:gap-2.5 sm:px-5"
+        className="btn-primary inline-flex min-w-0 items-center gap-2 rounded-xl px-3.5 py-3 text-[0.8125rem] font-medium sm:gap-2.5 sm:px-5 sm:text-sm"
       >
         {/* The address is the label, so the mark is decoration — and the first
             thing to go on a narrow screen, where dropping it is what keeps the
@@ -19,12 +19,12 @@ export default function CopyEmail({ email, locale = 'en' }: { email: string; loc
         <Icon name="mail" className="hidden size-4 shrink-0 sm:block" />
         {/* Latin address inside an RTL line: without an explicit direction the
             punctuation drifts to the wrong end. */}
-        <span dir="ltr">{email}</span>
+        <span dir="ltr" className="truncate">{email}</span>
       </a>
       <button
         type="button"
         onClick={() => copy(email)}
-        className="btn-ghost rounded-xl px-3.5 py-3 font-mono text-xs text-muted hover:text-text"
+        className="btn-ghost shrink-0 rounded-xl px-3 py-3 text-xs text-muted hover:text-text sm:px-3.5"
       >
         {copied ? `${t(locale, 'copied')} ✓` : t(locale, 'copy')}
       </button>
