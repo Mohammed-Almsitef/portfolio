@@ -898,11 +898,11 @@ body {
   --color-muted: #5b6980;
 
   /* Dark: the deck's navy, cream ink. */
-  --d-bg: #16233a;
-  --d-surface: #1c2c47;
-  --d-elevated: #233552;
-  --d-border: #2c3e5c;
-  --d-border-strong: #44546f;
+  --d-bg: #172640;
+  --d-surface: #1f3150;
+  --d-elevated: #263a5c;
+  --d-border: #2e4366;
+  --d-border-strong: #4a5d80;
   --d-text: #f4f1e8;
   --d-body: #d5dde8;
   --d-muted: #9aaac4;
@@ -1063,12 +1063,31 @@ main > .band:nth-of-type(odd) {
 main > .section > div > div {
   border-top-width: 0;
 }
-/* In dark mode the whole site is navy, so the bands step between two
-   navies instead. */
+/* In dark mode the whole site is navy, so the bands step between a deep
+   "cover" navy and the lifted slate navy of the page (about 1.3:1 apart, so
+   the rhythm reads), with a faint edge where they meet. */
 :root[data-theme='dark'] main > .band:nth-of-type(odd) {
-  --color-bg: #0f1a2c;
-  --color-surface: #16233a;
-  --color-elevated: #1c2c47;
+  --color-bg: #0b1322;
+  --color-surface: #121e33;
+  --color-elevated: #19273f;
+  --color-border: #233552;
+  --color-border-strong: #3a4c6b;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.05),
+    inset 0 -1px 0 rgb(255 255 255 / 0.05);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) main > .band:nth-of-type(odd) {
+    --color-bg: #0b1322;
+    --color-surface: #121e33;
+    --color-elevated: #19273f;
+    --color-border: #233552;
+    --color-border-strong: #3a4c6b;
+  }
+}
+/* Highlight cards: a navy cap on paper, the accent on navy (cream read harsh). */
+:root[data-theme='dark'] .highlight-card {
+  border-top-color: rgb(var(--accent-tone)) !important;
 }
 /* The simulation panel keeps the page's own palette inside a navy band:
    its canvas reads its colours from the page, not from the band. */

@@ -219,7 +219,7 @@ export default async function ProjectPage({ slug, locale }: { slug: string; loca
               {project.results.map((r, i) => (
                 <li
                   key={i}
-                  className="glass glow-border rounded-2xl p-5 text-[0.9375rem] leading-relaxed text-body [border-top:2px_solid_var(--color-text)]"
+                  className="highlight-card glass glow-border rounded-2xl p-5 text-[0.9375rem] leading-relaxed text-body [border-top:2px_solid_var(--color-text)]"
                 >
                   {r}
                 </li>

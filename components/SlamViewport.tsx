@@ -489,13 +489,13 @@ export default function SlamViewport({ labels }: { labels: SlamLabels }) {
   return (
     <figure className="slam-panel glass relative overflow-hidden rounded-2xl">
       {/* Title bar, in the manner of an RViz window. */}
-      <figcaption className="flex items-center justify-between gap-3 border-b border-border px-4 py-2.5 font-mono text-[0.7rem] text-muted">
+      <figcaption className="mono-label flex items-center justify-between gap-3 border-b border-border px-4 py-2.5 font-mono text-[0.7rem] text-muted">
         <span className="flex min-w-0 items-center gap-2">
           <span aria-hidden="true" className="relative flex size-2">
             <span className="absolute inline-flex size-full animate-ping rounded-full bg-[rgb(var(--tone-status))] opacity-60" />
             <span className="relative inline-flex size-2 rounded-full bg-[rgb(var(--tone-status))]" />
           </span>
-          <span className="truncate" dir="ltr">
+          <span className="truncate">
             {labels.title}
           </span>
         </span>
