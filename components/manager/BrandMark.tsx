@@ -1,26 +1,25 @@
 import Logo from '../Logo'
+import LangSwitch from './LangSwitch'
 
 /**
- * The mark in the manager's sidebar.
- *
- * The same monogram as the site, so the manager reads as part of it. The colours
- * are passed in rather than read from `--logo-ink` / `--logo-accent`, because
- * the manager's light/dark setting is its own — independent of the site's — and
- * Keystatic hands us the resolved scheme. That is also what keeps the handoff's
- * rule intact: the ink-on-light pairing and the light-on-ink pairing are not
- * interchangeable.
+ * The top of the manager's sidebar: the monogram and the content-language
+ * switch. Colours are passed in because the manager's light/dark setting is
+ * its own, independent of the site's, and Keystatic hands us the scheme.
  */
 export default function BrandMark({ colorScheme }: { colorScheme: 'light' | 'dark' }) {
   const dark = colorScheme === 'dark'
 
   return (
-    <Logo
-      id="manager-logo"
-      weight="medium"
-      label="Mohammed Almsitef"
-      ink={dark ? '#f4f1e8' : '#16233a'}
-      accent={dark ? '#f06e42' : '#e8582c'}
-      className="h-6 w-auto shrink-0"
-    />
+    <span className="kst-brand">
+      <Logo
+        id="manager-logo"
+        weight="medium"
+        label="Mohammed Almsitef"
+        ink={dark ? '#f4f1e8' : '#16233a'}
+        accent={dark ? '#f06e42' : '#e8582c'}
+        className="h-6 w-auto shrink-0"
+      />
+      <LangSwitch />
+    </span>
   )
 }

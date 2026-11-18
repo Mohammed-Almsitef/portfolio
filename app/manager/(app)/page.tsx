@@ -3,25 +3,41 @@ import { redirect } from 'next/navigation'
 import { gateStatus, isSignedIn } from '@/lib/manager/auth'
 import { editPath } from '@/lib/manager/editPath'
 import { managerSummary, type Attention } from '@/lib/manager/summary'
+import { NAVIGATION, type ManagerLang } from '@/lib/manager/lang'
 
 /** Rendered per request: it reports live state (drafts, protection). */
 export const dynamic = 'force-dynamic'
 
-const EDIT = [
-  { href: editPath('/collection/projects'), title: 'Projects', detail: 'Case studies, diagrams, covers' },
-  { href: editPath('/collection/posts'), title: 'Writing', detail: 'Posts and drafts' },
-  { href: editPath('/singleton/about'), title: 'About', detail: 'Bio, photo, headline figures' },
-  { href: editPath('/singleton/experience'), title: 'Experience', detail: 'Roles and highlights' },
-  { href: editPath('/singleton/skills'), title: 'Skills', detail: 'Groups and evidence links' },
-  { href: editPath('/singleton/teaching'), title: 'Teaching', detail: 'Courses and material' },
-  { href: editPath('/singleton/contact'), title: 'Contact', detail: 'Pitch, timezone, form' },
-  { href: editPath('/singleton/site'), title: 'Site & SEO', detail: 'Name, role, tagline, CV' },
-  { href: editPath('/singleton/sections'), title: 'Sections', detail: 'Order and visibility' },
-  { href: editPath('/singleton/appearance'), title: 'Appearance', detail: 'Default theme, accent' },
-  { href: editPath('/singleton/aboutAr'), title: 'Arabic site', detail: 'The /ar version' },
-  { href: editPath('/singleton/socials'), title: 'Contact links', detail: 'GitHub, LinkedIn, …' },
-  { href: editPath('/singleton/uiText'), title: 'Site text', detail: 'Buttons, labels, demo, 404' },
-]
+/** What each menu item holds, keyed by its English name (the Arabic key adds 'Ar'). */
+const ITEMS: Record<string, { title: string; detail: string }> = {
+  about: { title: 'About', detail: 'Bio, photo, headline figures' },
+  projects: { title: 'Projects', detail: 'Case studies, diagrams, covers' },
+  skills: { title: 'Skills', detail: 'Groups and evidence links' },
+  experience: { title: 'Experience', detail: 'Roles and highlights' },
+  teaching: { title: 'Teaching', detail: 'Courses and material' },
+  openSource: { title: 'Open source', detail: 'Contributions to other projects' },
+  posts: { title: 'Writing', detail: 'Posts and drafts (English only)' },
+  contact: { title: 'Contact section', detail: 'Pitch, timezone, form' },
+  site: { title: 'Name, role & CV', detail: 'Tagline, location, CV, SEO' },
+  socials: { title: 'Social links', detail: 'GitHub, LinkedIn, …' },
+  education: { title: 'Education', detail: 'Degrees and programmes' },
+  publications: { title: 'Publications', detail: 'Papers and talks' },
+  sections: { title: 'Section order', detail: 'Order, headings, visibility' },
+  appearance: { title: 'Appearance', detail: 'Default theme (both sites)' },
+  uiText: { title: 'Interface text', detail: 'Buttons, labels, demo, 404' },
+  arabicSettings: { title: 'Publish the Arabic site', detail: 'Turn /ar on or off' },
+}
+const COLLECTIONS = new Set(['projects', 'projectsAr', 'posts'])
+
+function editLinks(lang: ManagerLang) {
+  return Object.entries(NAVIGATION[lang]).map(([group, keys]) => ({
+    group,
+    items: keys.map((key) => {
+      const base = key.endsWith('Ar') ? key.slice(0, -2) : key
+      return { key, href: editPath(`/${COLLECTIONS.has(key) ? 'collection' : 'singleton'}/${key}`), ...ITEMS[base] }
+    }),
+  }))
+}
 
 const TONE: Record<Attention['tone'], { dot: string; ring: string; label: string }> = {
   critical: { dot: 'bg-[rgb(var(--tone-rose))]', ring: 'border-[rgb(var(--tone-rose)/0.45)]', label: 'Action needed' },
@@ -39,7 +55,8 @@ function Stat({ label, value, sub, href }: { label: string; value: string; sub: 
   )
 }
 
-export default async function OverviewPage() {
+export default async function OverviewPage({ searchParams }: { searchParams: Promise<{ lang?: string }> }) {
+  const lang: ManagerLang = (await searchParams).lang === 'ar' ? 'ar' : 'en'
   const gate = await gateStatus()
   if (gate.protection === 'required' && !(await isSignedIn())) redirect('/manager/login?from=/manager')
 
@@ -52,10 +69,7 @@ export default async function OverviewPage() {
       <div className="flex flex-wrap items-end justify-between gap-6">
         <div>
           <p className="flex items-center gap-2 text-sm text-muted">
-            <span className="relative flex size-2">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-[rgb(var(--tone-status))] opacity-60" />
-              <span className="relative inline-flex size-2 rounded-full bg-[rgb(var(--tone-status))]" />
-            </span>
+            <span className="size-2 rounded-full bg-[rgb(var(--tone-status))]" aria-hidden="true" />
             {host}
           </p>
           <h1 className="mt-2 text-3xl font-semibold tracking-[-0.03em] md:text-4xl">Overview</h1>
@@ -97,6 +111,55 @@ export default async function OverviewPage() {
           sub={s.arabicLive ? `${s.arabicSections} sections at /ar` : 'not published'}
           href={editPath('/singleton/arabicSettings')}
         />
+      </section>
+
+      {/* Content, grouped like the editor's menu, one language at a time */}
+      <section aria-labelledby="content">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <h2 id="content" className="text-lg font-semibold tracking-tight">
+            Content
+          </h2>
+          <div role="group" aria-label="Content language" className="inline-flex rounded-full border border-border bg-surface p-0.5 text-xs font-semibold">
+            {(['en', 'ar'] as const).map((l) => (
+              <Link
+                key={l}
+                href={l === 'en' ? '/manager' : '/manager?lang=ar'}
+                aria-current={lang === l ? 'true' : undefined}
+                lang={l}
+                className={`rounded-full px-3.5 py-1.5 transition-colors ${
+                  lang === l ? 'bg-accent text-bg' : 'text-muted hover:text-text'
+                }`}
+              >
+                {l === 'en' ? 'English' : 'العربية'}
+              </Link>
+            ))}
+          </div>
+        </div>
+        <div className="mt-5 space-y-7">
+          {editLinks(lang).map(({ group, items }) => (
+            <div key={group}>
+              <h3 className="text-xs font-medium text-muted">{group}</h3>
+              <ul className="mt-2.5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                {items.map((e) => (
+                  <li key={e.key}>
+                    <Link
+                      href={e.href}
+                      className="group flex h-full items-center justify-between gap-3 rounded-xl border border-border bg-surface px-4 py-3.5 transition-colors hover:border-accent/60"
+                    >
+                      <span>
+                        <span className="block text-sm font-medium transition-colors group-hover:text-accent">{e.title}</span>
+                        <span className="mt-0.5 block text-xs text-muted">{e.detail}</span>
+                      </span>
+                      <span aria-hidden="true" className="text-muted">
+                        →
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
       </section>
 
       <div className="grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
@@ -239,28 +302,6 @@ export default async function OverviewPage() {
         </div>
       </section>
 
-      {/* Quick edit */}
-      <section aria-labelledby="edit">
-        <h2 id="edit" className="text-lg font-semibold tracking-tight">Edit</h2>
-        <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {EDIT.map((e) => (
-            <li key={e.href}>
-              <Link
-                href={e.href}
-                className="group flex h-full items-center justify-between gap-3 rounded-xl border border-border bg-surface px-4 py-3.5 transition-colors hover:border-accent/60"
-              >
-                <span>
-                  <span className="block text-sm font-medium transition-colors group-hover:text-accent">{e.title}</span>
-                  <span className="mt-0.5 block text-xs text-muted">{e.detail}</span>
-                </span>
-                <span aria-hidden="true" className="text-muted transition-transform group-hover:translate-x-0.5">
-                  →
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
     </div>
   )
 }

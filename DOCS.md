@@ -144,7 +144,7 @@ beats the generated `visual`.
 | `open-source.json` | Open source | `intro` + items: `project`, `projectUrl`, `what`, `detail`, `status`, `prUrl`, `tone`, `tags[]`, `visible` |
 | `contact.json` | Contact | `headline`, `blurb`, `responseTime` |
 | `appearance.json` | Appearance | `defaultTheme`, `accent` |
-| `ar/settings.json` | العربية — نشر الموقع | `enabled` — the one switch that publishes the Arabic site |
+| `ar/settings.json` | Publish the Arabic site | `enabled` — the one switch that publishes the Arabic site |
 
 `appearance.json` and `ar/settings.json` are shared by both languages. Everything
 else exists twice.
@@ -264,6 +264,13 @@ geometry; `assets/brand/readme.txt` is the spec.
 
 ## Two languages, two sites
 
+**In the manager** the two trees are shown one language at a time: the
+EN / عربي switch beside the logo (and on the Overview page) swaps the whole menu
+for the other language's keys and reopens the same screen there
+(`lib/manager/lang.ts`). Opening an Arabic screen directly switches the view to
+Arabic. Text fields take their direction from their first letter, so Arabic
+types right-to-left in either view.
+
 Arabic is a **second site**, not a translation layer. Both trees are built from
 the same schema, so they cannot drift structurally, but their contents are wholly
 independent: different projects, a different section order, a different bio.
@@ -276,7 +283,7 @@ independent: different projects, a different section order, a different bio.
 - interface strings (not content) live in `lib/locale.ts` behind `t(locale, key)`
 - `hreflang` alternates are emitted on both pages and in the sitemap
 - the Arabic site only becomes visible — page, sitemap, `alternates` — once
-  **العربية — نشر الموقع → enabled** is ticked. Pointing a crawler at a 404 is
+  **Publish the Arabic site → enabled** is ticked. Pointing a crawler at a 404 is
   worse than not mentioning the translation.
 
 ⚠️ Anything under `public/` referenced by content exists in **both** trees. Rename

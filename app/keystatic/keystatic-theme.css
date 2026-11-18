@@ -181,3 +181,66 @@
   background: var(--kui-color-background-critical);
   color: var(--kui-color-foreground-critical);
 }
+
+/* ------------------------------------------------------ brand + language switch ---- */
+
+/* Keystatic's header shows the mark, then the brand name; the mark carries the
+   language switch so it is always in view. */
+.kst-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.kst-lang {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid var(--kui-color-border-neutral);
+  border-radius: var(--kui-size-radius-full);
+  background: var(--kui-color-background-canvas);
+}
+
+.kst-lang button {
+  min-width: 2.5rem;
+  padding: 0.2rem 0.55rem;
+  border: 0;
+  border-radius: var(--kui-size-radius-full);
+  background: transparent;
+  font: 600 0.75rem/1.2 var(--font-geist), system-ui, sans-serif;
+  color: var(--kui-color-foreground-neutral-secondary);
+  cursor: pointer;
+  transition:
+    background-color 150ms,
+    color 150ms;
+}
+
+.kst-lang button[lang='ar'] {
+  font-family: var(--font-arabic), var(--font-geist), system-ui, sans-serif;
+}
+
+.kst-lang button:hover {
+  color: var(--kui-color-foreground-neutral);
+}
+
+.kst-lang button[aria-pressed='true'] {
+  background: var(--kui-color-scale-indigo9);
+  color: var(--kui-color-foreground-on-emphasis);
+}
+
+.kst-lang button:focus-visible {
+  outline: 2px solid var(--kui-color-scale-indigo9);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------- bidirectional fields ---- */
+
+/* Each field (and each paragraph in the rich editor) takes its direction from
+   its own first letter, so Arabic types right-to-left and English
+   left-to-right, in either language view, with no setting. */
+.kui-theme input[type='text'],
+.kui-theme input:not([type]),
+.kui-theme textarea,
+.kui-theme [contenteditable='true'] > * {
+  unicode-bidi: plaintext;
+  text-align: start;
+}

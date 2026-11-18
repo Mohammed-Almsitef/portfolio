@@ -1,6 +1,7 @@
 import { collection, config, fields, singleton } from '@keystatic/core'
 import { PLATFORM_IDS, platformName } from '@/lib/socials'
 import { TONE_OPTIONS } from '@/lib/tones'
+import { NAVIGATION } from '@/lib/manager/lang'
 import { STRINGS, UI_GROUPS, type UIKey } from '@/lib/locale'
 import BrandMark from '@/components/manager/BrandMark'
 
@@ -210,7 +211,7 @@ const projectsDef = (dir: string, tag: string) =>
 
 const sectionsDef = (dir: string, tag: string) =>
   singleton({
-    label: `Sections${tag}`,
+    label: `Section order${tag}`,
     path: `${dir}/sections`,
     format: { data: 'json' },
     schema: {
@@ -253,7 +254,7 @@ const sectionsDef = (dir: string, tag: string) =>
 
 const siteDef = (dir: string, tag: string) =>
   singleton({
-    label: `Site & contact${tag}`,
+    label: `Name, role & CV${tag}`,
     path: `${dir}/site`,
     format: { data: 'json' },
     schema: {
@@ -314,7 +315,7 @@ const siteDef = (dir: string, tag: string) =>
 
 const socialsDef = (dir: string, tag: string) =>
   singleton({
-    label: `Contact links${tag}`,
+    label: `Social links${tag}`,
     path: `${dir}/socials`,
     format: { data: 'json' },
     schema: {
@@ -399,7 +400,7 @@ const aboutDef = (dir: string, tag: string) =>
 
 const contactDef = (dir: string, tag: string) =>
   singleton({
-    label: `Contact${tag}`,
+    label: `Contact section${tag}`,
     path: `${dir}/contact`,
     format: { data: 'json' },
     schema: {
@@ -599,7 +600,7 @@ const uiTextDef = (dir: string, tag: string, locale: 'en' | 'ar') => {
     })
   }
   return singleton({
-    label: `Site text${tag}`,
+    label: `Interface text${tag}`,
     path: `${dir}/ui`,
     format: { data: 'json' },
     schema: Object.fromEntries(
@@ -669,15 +670,13 @@ export default config({
     : { kind: 'local' },
 
   ui: {
-    brand: { name: 'Mohammed Almsitef', mark: BrandMark },
-    navigation: {
-      // Ordered by how often each is edited: content first, setup last.
-      Content: ['projects', 'posts', 'about', 'experience', 'skills', 'teaching', 'openSource'],
-      Profile: ['site', 'contact', 'socials', 'education', 'publications'],
-      'Page setup': ['sections', 'appearance', 'uiText'],
-      'Arabic site · content': ['projectsAr', 'aboutAr', 'experienceAr', 'skillsAr', 'teachingAr', 'openSourceAr', 'educationAr', 'publicationsAr'],
-      'Arabic site · setup': ['siteAr', 'contactAr', 'socialsAr', 'sectionsAr', 'uiTextAr', 'arabicSettings'],
-    },
+    // The mark already says who this is and carries the language switch; a
+    // zero-width name keeps Keystatic from printing its own name beside it.
+    brand: { name: '\u200b', mark: BrandMark },
+    // English by default; the manager swaps in the Arabic menu when the
+    // language switch beside the logo is set to Arabic (lib/manager/lang.ts).
+    // Keys are checked by Keystatic at runtime ("Unknown navigation key").
+    navigation: NAVIGATION.en as never,
   },
 
   collections: {
