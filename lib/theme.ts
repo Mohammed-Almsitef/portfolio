@@ -23,7 +23,9 @@ function currentTheme(): ThemeMode {
 function applyTheme(mode: ThemeMode) {
   document.documentElement.dataset.theme = mode
   try {
-    localStorage.setItem('theme', mode)
+    // '-v2': choices saved on the previous design are not carried over, so
+    // every visitor starts on the default (light) until they pick again.
+    localStorage.setItem('theme-v2', mode)
   } catch {
     // preference just won't persist
   }
@@ -34,8 +36,8 @@ function applyTheme(mode: ThemeMode) {
  * Subscribe to the colour mode and get a setter back.
  *
  * Returns 'light' on the first render rather than reading the DOM, because the
- * server never renders `data-theme` — reading it during render would be a
- * hydration mismatch. The real value arrives in the mount effect.
+ * pre-paint script may have replaced the server's `data-theme` with a stored
+ * choice — reading it during render would be a hydration mismatch. The real value arrives in the mount effect.
  */
 export function useTheme() {
   const [mode, setMode] = useState<ThemeMode>('light')

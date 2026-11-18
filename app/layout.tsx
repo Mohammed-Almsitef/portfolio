@@ -51,8 +51,8 @@ const mono = Geist_Mono({
 /** Browser chrome (address bar on phones) matches the page ground. */
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: dark)', color: '#16233a' },
-    { media: '(prefers-color-scheme: light)', color: '#f4f1e8' },
+    // Follows the site's default (light), not the device's preference.
+    { color: '#f4f1e8' },
   ],
 }
 
@@ -114,6 +114,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       // Server-rendered, so the accent is right in the first paint — no flash
       // of blue before a client effect could correct it.
       data-accent={accent}
+      // Also server-rendered, so the first paint is the default theme even
+      // before (or without) the script below, whatever the device prefers.
+      data-theme={defaultTheme}
       className={`${geist.variable} ${display.variable} ${mono.variable} ${arabic.variable} ${arabicDisplay.variable}`}
     >
       <head>
@@ -126,7 +129,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){var r=document.documentElement;var d=${JSON.stringify(defaultTheme)};r.classList.add('js');r.dataset.theme=d;try{var s=localStorage.getItem('theme');if(s==='dark'||s==='light')r.dataset.theme=s}catch(e){}})()`,
+            __html: `(function(){var r=document.documentElement;var d=${JSON.stringify(defaultTheme)};r.classList.add('js');r.dataset.theme=d;try{var s=localStorage.getItem('theme-v2');if(s==='dark'||s==='light')r.dataset.theme=s}catch(e){}})()`,
           }}
         />
       </head>
