@@ -20,7 +20,7 @@ export default function BrandMark({ colorScheme }: { colorScheme: 'light' | 'dar
       label="Mohammed Almsitef"
       ink={dark ? '#f4f1e8' : '#16233a'}
       accent={dark ? '#f06e42' : '#e8582c'}
-      className="h-9 w-auto shrink-0"
+      className="h-6 w-auto shrink-0"
     />
   )
 }

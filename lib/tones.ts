@@ -29,8 +29,22 @@ export function isTone(value: unknown): value is Tone {
   return TONE_NAMES.includes(value as Tone)
 }
 
-/** The colour pickers in the manager. Capitalised for display. */
-export const TONE_OPTIONS = TONE_NAMES.map((value) => ({
-  label: value[0].toUpperCase() + value.slice(1),
-  value,
-}))
+/**
+ * The colour pickers in the manager, named for what the course palette
+ * actually shows (globals.css folds the nine names onto four deck colours).
+ * The four main ones come first; the rest are kept so older content still
+ * validates, and say which colour they render as.
+ */
+const SHOWN_AS: Record<Tone, string> = {
+  blue: 'Slate',
+  amber: 'Gold',
+  teal: 'Teal',
+  rose: 'Orange',
+  violet: 'Gold (alt)',
+  purple: 'Gold (alt 2)',
+  cyan: 'Teal (alt)',
+  emerald: 'Teal (alt 2)',
+  lime: 'Teal (alt 3)',
+}
+const PICKER_ORDER: Tone[] = ['blue', 'amber', 'teal', 'rose', 'violet', 'purple', 'cyan', 'emerald', 'lime']
+export const TONE_OPTIONS = PICKER_ORDER.map((value) => ({ label: SHOWN_AS[value], value }))

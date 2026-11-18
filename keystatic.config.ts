@@ -675,14 +675,14 @@ export default config({
       Content: ['projects', 'posts', 'about', 'experience', 'skills', 'teaching', 'openSource'],
       Profile: ['site', 'contact', 'socials', 'education', 'publications'],
       'Page setup': ['sections', 'appearance', 'uiText'],
-      'العربية · المحتوى': ['projectsAr', 'aboutAr', 'experienceAr', 'skillsAr', 'teachingAr', 'openSourceAr', 'educationAr', 'publicationsAr'],
-      'العربية · الإعداد': ['siteAr', 'contactAr', 'socialsAr', 'sectionsAr', 'uiTextAr', 'arabicSettings'],
+      'Arabic site · content': ['projectsAr', 'aboutAr', 'experienceAr', 'skillsAr', 'teachingAr', 'openSourceAr', 'educationAr', 'publicationsAr'],
+      'Arabic site · setup': ['siteAr', 'contactAr', 'socialsAr', 'sectionsAr', 'uiTextAr', 'arabicSettings'],
     },
   },
 
   collections: {
     projects: projectsDef('content', ''),
-    projectsAr: projectsDef('content/ar', ' · عربي'),
+    projectsAr: projectsDef('content/ar', ' · Arabic'),
     /**
      * Writing: English-only engineering notes. A post with "Published" unticked
      * is a draft — visible locally and on preview deploys, never in production.
@@ -729,18 +729,18 @@ export default config({
     teaching: teachingDef('content', ''),
     uiText: uiTextDef('content', '', 'en'),
 
-    sectionsAr: sectionsDef('content/ar', ' · عربي'),
-    siteAr: siteDef('content/ar', ' · عربي'),
-    socialsAr: socialsDef('content/ar', ' · عربي'),
-    aboutAr: aboutDef('content/ar', ' · عربي'),
-    contactAr: contactDef('content/ar', ' · عربي'),
-    skillsAr: skillsDef('content/ar', ' · عربي', 'projectsAr'),
-    experienceAr: experienceDef('content/ar', ' · عربي'),
-    educationAr: educationDef('content/ar', ' · عربي'),
-    publicationsAr: publicationsDef('content/ar', ' · عربي'),
-    openSourceAr: openSourceDef('content/ar', ' · عربي'),
-    teachingAr: teachingDef('content/ar', ' · عربي'),
-    uiTextAr: uiTextDef('content/ar', ' · عربي', 'ar'),
+    sectionsAr: sectionsDef('content/ar', ' · Arabic'),
+    siteAr: siteDef('content/ar', ' · Arabic'),
+    socialsAr: socialsDef('content/ar', ' · Arabic'),
+    aboutAr: aboutDef('content/ar', ' · Arabic'),
+    contactAr: contactDef('content/ar', ' · Arabic'),
+    skillsAr: skillsDef('content/ar', ' · Arabic', 'projectsAr'),
+    experienceAr: experienceDef('content/ar', ' · Arabic'),
+    educationAr: educationDef('content/ar', ' · Arabic'),
+    publicationsAr: publicationsDef('content/ar', ' · Arabic'),
+    openSourceAr: openSourceDef('content/ar', ' · Arabic'),
+    teachingAr: teachingDef('content/ar', ' · Arabic'),
+    uiTextAr: uiTextDef('content/ar', ' · Arabic', 'ar'),
 
     /**
      * Chrome rather than content, so it is deliberately NOT duplicated per
@@ -764,7 +764,7 @@ export default config({
         accent: fields.select({
           label: 'Accent colour',
           description:
-            'The site-wide highlight — links, buttons, headings and the robot in the hero simulation. Same palette the skill groups use.',
+            'Not used by the current design, which always uses the course orange. Kept for the alternative dark design.',
           options: [...TONES],
           defaultValue: 'blue',
         }),
@@ -773,7 +773,7 @@ export default config({
 
     /** The single switch that publishes or hides the whole Arabic site. */
     arabicSettings: singleton({
-      label: 'العربية — نشر الموقع',
+      label: 'Publish the Arabic site',
       path: 'content/ar/settings',
       format: { data: 'json' },
       schema: {
